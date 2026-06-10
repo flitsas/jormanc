@@ -11,6 +11,9 @@
 #   CONNECTION_STRING_CORE  cadena Npgsql .NET (Host=...;Port=5432;Database=...;Username=...;Password=...)
 #   CORS_ORIGIN             origen permitido del frontend (https://jormanc.flitsas.online)
 #   VERIFIK_API_TOKEN       token Verifik (RUNT)
+# Variables para AISLAR este proyecto del resto del VPS (UNICAS por proyecto):
+#   COMPOSE_PROJECT_NAME    nombre del proyecto Compose (default: flit-prod)
+#   FRONTEND_PORT / GATEWAY_PORT / CORE_API_PORT   puertos host 127.0.0.1 (defaults: 60106/60206/60306)
 # Variables opcionales:
 #   CORE_API_TAG / FRONTEND_TAG   tag de imagen (default: latest)
 #   VERIFIK_BASE_URL / VERIFIK_TIMEOUT_SECONDS
@@ -21,7 +24,10 @@
 #   docker compose -f docker-compose.prod.yml pull
 #   docker compose -f docker-compose.prod.yml up -d --remove-orphans
 
-name: flit-prod
+# Nombre del proyecto: UNICO por proyecto en el VPS. Si dos repos comparten el
+# mismo nombre, `up --remove-orphans` borra los contenedores del otro. Sobrescribir
+# con COMPOSE_PROJECT_NAME en el .env de cada proyecto.
+name: ${COMPOSE_PROJECT_NAME:-flit-prod}
 
 x-restart-policy: &restart unless-stopped
 
@@ -52,7 +58,7 @@ services:
       Verifik__BaseUrl: ${VERIFIK_BASE_URL:-https://api.verifik.co}
       Verifik__TimeoutSeconds: ${VERIFIK_TIMEOUT_SECONDS:-30}
     ports:
-      - "127.0.0.1:60306:80"
+      - "127.0.0.1:${CORE_API_PORT:-60306}:80"
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:80/api/v1/health"]
       interval: 30s
@@ -75,7 +81,7 @@ services:
       # Login deshabilitado temporalmente: sin llave JWT el gateway no valida firma
       # ni exige autenticación (ver Flit.Gateway/Program.cs).
     ports:
-      - "127.0.0.1:60206:80"
+      - "127.0.0.1:${GATEWAY_PORT:-60206}:80"
     depends_on:
       core-api:
         condition: service_started
@@ -92,7 +98,7 @@ services:
   frontend:
     image: ghcr.io/flitsas/jormanc-pdn/frontend:${FRONTEND_TAG:-latest}
     ports:
-      - "127.0.0.1:60106:80"
+      - "127.0.0.1:${FRONTEND_PORT:-60106}:80"
     depends_on:
       - gateway
     restart: *restart
