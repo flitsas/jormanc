@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<style>
+  body { font-family:'Segoe UI',Arial,sans-serif; background:#ffffff; margin:0; padding:24px; width:2200px; }
+  h1 { color:#162744; font-size:24px; margin:0 0 4px; }
+  .sub { color:#557EFF; font-size:13px; margin-bottom:16px; font-weight:600; }
+  #er { width:100%; }
+  .mermaid { font-size:15px; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <h1>Modelo Entidad-Relación · Trámites de Tránsito FLIT 2.0</h1>
+  <div class="sub">Entidades por bounded context y sus relaciones (cardinalidad crow's-foot). Detalle de campos en el diccionario de datos.</div>
+  <div id="er">
+  <pre class="mermaid">
+erDiagram
+  tenants ||--o{ users : "1:N"
+  tenants ||--o| companies : "1:1"
+  users ||--o| profiles : "1:1"
+  roles ||--o{ role_permissions : ""
+  permissions ||--o{ role_permissions : ""
+  users ||--o{ user_roles : ""
+  roles ||--o{ user_roles : ""
+  tenants ||--o{ onboarding_invitations : ""
+  tenants ||--o{ refresh_tokens : ""
+
+  companies ||--o{ company_module_configs : ""
+  companies ||--o| signature_wallets : ""
+  signature_wallets ||--o{ signature_wallet_movements : ""
+  companies ||--o{ escrituras : ""
+  escrituras ||--o{ escritura_attachments : "PDF"
+  files ||--o{ escritura_attachments : ""
+
+  traffic_agencies ||--o{ ot_users : ""
+  ot_users ||--o{ ot_user_permissions : ""
+  traffic_agencies ||--o{ ot_rules : ""
+  traffic_agencies ||--o| ot_consolidated_doc_orders : ""
+  ot_consolidated_doc_orders ||--o{ ot_consolidated_doc_order_items : ""
+  traffic_agencies ||--o| ot_qx_integrations : ""
+
+  procedure_families ||--o{ procedure_types : "1:N"
+  procedure_types ||--o{ procedure_type_edges : "matriz"
+  edges ||--o{ procedure_type_edges : "matriz"
+  procedure_types ||--o{ procedure_type_activations : "tenant/OT"
+  procedure_types ||--o{ form_sections : ""
+  form_sections ||--o{ form_fields : ""
+  procedure_types ||--o{ procedure_type_query_configs : ""
+  query_connectors ||--o{ procedure_type_query_configs : ""
+  procedure_types ||--o{ required_documents : ""
+  document_templates ||--o{ document_template_versions : ""
+  required_documents }o--o| document_templates : ""
+  procedure_types ||--o{ rules : ""
+  tenants ||--o{ procedure_type_activations : ""
+  tenants ||--o{ rules : ""
+  tenants ||--o{ endpoint_catalog : ""
+
+  procedure_types ||--o{ procedure_instances : "instancias"
+  traffic_agencies ||--o{ procedure_instances : "radicado"
+  tenants ||--o{ procedure_instances : ""
+  procedure_instances ||--o{ procedure_field_values : ""
+  procedure_instances ||--o{ procedure_actors : ""
+  procedure_actors ||--o| procedure_actor_representatives : "rep.legal"
+  procedure_instances ||--o| procedure_vehicles : ""
+  procedure_instances ||--o{ procedure_query_results : "snapshot"
+  procedure_instances ||--o{ procedure_documents : ""
+  procedure_instances ||--o{ procedure_state_history : ""
+  procedure_instances ||--o{ procedure_identity_validations : ""
+  verification_sessions ||--o{ procedure_identity_validations : "reusada"
+  verification_sessions ||--o{ verification_evidences : ""
+  files ||--o{ verification_evidences : ""
+  document_template_versions ||--o{ procedure_documents : "version"
+  files ||--o{ procedure_documents : ""
+
+  divipola_departments ||--o{ divipola_municipalities : ""
+  vehicle_makes ||--o{ vehicle_lines : ""
+  document_types ||--o{ procedure_actors : ""
+  document_types ||--o{ escrituras : ""
+  external_query_calls ||--o{ procedure_query_results : "raw"
+  </pre>
+  </div>
+  <script>
+    mermaid.initialize({ startOnLoad:true, securityLevel:'loose', er:{ useMaxWidth:false, layoutDirection:'TB' } });
+  </script>
+</body>
+</html>

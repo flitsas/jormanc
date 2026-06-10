@@ -1,0 +1,151 @@
+{
+  "annotations": { "list": [] },
+  "description": "FLIT — Flit.Modules.Files (core-api). Uploads/downloads, presigned URLs MinIO, errores (post ADR-0014/0016).",
+  "editable": true,
+  "graphTooltip": 1,
+  "id": null,
+  "panels": [
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "drawStyle": "bars", "lineWidth": 1, "fillOpacity": 60 }
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "id": 1,
+      "title": "Upload-request / hora (presigned URLs generadas)",
+      "targets": [
+        {
+          "expr": "sum(increase(http_server_request_duration_seconds_count{service=\"core-api\", http_route=\"/api/files/upload-url\", http_response_status_code=\"200\"}[1h]))",
+          "legendFormat": "Presigned upload URLs",
+          "refId": "A"
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "drawStyle": "bars", "lineWidth": 1, "fillOpacity": 60 }
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "id": 2,
+      "title": "Confirms / hora (uploads completados)",
+      "targets": [
+        {
+          "expr": "sum(increase(http_server_request_duration_seconds_count{service=\"core-api\", http_route=~\"/api/files/.+/confirm\", http_response_status_code=\"200\"}[1h]))",
+          "legendFormat": "Confirms OK",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(increase(http_server_request_duration_seconds_count{service=\"core-api\", http_route=~\"/api/files/.+/confirm\", http_response_status_code=\"400\"}[1h]))",
+          "legendFormat": "FILE_UPLOAD_NOT_FOUND",
+          "refId": "B"
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "drawStyle": "bars", "lineWidth": 1, "fillOpacity": 60 }
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "id": 3,
+      "title": "Download-url / hora",
+      "targets": [
+        {
+          "expr": "sum(increase(http_server_request_duration_seconds_count{service=\"core-api\", http_route=~\"/api/files/.+/download-url\"}[1h]))",
+          "legendFormat": "Downloads",
+          "refId": "A"
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10 },
+          "unit": "s"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "id": 4,
+      "title": "Latencia /api/files/* p99",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(http_server_request_duration_seconds_bucket{service=\"core-api\", http_route=~\"/api/files/.+\"}[5m])) by (http_route, le))",
+          "legendFormat": "{{http_route}} p99",
+          "refId": "A"
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 },
+              { "color": "red", "value": 5 }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 16 },
+      "id": 5,
+      "title": "Errores 5xx /api/files/* (5min)",
+      "targets": [
+        {
+          "expr": "sum(increase(http_server_request_duration_seconds_count{service=\"core-api\", http_route=~\"/api/files/.+\", http_response_status_code=~\"5..\"}[5m]))",
+          "legendFormat": "5xx",
+          "refId": "A"
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "drawStyle": "bars", "lineWidth": 1, "fillOpacity": 60 }
+        }
+      },
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 16 },
+      "id": 6,
+      "title": "Eventos file.uploaded publicados (RabbitMQ)",
+      "targets": [
+        {
+          "expr": "sum(increase(rabbitmq_published_total{exchange=\"flit.files\"}[1h]))",
+          "legendFormat": "Published / hora",
+          "refId": "A"
+        }
+      ],
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 38,
+  "tags": ["flit", "mvp", "files"],
+  "templating": { "list": [] },
+  "time": { "from": "now-6h", "to": "now" },
+  "title": "FLIT MVP - Files",
+  "uid": "flit-mvp-files",
+  "version": 1
+}

@@ -1,0 +1,164 @@
+{
+  "annotations": { "list": [] },
+  "description": "MVP FLIT — Auth metrics (Identity module). Logins success/fail, lockouts, refresh rotation.",
+  "editable": true,
+  "graphTooltip": 1,
+  "id": null,
+  "panels": [
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.1 },
+              { "color": "red", "value": 0.3 }
+            ]
+          },
+          "unit": "percentunit"
+        }
+      },
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 0 },
+      "id": 1,
+      "title": "Login failure rate (5min)",
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_request_duration_seconds_count{http_route=\"/api/v1/auth/login\", http_response_status_code=\"401\"}[5m])) / sum(rate(http_server_request_duration_seconds_count{http_route=\"/api/v1/auth/login\"}[5m]))",
+          "legendFormat": "Failure rate",
+          "refId": "A"
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 5 },
+              { "color": "red", "value": 20 }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 0 },
+      "id": 2,
+      "title": "Cuentas bloqueadas (423 / 1h)",
+      "targets": [
+        {
+          "expr": "sum(increase(http_server_request_duration_seconds_count{http_route=\"/api/v1/auth/login\", http_response_status_code=\"423\"}[1h]))",
+          "legendFormat": "Locked",
+          "refId": "A"
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "drawStyle": "bars", "lineWidth": 1, "fillOpacity": 80 }
+        }
+      },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 0 },
+      "id": 3,
+      "title": "Registros / dia",
+      "targets": [
+        {
+          "expr": "sum(increase(http_server_request_duration_seconds_count{http_route=\"/api/v1/auth/register\", http_response_status_code=\"201\"}[1d]))",
+          "legendFormat": "Nuevos usuarios",
+          "refId": "A"
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10 }
+        }
+      },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 4 },
+      "id": 4,
+      "title": "Auth endpoints — req/s por status",
+      "targets": [
+        {
+          "expr": "sum by (http_route, http_response_status_code) (rate(http_server_request_duration_seconds_count{http_route=~\"/api/v1/auth/.+\"}[5m]))",
+          "legendFormat": "{{http_route}} {{http_response_status_code}}",
+          "refId": "A"
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10 },
+          "unit": "s"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+      "id": 5,
+      "title": "Latencia /auth/login (Argon2id ~150ms esperado)",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, sum(rate(http_server_request_duration_seconds_bucket{http_route=\"/api/v1/auth/login\"}[5m])) by (le))",
+          "legendFormat": "p50",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(http_server_request_duration_seconds_bucket{http_route=\"/api/v1/auth/login\"}[5m])) by (le))",
+          "legendFormat": "p99",
+          "refId": "B"
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10 }
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+      "id": 6,
+      "title": "Refresh token rotations / hora",
+      "targets": [
+        {
+          "expr": "sum(increase(http_server_request_duration_seconds_count{http_route=\"/api/v1/auth/refresh\", http_response_status_code=\"200\"}[1h]))",
+          "legendFormat": "Rotations OK",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(increase(http_server_request_duration_seconds_count{http_route=\"/api/v1/auth/refresh\", http_response_status_code=\"401\"}[1h]))",
+          "legendFormat": "Rotations invalid",
+          "refId": "B"
+        }
+      ],
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 38,
+  "tags": ["flit", "mvp", "auth", "security"],
+  "templating": { "list": [] },
+  "time": { "from": "now-6h", "to": "now" },
+  "title": "FLIT MVP - Auth",
+  "uid": "flit-mvp-auth",
+  "version": 1
+}

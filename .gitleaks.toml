@@ -1,0 +1,26 @@
+title = "FLIT Boilerplate — Gitleaks Config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Example placeholders, .example files, skill/doc fixtures, and local-dev credentials"
+paths = [
+  '''\.example$''',
+  '''skills/.*\.md$''',
+  '''SKILL\.md$''',
+  '''agent-templates/''',
+  '''docs/''',
+]
+stopwords = [
+  "flit_local",
+  "flit_test",
+  "sk-abc123def456",
+  "p4ssw0rd",
+  "AKIAIOSFODNN7EXAMPLE",
+]
+regexTarget = "match"
+regexes = [
+  '''sk-abc123def456\.\.\.''',
+  '''p4ssw0rd@host''',
+]

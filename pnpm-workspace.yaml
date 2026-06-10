@@ -1,0 +1,14 @@
+packages:
+  - 'frontend'
+
+# Linter del IDE Antigravity requiere este campo. pnpm lo ignora.
+# El control real de builds postinstall se hace en package.json `pnpm.onlyBuiltDependencies`.
+allowBuilds:
+  esbuild: true
+  sharp: true
+
+# pnpm 10+ field (equivalente a package.json pnpm.onlyBuiltDependencies).
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+  - '@biomejs/biome'

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Ejemplo de datos · Trámites de Tránsito FLIT 2.0</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Poppins','Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#162744;background:#f4f6fb;padding:28px 18px;line-height:1.45}
+  .wrap{max-width:1280px;margin:0 auto}
+  h1{font-size:26px}
+  .sub{color:#557EFF;font-weight:600;font-size:13px;margin:2px 0 16px}
+  h2{font-size:17px;color:#fff;background:#162744;padding:9px 14px;border-radius:8px;margin:30px 0 6px}
+  h3{font-size:14px;color:#162744;margin:18px 0 2px;border-left:4px solid #557EFF;padding-left:8px}
+  .fn{font-size:12px;color:#5b6b86;margin-bottom:6px}
+  table{border-collapse:collapse;width:100%;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(22,39,68,.08);font-size:11.5px;margin-bottom:6px}
+  th{background:#e9eefb;color:#162744;text-align:left;padding:6px 8px;font-weight:700;border-bottom:2px solid #557EFF;white-space:nowrap}
+  td{padding:5px 8px;border-bottom:1px solid #eef1f7;vertical-align:top}
+  tr:nth-child(even) td{background:#fafbfe}
+  .fk{color:#557EFF;font-weight:600}
+  .pk{color:#162744;font-weight:700}
+  .pii{color:#FF4E00}
+  code{background:#eef2fb;border-radius:4px;padding:1px 5px;font-size:11px;color:#162744}
+  .scen{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+  .scard{border-radius:10px;padding:14px 16px;color:#fff}
+  .e1{background:#557EFF}.e2{background:#7A5Cff}.o1{background:#00B3AE}.o2{background:#FF7A33}
+  .scard h4{font-size:14px;margin-bottom:5px}
+  .scard p{font-size:11.5px;opacity:.96;margin:2px 0}
+  .note{background:#fff;border:1px solid #DFE5ED;border-left:4px solid #00DBD5;border-radius:8px;padding:11px 14px;font-size:12px;margin:12px 0}
+  .leg{font-size:11.5px;color:#5b6b86;margin:4px 0 18px}
+  .leg b{color:#162744}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Ejemplo de datos — Trámites de Tránsito FLIT 2.0</h1>
+  <div class="sub">Juego de datos completo, coherente y funcional · 2 empresas · 2 organismos de tránsito · usuarios y un trámite radicado end-to-end</div>
+
+  <div class="note">
+    <b>Cómo leer este documento.</b> Los identificadores se muestran como <b>claves legibles</b>
+    (p. ej. <code>t-cafe</code>, <code>pi-2001</code>) en lugar de los UUID v7 reales, para que se
+    entienda cómo se encadenan las tablas. Las columnas <span class="fk">azules</span> son llaves
+    foráneas (referencias a otra fila); <span class="pii">naranja</span> marca datos personales (PII).
+    Por brevedad se omiten las columnas estándar de auditoría (<code>created_at/by</code>,
+    <code>updated_at/by</code>, <code>deleted_at/by</code>, <code>row_version</code>) salvo cuando
+    aportan al ejemplo.
+  </div>
+
+  <h2>Escenario</h2>
+  <div class="scen">
+    <div class="scard e1"><h4>Empresa 1 · Tránsitos del Café S.A.S.</h4>
+      <p>Tramitadora B2B del Eje Cafetero. Tenant <code>t-cafe</code> · NIT 900111222-3 · slug <code>transitos-cafe</code>.</p>
+      <p>Módulos: escrituras ✔ · traspasos ✔. Radica un <b>Traspaso Estándar</b> ante Bucaramanga.</p>
+      <p>Usuarios: admin, radicador, gestor.</p></div>
+    <div class="scard e2"><h4>Empresa 2 · AutoLegal Bogotá S.A.S.</h4>
+      <p>Tramitadora en Bogotá. Tenant <code>t-auto</code> · NIT 901333444-5 · slug <code>autolegal-bogota</code>.</p>
+      <p>Módulos: escrituras ✘ · traspasos ✔. Radica un <b>Cambio de Color</b> ante Cartagena.</p>
+      <p>Usuarios: admin, operario.</p></div>
+    <div class="scard o1"><h4>OT 1 · Tránsito de Bucaramanga</h4>
+      <p><code>ot-bga</code> · DANE 68001 · modo <b>Dashboard</b> (procesa/aprueba en FLIT).</p>
+      <p>Usuario OT: revisor. Orden de consolidado configurado.</p></div>
+    <div class="scard o2"><h4>OT 2 · Tránsito Distrital de Cartagena</h4>
+      <p><code>ot-ctg</code> · DANE 13001 · modo <b>QX/Quipux</b> (aprueba en sistema externo).</p>
+      <p>Requiere paz y salvo. Usuario OT: aprobador.</p></div>
+  </div>
+  <div class="leg"><b>Flujo del ejemplo:</b> el radicador de Tránsitos del Café crea un Traspaso Estándar
+  (<code>pi-2001</code>): vehículo placa ABC123 (Chevrolet Onix), vendedor persona natural y comprador
+  persona jurídica (con representante legal). Se ejecutan consultas RUNT/SIMIT/RUES, se valida la
+  identidad del vendedor, se genera el FUR y se adjunta la compraventa; queda en <i>Q Validación</i>.
+  En paralelo, AutoLegal radica un Cambio de Color de un Tesla (<code>pi-3001</code>) ante Cartagena por QX.</div>
+
+  <!-- ===================== IDENTITY ===================== -->
+  <h2>Schema · identity</h2>
+
+  <h3>identity.tenants</h3><div class="fn">Cada fila es una Compañía B2B (frontera de aislamiento multi-tenant).</div>
+  <table><tr><th>id</th><th>name</th><th>nit</th><th>slug</th><th>status</th></tr>
+  <tr><td class="pk">t-plat</td><td>FLIT Platform</td><td>000000000</td><td>flit-platform</td><td>active</td></tr>
+  <tr><td class="pk">t-cafe</td><td>Tránsitos del Café S.A.S.</td><td>900111222-3</td><td>transitos-cafe</td><td>active</td></tr>
+  <tr><td class="pk">t-auto</td><td>AutoLegal Bogotá S.A.S.</td><td>901333444-5</td><td>autolegal-bogota</td><td>active</td></tr></table>
+
+  <h3>identity.users</h3><div class="fn">Cuentas; email global único; estados de ciclo de vida y bloqueos.</div>
+  <table><tr><th>id</th><th class="fk">tenant_id</th><th>email</th><th>account_state</th><th>blocked_until</th><th>failed_attempt_count</th></tr>
+  <tr><td class="pk">u-super</td><td class="fk">t-plat</td><td class="pii">system@flit.co</td><td>active</td><td>—</td><td>0</td></tr>
+  <tr><td class="pk">u-adm-cafe</td><td class="fk">t-cafe</td><td class="pii">admin@transitos-cafe.co</td><td>active</td><td>—</td><td>0</td></tr>
+  <tr><td class="pk">u-rad-cafe</td><td class="fk">t-cafe</td><td class="pii">radicador@transitos-cafe.co</td><td>active</td><td>—</td><td>0</td></tr>
+  <tr><td class="pk">u-ges-cafe</td><td class="fk">t-cafe</td><td class="pii">gestor@transitos-cafe.co</td><td>active</td><td>—</td><td>1</td></tr>
+  <tr><td class="pk">u-adm-auto</td><td class="fk">t-auto</td><td class="pii">admin@autolegal.co</td><td>active</td><td>—</td><td>0</td></tr>
+  <tr><td class="pk">u-ope-auto</td><td class="fk">t-auto</td><td class="pii">operario@autolegal.co</td><td>temp_blocked</td><td>2026-06-03 14:30Z</td><td>5</td></tr></table>
+
+  <h3>identity.profiles</h3><div class="fn">Perfil autoservicio 1:1 con el usuario.</div>
+  <table><tr><th>id</th><th class="fk">user_id</th><th>full_name</th><th>phone</th><th>locale</th><th>timezone</th></tr>
+  <tr><td class="pk">pf-adm-cafe</td><td class="fk">u-adm-cafe</td><td class="pii">Laura Restrepo</td><td class="pii">3104567890</td><td>es-CO</td><td>America/Bogota</td></tr>
+  <tr><td class="pk">pf-rad-cafe</td><td class="fk">u-rad-cafe</td><td class="pii">Carlos Bedoya</td><td class="pii">3119876543</td><td>es-CO</td><td>America/Bogota</td></tr>
+  <tr><td class="pk">pf-ope-auto</td><td class="fk">u-ope-auto</td><td class="pii">Andrés Silva</td><td class="pii">3201112233</td><td>es-CO</td><td>America/Bogota</td></tr></table>
+
+  <h3>identity.permissions</h3><div class="fn">Catálogo global de permisos-slug.</div>
+  <table><tr><th>id</th><th>slug</th><th>module</th><th>action</th><th>is_system</th></tr>
+  <tr><td class="pk">p-tram-crud</td><td>modulo.tramites.crud-total</td><td>tramites</td><td>crud-total</td><td>true</td></tr>
+  <tr><td class="pk">p-tram-ver</td><td>modulo.tramites.ver</td><td>tramites</td><td>ver</td><td>true</td></tr>
+  <tr><td class="pk">p-dash-ver</td><td>modulo.dashboard.ver</td><td>dashboard</td><td>ver</td><td>true</td></tr>
+  <tr><td class="pk">p-param-crud</td><td>modulo.parametrizacion.crud-total</td><td>parametrizacion</td><td>crud-total</td><td>true</td></tr></table>
+
+  <h3>identity.roles</h3><div class="fn">Roles maestros (globales, tenant_id NULL) y locales por tenant.</div>
+  <table><tr><th>id</th><th class="fk">tenant_id</th><th>slug</th><th>scope</th><th>is_system</th></tr>
+  <tr><td class="pk">r-super</td><td>NULL (global)</td><td>super-admin</td><td>global</td><td>true</td></tr>
+  <tr><td class="pk">r-tadmin</td><td>NULL (global)</td><td>tenant-admin</td><td>global</td><td>true</td></tr>
+  <tr><td class="pk">r-colab</td><td>NULL (global)</td><td>colaborador</td><td>global</td><td>true</td></tr>
+  <tr><td class="pk">r-rad-cafe</td><td class="fk">t-cafe</td><td>radicador</td><td>tenant</td><td>false</td></tr></table>
+
+  <h3>identity.role_permissions</h3><div class="fn">Asociación rol↔permiso.</div>
+  <table><tr><th>id</th><th class="fk">role_id</th><th class="fk">permission_id</th></tr>
+  <tr><td class="pk">rp-1</td><td class="fk">r-super</td><td class="fk">p-tram-crud</td></tr>
+  <tr><td class="pk">rp-2</td><td class="fk">r-super</td><td class="fk">p-param-crud</td></tr>
+  <tr><td class="pk">rp-3</td><td class="fk">r-colab</td><td class="fk">p-tram-ver</td></tr>
+  <tr><td class="pk">rp-4</td><td class="fk">r-rad-cafe</td><td class="fk">p-tram-crud</td></tr></table>
+
+  <h3>identity.user_roles</h3><div class="fn">Asignación usuario↔rol dentro de un tenant.</div>
+  <table><tr><th>id</th><th class="fk">tenant_id</th><th class="fk">user_id</th><th class="fk">role_id</th></tr>
+  <tr><td class="pk">ur-1</td><td class="fk">t-plat</td><td class="fk">u-super</td><td class="fk">r-super</td></tr>
+  <tr><td class="pk">ur-2</td><td class="fk">t-cafe</td><td class="fk">u-adm-cafe</td><td class="fk">r-tadmin</td></tr>
+  <tr><td class="pk">ur-3</td><td class="fk">t-cafe</td><td class="fk">u-rad-cafe</td><td class="fk">r-rad-cafe</td></tr>
+  <tr><td class="pk">ur-4</td><td class="fk">t-cafe</td><td class="fk">u-ges-cafe</td><td class="fk">r-colab</td></tr>
+  <tr><td class="pk">ur-5</td><td class="fk">t-auto</td><td class="fk">u-adm-auto</td><td class="fk">r-tadmin</td></tr>
+  <tr><td class="pk">ur-6</td><td class="fk">t-auto</td><td class="fk">u-ope-auto</td><td class="fk">r-colab</td></tr></table>
+
+  <h3>identity.onboarding_invitations</h3><div class="fn">Enlace firmado 24h de un solo uso para alta de colaborador.</div>
+  <table><tr><th>id</th><th class="fk">tenant_id</th><th>email</th><th class="fk">invited_role_id</th><th>status</th><th>expires_at</th><th>consumed_at</th></tr>
+  <tr><td class="pk">inv-1</td><td class="fk">t-cafe</td><td class="pii">nuevo@transitos-cafe.co</td><td class="fk">r-colab</td><td>pending</td><td>2026-06-04 09:00Z</td><td>—</td></tr></table>
+
+  <h3>identity.password_policies</h3><div class="fn">Política de contraseña por tenant.</div>
+  <table><tr><th>id</th><th class="fk">tenant_id</th><th>min_length</th><th>require_symbol</th><th>max_age_days</th><th>lockout_threshold</th></tr>
+  <tr><td class="pk">pp-cafe</td><td class="fk">t-cafe</td><td>12</td><td>true</td><td>90</td><td>5</td></tr>
+  <tr><td class="pk">pp-auto</td><td class="fk">t-auto</td><td>14</td><td>true</td><td>60</td><td>5</td></tr></table>
+
+  <h3>identity.refresh_tokens</h3><div class="fn">Sesiones / refresh tokens (solo se guarda el hash).</div>
+  <table><tr><th>id</th><th class="fk">tenant_id</th><th class="fk">user_id</th><th>token_hash</th><th>expires_at</th><th>revoked_at</th></tr>
+  <tr><td class="pk">rt-1</td><td class="fk">t-cafe</td><td class="fk">u-rad-cafe</td><td class="pii">sha256:9f2a…</td><td>2026-06-10 12:00Z</td><td>—</td></tr></table>
+
+  <h3>identity.password_reset_tokens</h3><div class="fn">Tokens de restablecimiento (un solo uso).</div>
+  <table><tr><th>id</th><th class="fk">tenant_id</th><th class="fk">user_id</th><th>token_hash</th><th>expires_at</th><th>consumed_at</th></tr>
+  <tr><td class="pk">prt-1</td><td class="fk">t-auto</td><td class="fk">u-ope-auto</td><td class="pii">sha256:3c1d…</td><td>2026-06-03 13:00Z</td><td>2026-06-03 12:40Z</td></tr></table>
+
+  <h3>identity.login_attempts</h3><div class="fn">Bitácora de intentos y bloqueos.</div>
+  <table><tr><th>id</th><th class="fk">tenant_id</th><th>email_attempted</th><th>succeeded</th><th>failure_reason</th><th>ip_address</th><th>attempted_at</th></tr>
+  <tr><td class="pk">la-1</td><td class="fk">t-cafe</td><td class="pii">radicador@transitos-cafe.co</td><td>true</td><td>—</td><td>190.85.x.x</td><td>2026-06-03 08:02Z</td></tr>
+  <tr><td class="pk">la-2</td><td class="fk">t-auto</td><td class="pii">operario@autolegal.co</td><td>false</td><td>invalid_credentials</td><td>181.49.x.x</td><td>2026-06-03 12:31Z</td></tr>
+  <tr><td class="pk">la-3</td><td class="fk">t-auto</td><td class="pii">operario@autolegal.co</td><td>false</td><td>temp_blocked</td><td>181.49.x.x</td><td>2026-06-03 12:33Z</td></tr></table>
+
+  <h3>identity.support_tickets</h3><div class="fn">Tickets de soporte con contexto del colaborador.</div>
+  <table><tr><th>id</th><th class="fk">tenant_id</th><th class="fk">reporter_user_id</th><th>subject</th><th>status</th></tr>
+  <tr><td class="pk">tk-1</td><td class="fk">t-cafe</td><td class="fk">u-rad-cafe</td><td>No carga el catálogo de marcas</td><td>open</td></tr></table>
+
+  <!-- ===================== CATALOGS ===================== -->
+  <h2>Schema · catalogs (compartidos, sin tenant)</h2>
+
+  <h3>catalogs.document_types</h3><div class="fn">Tipos de documento; default_person_kind enruta Natural/Jurídica.</div>
+  <table><tr><th>id</th><th>code</th><th>name</th><th>default_person_kind</th></tr>
+  <tr><td class="pk">dt-cc</td><td>CC</td><td>Cédula de ciudadanía</td><td>natural</td></tr>
+  <tr><td class="pk">dt-nit</td><td>NIT</td><td>Número de identificación tributaria</td><td>juridica</td></tr></table>
+
+  <h3>catalogs.divipola_departments / divipola_municipalities</h3><div class="fn">DIVIPOLA (DANE).</div>
+  <table><tr><th>id</th><th>code</th><th>name</th><th class="fk">department_id</th></tr>
+  <tr><td class="pk">dep-68</td><td>68</td><td>Santander (departamento)</td><td>—</td></tr>
+  <tr><td class="pk">mun-bga</td><td>68001</td><td>Bucaramanga</td><td class="fk">dep-68</td></tr>
+  <tr><td class="pk">mun-ctg</td><td>13001</td><td>Cartagena</td><td class="fk">dep-13</td></tr></table>
+
+  <h3>catalogs.vehicle_makes / vehicle_lines / fuel_types / colors</h3><div class="fn">Catálogos RUNT usados por el ejemplo.</div>
+  <table><tr><th>tabla</th><th>id</th><th>code</th><th>name</th><th class="fk">ref</th></tr>
+  <tr><td>vehicle_makes</td><td class="pk">mk-chevrolet</td><td>CHEVROLET</td><td>Chevrolet</td><td>—</td></tr>
+  <tr><td>vehicle_makes</td><td class="pk">mk-tesla</td><td>TESLA</td><td>Tesla</td><td>—</td></tr>
+  <tr><td>vehicle_lines</td><td class="pk">ln-onix</td><td>ONIX</td><td>Onix</td><td class="fk">make=mk-chevrolet</td></tr>
+  <tr><td>vehicle_lines</td><td class="pk">ln-model3</td><td>MODEL3</td><td>Model 3</td><td class="fk">make=mk-tesla</td></tr>
+  <tr><td>fuel_types</td><td class="pk">fu-gas</td><td>GASOLINA</td><td>Gasolina</td><td>—</td></tr>
+  <tr><td>fuel_types</td><td class="pk">fu-elec</td><td>ELECTRICO</td><td>Eléctrico</td><td>—</td></tr>
+  <tr><td>colors</td><td class="pk">co-blanco</td><td>BLANCO</td><td>Blanco</td><td>—</td></tr>
+  <tr><td>colors</td><td class="pk">co-rojo</td><td>ROJO</td><td>Rojo</td><td>—</td></tr></table>
+
+  <!-- ===================== FILES ===================== -->
+  <h2>Schema · files (MinIO)</h2>
+  <h3>files.files</h3><div class="fn">Metadatos de objetos; el binario vive en MinIO, se sirve por URL prefirmada.</div>
+  <table><tr><th>id</th><th class="fk">tenant_id</th><th>bucket</th><th>object_key</th><th>content_type</th><th>status</th></tr>
+  <tr><td class="pk">f-compra</td><td class="fk">t-cafe</td><td>tramites</td><td>2026/06/abc123/compraventa.pdf</td><td>application/pdf</td><td>ready</td></tr>
+  <tr><td class="pk">f-fur</td><td class="fk">t-cafe</td><td>tramites</td><td>2026/06/abc123/fur.pdf</td><td>application/pdf</td><td>ready</td></tr>
+  <tr><td class="pk">f-live</td><td class="fk">t-cafe</td><td>identidad</td><td>2026/06/vend/liveness.jpg</td><td>image/jpeg</td><td>ready</td></tr>
+  <tr><td class="pk">f-escr</td><td class="fk">t-cafe</td><td>escrituras</td><td>2026/06/escritura-001.pdf</td><td>application/pdf</td><td>ready</td></tr></table>
+
+  <!-- ===================== COMPANIES ===================== -->
+  <h2>Schema · companies</h2>
+
+  <h3>companies.companies</h3><div class="fn">Maestro de compañía 1:1 con tenant; modules_enabled controla visibilidad.</div>
+  <table><tr><th>id</th><th class="fk">tenant_id</th><th>nit</th><th>legal_name</th><th>modules_enabled</th></tr>
+  <tr><td class="pk">c-cafe</td><td class="fk">t-cafe</td><td>900111222-3</td><td>Tránsitos del Café S.A.S.</td><td><code>{"escrituras":true,"traspasos":true}</code></td></tr>
+  <tr><td class="pk">c-auto</td><td class="fk">t-auto</td><td>901333444-5</td><td>AutoLegal Bogotá S.A.S.</td><td><code>{"escrituras":false,"traspasos":true}</code></td></tr></table>
+
+  <h3>companies.company_module_configs</h3><div class="fn">Config modular hot-reload (1 fila por módulo).</div>
+  <table><tr><th>id</th><th class="fk">tenant_id</th><th>module_key</th><th>config</th><th>is_active</th></tr>
+  <tr><td class="pk">cmc-1</td><td class="fk">t-cafe</td><td>transfers</td><td><code>{"requiere_firma":true,"excepciones":["vehiculo_propio"]}</code></td><td>true</td></tr>
+  <tr><td class="pk">cmc-2</td><td class="fk">t-cafe</td><td>runt_contingency</td><td><code>{"primario":"runt","fallback":["verifik","intempo"]}</code></td><td>true</td></tr>
+  <tr><td class="pk">cmc-3</td><td class="fk">t-auto</td><td>company</td><td><code>{"correo_notif":"ops@autolegal.co","pagos":"pse"}</code></td><td>true</td></tr></table>
+
+  <h3>companies.signature_wallets / signature_wallet_movements</h3><div class="fn">Bal de firmas y su ledger.</div>
+  <table><tr><th>tabla</th><th>id</th><th class="fk">tenant_id / wallet_id</th><th>dato</th></tr>
+  <tr><td>signature_wallets</td><td class="pk">sw-cafe</td><td class="fk">t-cafe</td><td>balance=120 · low_threshold=20 · auto_recharge=true</td></tr>
+  <tr><td>signature_wallet_movements</td><td class="pk">swm-1</td><td class="fk">sw-cafe</td><td>delta=-1 · reason="firma traspaso pi-2001" · balance_after=119</td></tr></table>
+
+  <h3>companies.vehicle_ownership_rules</h3><div class="fn">Interceptor de propiedad (reutiliza árbol JSONB).</div>
+  <table><tr><th>id</th><th class="fk">tenant_id</th><th>name</th><th>rule_type</th><th>condition</th></tr>
+  <tr><td class="pk">vor-1</td><td class="fk">t-cafe</td><td>Bloquear si vehículo con prenda</td><td>block</td><td><code>{"field":"vehicle.tiene_prenda","operator":"equal","value":{"kind":"static","value":true}}</code></td></tr></table>
+
+  <h3>companies.escrituras / escritura_attachments</h3><div class="fn">Repositorio legal (solo Empresa 1, que tiene escrituras ✔). Adjuntos PDF (máx 5).</div>
+  <table><tr><th>tabla</th><th>id</th><th class="fk">tenant_id / escritura_id</th><th>datos</th></tr>
+  <tr><td>escrituras</td><td class="pk">esc-1</td><td class="fk">t-cafe</td><td>document_type=<span class="fk">dt-nit</span> · deed_number="ESC-2024-0456" · company_name="Tránsitos del Café S.A.S." · expiration_date=2027-12-31</td></tr>
+  <tr><td>escritura_attachments</td><td class="pk">ea-1</td><td class="fk">esc-1</td><td>file=<span class="fk">f-escr</span> · position=1 (PDF ≤3MB)</td></tr></table>
+
+  <!-- ===================== OT ===================== -->
+  <h2>Schema · ot (referencia cross-tenant, sin tenant_id)</h2>
+
+  <h3>ot.traffic_agencies</h3><div class="fn">Registro de Organismos de Tránsito (semilla ~370; aquí 2).</div>
+  <table><tr><th>id</th><th>code</th><th>name</th><th>dane_municipality_code</th><th>requires_peace_and_safe</th><th>runt_agency_code</th></tr>
+  <tr><td class="pk">ot-bga</td><td>OT-BUCARAMANGA</td><td>Dir. Tránsito de Bucaramanga</td><td>68001</td><td>false</td><td>68001000</td></tr>
+  <tr><td class="pk">ot-ctg</td><td>OT-CARTAGENA</td><td>Dpto. Adtvo Tránsito Dist. Cartagena</td><td>13001</td><td>true</td><td>13001000</td></tr></table>
+
+  <h3>ot.ot_users / ot_user_permissions</h3><div class="fn">Operadores de la consola OT (aislados por traffic_agency_id).</div>
+  <table><tr><th>tabla</th><th>id</th><th class="fk">traffic_agency_id</th><th>datos</th></tr>
+  <tr><td>ot_users</td><td class="pk">otu-bga</td><td class="fk">ot-bga</td><td>email=<span class="pii">revisor@transito-bucaramanga.gov.co</span> · full_name="Marta Díaz"</td></tr>
+  <tr><td>ot_users</td><td class="pk">otu-ctg</td><td class="fk">ot-ctg</td><td>email=<span class="pii">aprobador@transito-cartagena.gov.co</span> · full_name="Pedro Lara"</td></tr>
+  <tr><td>ot_user_permissions</td><td class="pk">otp-1</td><td class="fk">ot-bga</td><td>ot_user=<span class="fk">otu-bga</span> · permission_slug="ot.tramites.aprobar"</td></tr></table>
+
+  <h3>ot.ot_rules</h3><div class="fn">Reglas operativas por OT (gatillo/condición/acciones; toggle en caliente).</div>
+  <table><tr><th>id</th><th class="fk">traffic_agency_id</th><th>name</th><th>trigger_event</th><th>actions</th><th>is_active</th></tr>
+  <tr><td class="pk">otr-ctg-1</td><td class="fk">ot-ctg</td><td>Exigir paz y salvo</td><td>on_submit</td><td><code>[{"type":"block","params":{"msg":"Falta paz y salvo"}}]</code></td><td>true</td></tr></table>
+
+  <h3>ot.ot_consolidated_doc_orders / _items</h3><div class="fn">Orden del consolidado por OT (FUN antes que Carta Selfie). Quitar = borrar la fila, no el archivo.</div>
+  <table><tr><th>tabla</th><th>id</th><th class="fk">traffic_agency_id / order_id</th><th>datos</th></tr>
+  <tr><td>ot_consolidated_doc_orders</td><td class="pk">ord-bga</td><td class="fk">ot-bga</td><td>version=2 · is_active=true</td></tr>
+  <tr><td>_order_items</td><td class="pk">oi-1</td><td class="fk">ord-bga</td><td>position=1 · source=global · document_type=FUN</td></tr>
+  <tr><td>_order_items</td><td class="pk">oi-2</td><td class="fk">ord-bga</td><td>position=2 · source=global · document_type=Carta Selfie</td></tr>
+  <tr><td>_order_items</td><td class="pk">oi-3</td><td class="fk">ord-bga</td><td>position=3 · source=custom · custom_label="Compraventa autenticada"</td></tr></table>
+
+  <h3>ot.ot_qx_integrations</h3><div class="fn">Modo de gestión por OT.</div>
+  <table><tr><th>id</th><th class="fk">traffic_agency_id</th><th>mode</th><th>callback_url</th></tr>
+  <tr><td class="pk">qx-bga</td><td class="fk">ot-bga</td><td>dashboard</td><td>—</td></tr>
+  <tr><td class="pk">qx-ctg</td><td class="fk">ot-ctg</td><td>qx</td><td>https://quipux.cartagena.gov.co/api/tramites</td></tr></table>
+
+  <!-- ===================== PROCEDURES_CONFIG ===================== -->
+  <h2>Schema · procedures_config (parametrización — maestros globales)</h2>
+
+  <h3>procedure_families → procedure_types</h3><div class="fn">Familias 1:N tipos.</div>
+  <table><tr><th>tabla</th><th>id</th><th class="fk">family_id</th><th>code</th><th>name</th><th>is_active</th></tr>
+  <tr><td>families</td><td class="pk">f-tras</td><td>—</td><td>TRASPASO</td><td>Traspaso</td><td>true</td></tr>
+  <tr><td>families</td><td class="pk">f-mat</td><td>—</td><td>MATRICULAS</td><td>Matrículas</td><td>true</td></tr>
+  <tr><td>families</td><td class="pk">f-otros</td><td>—</td><td>OTROS_TRAMITES</td><td>Otros trámites</td><td>true</td></tr>
+  <tr><td>types</td><td class="pk">pt-trasstd</td><td class="fk">f-tras</td><td>TRA_ESTANDAR</td><td>Traspaso Estándar</td><td>true</td></tr>
+  <tr><td>types</td><td class="pk">pt-matstd</td><td class="fk">f-mat</td><td>MAT_ESTANDAR</td><td>Matrícula Estándar</td><td>true</td></tr>
+  <tr><td>types</td><td class="pk">pt-color</td><td class="fk">f-otros</td><td>CAMBIO_COLOR</td><td>Cambio de Color</td><td>true</td></tr></table>
+
+  <h3>edges + procedure_type_edges (MATRIZ DE CONFORMACIÓN)</h3><div class="fn">Qué aristas aplican a cada tipo. Nota: Cambio de Color NO tiene Comprador → no se renderiza ni valida.</div>
+  <table><tr><th class="fk">procedure_type_id</th><th class="fk">edge_id</th><th>is_active</th><th>is_required</th><th>role_label</th></tr>
+  <tr><td class="fk">pt-trasstd</td><td class="fk">e-veh (vehiculo)</td><td>true</td><td>true</td><td>Vehículo</td></tr>
+  <tr><td class="fk">pt-trasstd</td><td class="fk">e-prop (propietario)</td><td>true</td><td>true</td><td>Vendedor</td></tr>
+  <tr><td class="fk">pt-trasstd</td><td class="fk">e-comp (comprador)</td><td>true</td><td>true</td><td>Comprador</td></tr>
+  <tr><td class="fk">pt-color</td><td class="fk">e-veh</td><td>true</td><td>true</td><td>Vehículo</td></tr>
+  <tr><td class="fk">pt-color</td><td class="fk">e-prop</td><td>true</td><td>true</td><td>Propietario</td></tr></table>
+
+  <h3>form_sections → form_fields</h3><div class="fn">Formulario dinámico del Traspaso Estándar.</div>
+  <table><tr><th>tabla</th><th>id</th><th class="fk">type / section / edge</th><th>datos</th></tr>
+  <tr><td>form_sections</td><td class="pk">fs-veh</td><td class="fk">pt-trasstd / e-veh</td><td>title="Datos del vehículo" · ui_mode=interactive</td></tr>
+  <tr><td>form_fields</td><td class="pk">ff-placa</td><td class="fk">fs-veh</td><td>field_key="placa" · data_type=text · is_required=true · is_trigger=true (dispara RUNT)</td></tr>
+  <tr><td>form_fields</td><td class="pk">ff-avaluo</td><td class="fk">fs-veh</td><td>field_key="avaluo" · data_type=number · is_required=false</td></tr>
+  <tr><td>form_sections</td><td class="pk">fs-comp</td><td class="fk">pt-trasstd / e-comp</td><td>title="Datos del comprador" · ui_mode=interactive</td></tr>
+  <tr><td>form_fields</td><td class="pk">ff-comp-doc</td><td class="fk">fs-comp</td><td>field_key="document_type" · data_type=select · options=[CC,NIT]</td></tr></table>
+
+  <h3>query_connectors + procedure_type_query_configs</h3><div class="fn">Conectores externos y qué consulta corre por arista (enrutamiento CC→Natural, NIT→Jurídica).</div>
+  <table><tr><th class="fk">procedure_type_id</th><th class="fk">edge_id</th><th class="fk">query_connector</th><th>person_kind_filter</th><th>is_mandatory</th></tr>
+  <tr><td class="fk">pt-trasstd</td><td class="fk">e-veh</td><td class="fk">qc-runt (RUNT)</td><td>any</td><td>true</td></tr>
+  <tr><td class="fk">pt-trasstd</td><td class="fk">e-veh</td><td class="fk">qc-fase (FASECOLDA)</td><td>any</td><td>false</td></tr>
+  <tr><td class="fk">pt-trasstd</td><td class="fk">e-prop</td><td class="fk">qc-simit (SIMIT)</td><td>natural</td><td>true</td></tr>
+  <tr><td class="fk">pt-trasstd</td><td class="fk">e-comp</td><td class="fk">qc-rues (RUES)</td><td>juridica</td><td>true</td></tr></table>
+
+  <h3>required_documents + document_templates / _versions</h3><div class="fn">Documentos por trámite; FUR es de generación automática desde plantilla versionada.</div>
+  <table><tr><th>tabla</th><th>id</th><th class="fk">refs</th><th>datos</th></tr>
+  <tr><td>required_documents</td><td class="pk">rd-fur</td><td class="fk">pt-trasstd</td><td>kind=auto_generated · template=<span class="fk">tpl-fur</span> · is_required=true</td></tr>
+  <tr><td>required_documents</td><td class="pk">rd-compra</td><td class="fk">pt-trasstd / e-comp</td><td>kind=upload · document_type=Compraventa · is_required=true · formats=[pdf]</td></tr>
+  <tr><td>document_templates</td><td class="pk">tpl-fur</td><td>—</td><td>code="FUR" · scope=global · current_version=1</td></tr>
+  <tr><td>document_template_versions</td><td class="pk">tplv-fur1</td><td class="fk">tpl-fur</td><td>version=1 · is_current=true · marker_map=<code>{"placa":"vehicle.license_plate","vendedor":"actor.propietario.full_name"}</code></td></tr></table>
+
+  <h3>procedure_type_activations</h3><div class="fn">Activación/override por tenant (y opcional por OT) sin duplicar el maestro.</div>
+  <table><tr><th>id</th><th class="fk">tenant_id</th><th class="fk">procedure_type_id</th><th class="fk">traffic_agency_id</th><th>is_active</th><th>overrides</th></tr>
+  <tr><td class="pk">act-cafe</td><td class="fk">t-cafe</td><td class="fk">pt-trasstd</td><td class="fk">ot-bga</td><td>true</td><td><code>{}</code></td></tr>
+  <tr><td class="pk">act-auto</td><td class="fk">t-auto</td><td class="fk">pt-color</td><td class="fk">ot-ctg</td><td>true</td><td><code>{"firma_omitible":true}</code></td></tr></table>
+
+  <h3>rules + endpoint_catalog</h3><div class="fn">Motor de reglas no-code (árbol JSONB) y endpoints invocables.</div>
+  <table><tr><th>tabla</th><th>id</th><th class="fk">tenant / type</th><th>datos</th></tr>
+  <tr><td>rules</td><td class="pk">rl-juridica</td><td class="fk">t-cafe / pt-trasstd</td><td>SI comprador.document_type = NIT → inyectar sección "Representante Legal" + call_endpoint <span class="fk">ep-rues</span></td></tr>
+  <tr><td>rules</td><td class="pk">rl-tesla</td><td class="fk">t-auto / pt-color</td><td>SI vehicle.fuel = ELECTRICO OR make = TESLA → popup "Descuentos verdes". is_active=true</td></tr>
+  <tr><td>endpoint_catalog</td><td class="pk">ep-rues</td><td class="fk">t-cafe</td><td>code="VALIDA_RUES" · method=POST · auth_type=api_key · auth_config=<code>{"secret_ref":"vault://rues-key"}</code></td></tr></table>
+
+  <!-- ===================== IDENTITY_VERIFICATION ===================== -->
+  <h2>Schema · identity_verification</h2>
+  <h3>verification_sessions / verification_evidences</h3><div class="fn">Validación de identidad (liveness); corre una vez y se reutiliza. Evidencia = PII alta.</div>
+  <table><tr><th>tabla</th><th>id</th><th class="fk">tenant / session</th><th>datos</th></tr>
+  <tr><td>verification_sessions</td><td class="pk">vs-vend</td><td class="fk">t-cafe</td><td>document_type=<span class="fk">dt-cc</span> · document_number=<span class="pii">1098765432</span> · provider=verifik · status=passed · score=0.97</td></tr>
+  <tr><td>verification_evidences</td><td class="pk">ve-1</td><td class="fk">vs-vend</td><td>evidence_type=liveness · file=<span class="fk">f-live</span></td></tr></table>
+
+  <!-- ===================== PROCEDURES (RUNTIME) ===================== -->
+  <h2>Schema · procedures (runtime — trámites radicados)</h2>
+
+  <h3>procedures.procedure_instances</h3><div class="fn">2 trámites radicados. config_snapshot congela la config resuelta al radicar.</div>
+  <table><tr><th>id</th><th class="fk">tenant</th><th class="fk">type</th><th class="fk">OT</th><th>reference_number</th><th>state</th><th class="fk">assigned_to</th></tr>
+  <tr><td class="pk">pi-2001</td><td class="fk">t-cafe</td><td class="fk">pt-trasstd</td><td class="fk">ot-bga</td><td>BGA-2026-002001</td><td>q_validacion</td><td class="fk">u-ges-cafe</td></tr>
+  <tr><td class="pk">pi-3001</td><td class="fk">t-auto</td><td class="fk">pt-color</td><td class="fk">ot-ctg</td><td>CTG-2026-003001</td><td>enviado</td><td class="fk">u-ope-auto</td></tr></table>
+  <div class="leg"><code>pi-2001.config_snapshot</code> (resumen): <code>{"aristas":["vehiculo","propietario","comprador"],"documentos":["FUR","Compraventa"],"reglas":["rl-juridica"],"plantillas":{"FUR":"tplv-fur1"}}</code></div>
+
+  <h3>procedures.procedure_actors → procedure_actor_representatives</h3><div class="fn">Actores por arista. Comprador jurídico ⇒ representante legal.</div>
+  <table><tr><th>id</th><th class="fk">instance</th><th>edge_role</th><th>person_kind</th><th>document</th><th>full_name</th></tr>
+  <tr><td class="pk">a-vend</td><td class="fk">pi-2001</td><td>propietario</td><td>natural</td><td><span class="fk">CC</span> <span class="pii">1098765432</span></td><td class="pii">Juan Pérez</td></tr>
+  <tr><td class="pk">a-comp</td><td class="fk">pi-2001</td><td>comprador</td><td>juridica</td><td><span class="fk">NIT</span> 901333444-5</td><td>Inversiones XYZ S.A.S.</td></tr>
+  <tr><td class="pk">a-prop3</td><td class="fk">pi-3001</td><td>propietario</td><td>natural</td><td><span class="fk">CC</span> <span class="pii">43250011</span></td><td class="pii">Sandra Ruiz</td></tr></table>
+  <table><tr><th>tabla</th><th>id</th><th class="fk">procedure_actor_id</th><th>datos (representante legal)</th></tr>
+  <tr><td>procedure_actor_representatives</td><td class="pk">rep-1</td><td class="fk">a-comp</td><td>document=<span class="fk">CC</span> <span class="pii">52001122</span> · full_name=<span class="pii">María Gómez</span></td></tr></table>
+
+  <h3>procedures.procedure_vehicles</h3><div class="fn">Arista vehículo: placa si matriculado, VIN si matrícula inicial.</div>
+  <table><tr><th>id</th><th class="fk">instance</th><th>subkind</th><th>license_plate</th><th>vin</th><th class="fk">make / line / fuel / color</th></tr>
+  <tr><td class="pk">pv-2001</td><td class="fk">pi-2001</td><td>automovil</td><td>ABC123</td><td>—</td><td class="fk">mk-chevrolet / ln-onix / fu-gas / co-blanco</td></tr>
+  <tr><td class="pk">pv-3001</td><td class="fk">pi-3001</td><td>automovil</td><td>XYZ987</td><td>—</td><td class="fk">mk-tesla / ln-model3 / fu-elec / co-rojo</td></tr></table>
+
+  <h3>procedures.procedure_field_values</h3><div class="fn">Valores capturados del formulario.</div>
+  <table><tr><th>id</th><th class="fk">instance</th><th>edge_role</th><th>field_key</th><th>value</th></tr>
+  <tr><td class="pk">fv-1</td><td class="fk">pi-2001</td><td>vehiculo</td><td>placa</td><td>"ABC123"</td></tr>
+  <tr><td class="pk">fv-2</td><td class="fk">pi-2001</td><td>vehiculo</td><td>avaluo</td><td>45000000</td></tr>
+  <tr><td class="pk">fv-3</td><td class="fk">pi-3001</td><td>vehiculo</td><td>color_nuevo</td><td>"ROJO"</td></tr></table>
+
+  <h3>procedures.procedure_query_results</h3><div class="fn">Snapshot por fuente (fallo aislado). Re-ejecutable solo en Borrador.</div>
+  <table><tr><th>id</th><th class="fk">instance</th><th>connector</th><th>edge_role</th><th>status</th><th>result (resumen)</th></tr>
+  <tr><td class="pk">qr-1</td><td class="fk">pi-2001</td><td>RUNT</td><td>vehiculo</td><td>ok</td><td><code>{"clase":"AUTOMOVIL","modelo":2020,"gravamen":false}</code></td></tr>
+  <tr><td class="pk">qr-2</td><td class="fk">pi-2001</td><td>SIMIT</td><td>propietario</td><td>ok</td><td><code>{"multas":0}</code></td></tr>
+  <tr><td class="pk">qr-3</td><td class="fk">pi-2001</td><td>RUES</td><td>comprador</td><td>ok</td><td><code>{"existe":true,"rep_legal":"María Gómez"}</code></td></tr>
+  <tr><td class="pk">qr-4</td><td class="fk">pi-2001</td><td>FASECOLDA</td><td>vehiculo</td><td>partial</td><td><code>{"avaluo_fasecolda":46800000}</code></td></tr></table>
+
+  <h3>procedures.procedure_documents</h3><div class="fn">Adjuntos (upload) y generados (auto_generated).</div>
+  <table><tr><th>id</th><th class="fk">instance</th><th>kind</th><th>document</th><th class="fk">file / template_version</th><th>status</th></tr>
+  <tr><td class="pk">pd-1</td><td class="fk">pi-2001</td><td>auto_generated</td><td>FUR</td><td class="fk">f-fur / tplv-fur1</td><td>generated</td></tr>
+  <tr><td class="pk">pd-2</td><td class="fk">pi-2001</td><td>upload</td><td>Compraventa</td><td class="fk">f-compra</td><td>uploaded</td></tr></table>
+
+  <h3>procedures.procedure_state_history</h3><div class="fn">Historial de transiciones (append-only).</div>
+  <table><tr><th>id</th><th class="fk">instance</th><th>from_state</th><th>to_state</th><th class="fk">changed_by</th><th>changed_at</th></tr>
+  <tr><td class="pk">sh-1</td><td class="fk">pi-2001</td><td>—</td><td>borrador</td><td class="fk">u-rad-cafe</td><td>2026-06-03 08:10Z</td></tr>
+  <tr><td class="pk">sh-2</td><td class="fk">pi-2001</td><td>borrador</td><td>asignado</td><td class="fk">u-adm-cafe</td><td>2026-06-03 08:40Z</td></tr>
+  <tr><td class="pk">sh-3</td><td class="fk">pi-2001</td><td>asignado</td><td>q_validacion</td><td class="fk">u-ges-cafe</td><td>2026-06-03 09:05Z</td></tr></table>
+
+  <h3>procedures.procedure_identity_validations</h3><div class="fn">Vínculo trámite ↔ validación de identidad reutilizada.</div>
+  <table><tr><th>id</th><th class="fk">instance</th><th class="fk">verification_session</th><th class="fk">actor</th><th>verdict</th></tr>
+  <tr><td class="pk">piv-1</td><td class="fk">pi-2001</td><td class="fk">vs-vend</td><td class="fk">a-vend</td><td>aprobado</td></tr></table>
+
+  <!-- ===================== INTEGRATIONS ===================== -->
+  <h2>Schema · integrations</h2>
+  <h3>external_query_calls · runt_sync_log · endpoint_call_log · webhook_events</h3>
+  <div class="fn">Bitácoras de ejecución (la fuente "viva"; el resultado congelado vive en procedures.procedure_query_results).</div>
+  <table><tr><th>tabla</th><th>id</th><th class="fk">tenant / instance</th><th>datos</th></tr>
+  <tr><td>external_query_calls</td><td class="pk">eqc-1</td><td class="fk">t-cafe / pi-2001</td><td>connector=RUNT · http_status=200 · latency_ms=420 · succeeded=true</td></tr>
+  <tr><td>runt_sync_log</td><td class="pk">rsl-1</td><td class="fk">t-cafe</td><td>provider=runt · outcome=timeout → failover_from=runt a verifik (contingencia)</td></tr>
+  <tr><td>endpoint_call_log</td><td class="pk">ecl-1</td><td class="fk">t-cafe / pi-2001</td><td>endpoint_code=VALIDA_RUES · http_status=200 · succeeded=true</td></tr>
+  <tr><td>webhook_events</td><td class="pk">wh-1</td><td class="fk">t-auto</td><td>traffic_agency=<span class="fk">ot-ctg</span> · direction=outbound · idempotency_key="ctg-3001-001" · status=processed</td></tr></table>
+
+  <!-- ===================== DASHBOARD ===================== -->
+  <h2>Schema · dashboard (read model derivado)</h2>
+  <h3>dashboard.v_procedure_kpis (vista)</h3><div class="fn">Se calcula a partir de procedure_instances. Cada Gestor ve su tenant; Super Admin ve cross-tenant.</div>
+  <table><tr><th class="fk">tenant_id</th><th class="fk">traffic_agency_id</th><th>state</th><th>day</th><th>total</th></tr>
+  <tr><td class="fk">t-cafe</td><td class="fk">ot-bga</td><td>q_validacion</td><td>2026-06-03</td><td>1</td></tr>
+  <tr><td class="fk">t-auto</td><td class="fk">ot-ctg</td><td>enviado</td><td>2026-06-03</td><td>1</td></tr></table>
+
+  <!-- ===================== AUDIT ===================== -->
+  <h2>Schema · audit (transversal)</h2>
+  <h3>audit.audit_log</h3><div class="fn">Cada INSERT/UPDATE/DELETE de negocio queda registrado por trigger.</div>
+  <table><tr><th>id</th><th class="fk">tenant_id</th><th>table_name</th><th class="fk">record_id</th><th>operation</th><th class="fk">changed_by</th></tr>
+  <tr><td class="pk">al-1</td><td class="fk">t-cafe</td><td>procedure_instances</td><td class="fk">pi-2001</td><td>I</td><td class="fk">u-rad-cafe</td></tr>
+  <tr><td class="pk">al-2</td><td class="fk">t-cafe</td><td>procedure_instances</td><td class="fk">pi-2001</td><td>U (estado→q_validacion)</td><td class="fk">u-ges-cafe</td></tr></table>
+
+  <div class="leg" style="margin-top:24px">FLIT 2.0 · Ejemplo de datos para comprensión del modelo. Los valores son ilustrativos; los IDs reales son UUID v7. Ver el diccionario de datos (<code>Diccionario-de-Datos-Tramites-FLIT2.docx</code>) y el ER (<code>er-modelo.png</code>).</div>
+</div>
+</body>
+</html>

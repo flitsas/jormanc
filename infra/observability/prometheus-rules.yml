@@ -1,0 +1,166 @@
+# MVP Fase 15 — Reglas de alerta Prometheus.
+# Para activarlas: incluir este archivo en prometheus.yml via
+#   rule_files:
+#     - /etc/prometheus/prometheus-rules.yml
+#
+# El alertmanager (no incluido en el MVP) se agrega post-MVP.
+# Por ahora las alertas se ven en Grafana > Alerting > Rules.
+
+groups:
+  - name: flit_mvp_availability
+    interval: 30s
+    rules:
+      - alert: ServiceDown
+        expr: up{job=~"flit-gateway|core-api|python-ml|minio"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          team: platform
+        annotations:
+          summary: 'Servicio {{ $labels.job }} caido (>2 min)'
+          description: 'El servicio {{ $labels.job }} no responde a healthcheck Prometheus desde hace mas de 2 minutos. Revisar logs y reiniciar si aplica.'
+
+      - alert: HighErrorRate
+        expr: |
+          (
+            sum by (service) (
+              rate(http_server_request_duration_seconds_count{
+                http_response_status_code=~"5.."
+              }[5m])
+            )
+            /
+            sum by (service) (
+              rate(http_server_request_duration_seconds_count[5m])
+            )
+          ) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+        annotations:
+          summary: 'Error rate {{ $labels.service }} > 5% (5min)'
+          description: 'El servicio {{ $labels.service }} responde 5xx en mas del 5% de las requests durante los ultimos 5 minutos. Investigar.'
+
+      - alert: HighLatencyP99
+        expr: |
+          histogram_quantile(0.99,
+            sum(rate(http_server_request_duration_seconds_bucket[5m])) by (service, le)
+          ) > 0.5
+        for: 10m
+        labels:
+          severity: warning
+          team: platform
+        annotations:
+          summary: 'p99 {{ $labels.service }} > 500ms (10min)'
+          description: 'Latencia p99 del servicio {{ $labels.service }} excede el SLA MVP (500ms). Revisar trazas en Tempo.'
+
+  - name: flit_mvp_security
+    interval: 30s
+    rules:
+      - alert: AuthLoginFailureSpike
+        expr: |
+          sum(rate(http_server_request_duration_seconds_count{
+            http_route="/api/v1/auth/login",
+            http_response_status_code="401"
+          }[5m])) > 10
+        for: 5m
+        labels:
+          severity: warning
+          team: security
+        annotations:
+          summary: 'Login failures > 10/s sostenido 5min'
+          description: 'Posible ataque de fuerza bruta. Revisar IPs en logs y considerar bloqueo temporal en Flit.Gateway rate limiter (post ADR-0017).'
+
+      - alert: AccountLockoutsHigh
+        expr: |
+          sum(increase(http_server_request_duration_seconds_count{
+            http_route="/api/v1/auth/login",
+            http_response_status_code="423"
+          }[1h])) > 50
+        for: 5m
+        labels:
+          severity: warning
+          team: security
+        annotations:
+          summary: 'Cuentas bloqueadas > 50 en 1 hora'
+          description: 'Volumen de lockouts inusual. Posible credential stuffing.'
+
+      - alert: RefreshTokenInvalidSpike
+        expr: |
+          sum(rate(http_server_request_duration_seconds_count{
+            http_route="/api/v1/auth/refresh",
+            http_response_status_code="401"
+          }[10m])) > 5
+        for: 10m
+        labels:
+          severity: warning
+          team: security
+        annotations:
+          summary: 'Refresh tokens invalidos > 5/s (10min)'
+          description: 'Posible reutilizacion de refresh ya rotado o tokens robados intentando uso.'
+
+  - name: flit_mvp_files
+    interval: 30s
+    rules:
+      - alert: FileUploadFailureSpike
+        expr: |
+          sum(rate(http_server_request_duration_seconds_count{
+            service="core-api",
+            http_route=~"/api/files/.+/confirm",
+            http_response_status_code="400"
+          }[10m])) > 1
+        for: 10m
+        labels:
+          severity: warning
+          team: platform
+        annotations:
+          summary: 'FILE_UPLOAD_NOT_FOUND > 1/s (10min)'
+          description: 'Muchos usuarios solicitan upload-url pero no completan PUT a MinIO (presigned expira). Verificar CORS, MinIO disponible, frontend.'
+
+      - alert: MinIOLatencyHigh
+        expr: |
+          histogram_quantile(0.99,
+            sum(rate(http_server_request_duration_seconds_bucket{
+              service="core-api",
+              http_route="/api/files/upload-url"
+            }[5m])) by (le)
+          ) > 1.0
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+        annotations:
+          summary: 'core-api /upload-url p99 > 1s'
+          description: 'Generar presigned URL no deberia tomar >1s (operacion local con AWSSDK.S3 contra MinIO en Docker network). Revisar MinIO healthcheck y red Docker.'
+
+  - name: flit_mvp_tramites
+    interval: 1m
+    rules:
+      - alert: TramitesRadicacionSlow
+        expr: |
+          histogram_quantile(0.99,
+            sum(rate(http_server_request_duration_seconds_bucket{
+              http_route=~"/api/v1/tramites/.+/radicar"
+            }[5m])) by (le)
+          ) > 1.0
+        for: 10m
+        labels:
+          severity: warning
+          team: platform
+        annotations:
+          summary: 'Radicar tramite p99 > 1s'
+          description: 'Operacion de radicacion lenta. Revisar locks/conflictos en InMemoryTramitesRepository (post-cutover: EF Core transactions).'
+
+      - alert: VerifikDown
+        expr: |
+          sum(rate(http_server_request_duration_seconds_count{
+            http_route="/api/v1/vehiculos/{placa}",
+            http_response_status_code="502"
+          }[5m])) > 0.5
+        for: 5m
+        labels:
+          severity: critical
+          team: platform
+        annotations:
+          summary: 'Verifik/RUNT devuelve 502 sostenido'
+          description: 'core-api no puede consultar Verifik. Verificar token, conectividad, rate limit del proveedor.'

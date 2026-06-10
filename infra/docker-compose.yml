@@ -1,0 +1,325 @@
+# Local development stack (post ADR-0014/15/16/17, 2026-05-27).
+#
+# Servicios:
+#   - Infra: postgres + redis + rabbitmq + minio + minio-init + mailhog
+#   - Observabilidad: otel-collector + prometheus + loki + tempo + grafana
+#   - Proxy: caddy (TLS automático, sirve api.flit.co, files.flit.co, admin.flit.co)
+#   - Apps: core-api-gateway (YARP, .NET), core-api (Flit.Api, .NET), python-ml, web (Next.js)
+#
+# ELIMINADO 2026-05-27 (ADR-0014):
+#   - go-gateway → reemplazado por core-api-gateway (Flit.Gateway YARP)
+#   - bff (node-bff) → reemplazado por módulos en core-api
+#
+# Secretos: generar localmente con scripts/gen-secrets.sh. NO commitear .env.
+#
+# Puertos HOST (DEV, esquema 4xxx): ver docs/designs/port-allocation-flit.md
+#   4001 Front | 4002 Gateway | 4003 Flit.Api interno | 4012 python-ml
+#   5432 Postgres | 4006 Redis | 4007 RabbitMQ | 4008 RabbitMQ UI
+#   4009 MinIO API | 4010 MinIO Console | 4011 MailHog SMTP
+
+name: flit-platform
+
+services:
+  # ============================================================================
+  # Infraestructura base
+  # ============================================================================
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: flit
+      POSTGRES_PASSWORD: flit_local
+      POSTGRES_DB: flit_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres-init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flit -d flit_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks: [flit-net]
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    ports:
+      - "4006:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks: [flit-net]
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: flit
+      RABBITMQ_DEFAULT_PASS: flit_local
+    ports:
+      - "4007:5672"
+      - "4008:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks: [flit-net]
+
+  # ============================================================================
+  # MinIO — S3-compatible object storage (ADR-0016 Aceptado 2026-05-27)
+  # Reemplaza AWS S3 + DynamoDB del ADR-0008 (superseded parcial).
+  # ============================================================================
+  minio:
+    image: minio/minio:RELEASE.2026-01-15T00-00-00Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-flit-root}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-flit_local_password_32chars_min!}
+      MINIO_SERVER_URL: ${MINIO_SERVER_URL:-http://localhost:4009}
+      MINIO_BROWSER_REDIRECT_URL: ${MINIO_BROWSER_REDIRECT_URL:-http://localhost:4010}
+      MINIO_PROMETHEUS_AUTH_TYPE: public
+    ports:
+      - "4009:9000"
+      - "4010:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks: [flit-net]
+
+  # Init job: crea buckets, lifecycle, service account flit-core (idempotente)
+  minio-init:
+    image: minio/mc:RELEASE.2026-01-15T00-00-00Z
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-flit-root}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-flit_local_password_32chars_min!}
+      FLIT_CORE_ACCESS_KEY: ${FLIT_CORE_ACCESS_KEY:-flit-core-app}
+      FLIT_CORE_SECRET_KEY: ${FLIT_CORE_SECRET_KEY:-flit_core_secret_32chars_min!!}
+    entrypoint: /bin/sh
+    command: -c "/scripts/init-minio.sh"
+    volumes:
+      - ./minio/init-minio.sh:/scripts/init-minio.sh:ro
+    restart: "no"
+    networks: [flit-net]
+
+  # ============================================================================
+  # Caddy — reverse proxy con auto-SSL (Let's Encrypt en prod)
+  # ============================================================================
+  caddy:
+    image: caddy:2.8-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - core-api-gateway
+      - minio
+    restart: unless-stopped
+    networks: [flit-net]
+
+  # ============================================================================
+  # MailHog — servidor SMTP de desarrollo
+  # ============================================================================
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: flit-mailhog
+    ports:
+      - "4011:1025"
+      - "4018:8025"
+    restart: unless-stopped
+    networks: [flit-net]
+
+  # ============================================================================
+  # Observabilidad (ADR-0002 §9)
+  # ============================================================================
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.118.0
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./observability/otel-collector.yaml:/etc/otel-collector-config.yaml:ro
+    ports:
+      - "4013:4317"
+      - "4019:4318"
+    depends_on: [tempo, prometheus, loki]
+    restart: unless-stopped
+    networks: [flit-net]
+
+  prometheus:
+    image: prom/prometheus:v3.0.1
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-lifecycle'
+    ports:
+      - "4014:9090"
+    volumes:
+      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    restart: unless-stopped
+    networks: [flit-net]
+
+  loki:
+    image: grafana/loki:3.3.2
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "4016:3100"
+    volumes:
+      - ./observability/loki-config.yaml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+    restart: unless-stopped
+    networks: [flit-net]
+
+  tempo:
+    image: grafana/tempo:2.6.1
+    command: ["-config.file=/etc/tempo.yaml"]
+    ports:
+      - "4017:3200"
+    volumes:
+      - ./observability/tempo-config.yaml:/etc/tempo.yaml:ro
+      - tempo_data:/var/tempo
+    restart: unless-stopped
+    networks: [flit-net]
+
+  grafana:
+    image: grafana/grafana:11.4.0
+    ports:
+      - "4015:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+      GF_AUTH_ANONYMOUS_ENABLED: 'true'
+      GF_AUTH_ANONYMOUS_ORG_ROLE: 'Viewer'
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./observability/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    depends_on: [prometheus, loki, tempo]
+    restart: unless-stopped
+    networks: [flit-net]
+
+  # ============================================================================
+  # Apps (post ADR-0014: solo core-api + python-ml + frontend)
+  # ============================================================================
+
+  # API Gateway YARP (ADR-0017). Entrada única de tráfico al API.
+  core-api-gateway:
+    build:
+      context: ../services/core-api
+      dockerfile: Dockerfile
+      target: gateway
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ASPNETCORE_ENVIRONMENT: Development
+      OTEL_SERVICE_NAME: flit-gateway
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      JWT__PUBLICKEYPEM: ${JWT_PUBLIC_KEY_PEM:-}
+      RateLimit__PerIpPermitsPerMinute: 600
+      RateLimit__LoginEndpointPermitsPerMinute: 10
+    ports:
+      - "4002:8080"
+    depends_on:
+      core-api:
+        condition: service_started
+    restart: unless-stopped
+    networks: [flit-net]
+
+  # Core dominio (Flit.Api): no expone tráfico externo, solo accesible via gateway.
+  core-api:
+    build:
+      context: ../services/core-api
+      dockerfile: Dockerfile
+    environment:
+      ASPNETCORE_URLS: http://+:8081
+      ASPNETCORE_ENVIRONMENT: Development
+      OTEL_SERVICE_NAME: flit-api
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      ConnectionStrings__FlitDb: Host=postgres;Port=5432;Database=flit_dev;Username=flit;Password=flit_local
+      MinIO__Endpoint: http://minio:9000
+      MinIO__PublicEndpoint: ${MINIO_SERVER_URL:-http://localhost:4009}
+      MinIO__AccessKey: ${FLIT_CORE_ACCESS_KEY:-flit-core-app}
+      MinIO__SecretKey: ${FLIT_CORE_SECRET_KEY:-flit_core_secret_32chars_min!!}
+      RabbitMq__Uri: amqp://flit:flit_local@rabbitmq:5672
+      Redis__Connection: redis:6379
+    ports:
+      - "4003:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    restart: unless-stopped
+    networks: [flit-net]
+
+  python-ml:
+    build:
+      context: ../services/python-ml
+      dockerfile: Dockerfile
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      OTEL_SERVICE_NAME: python-ml
+      RABBITMQ_URL: amqp://flit:flit_local@rabbitmq:5672
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${FLIT_CORE_ACCESS_KEY:-flit-core-app}
+      MINIO_SECRET_KEY: ${FLIT_CORE_SECRET_KEY:-flit_core_secret_32chars_min!!}
+    ports:
+      - "4012:8000"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    restart: unless-stopped
+    networks: [flit-net]
+
+  web:
+    build:
+      context: ..
+      dockerfile: frontend/Dockerfile
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:4002
+    ports:
+      - "4001:3000"
+    depends_on: [core-api-gateway]
+    restart: unless-stopped
+    networks: [flit-net]
+
+volumes:
+  postgres_data:
+  redis_data:
+  rabbitmq_data:
+  minio_data:
+  caddy_data:
+  caddy_config:
+  prometheus_data:
+  loki_data:
+  tempo_data:
+  grafana_data:
+
+networks:
+  flit-net:
+    driver: bridge

@@ -1,0 +1,100 @@
+# Caddyfile — reverse proxy con auto-SSL (post ADR-0014/16/17, 2026-05-27).
+#
+# Hostnames:
+#   - api.flit.co     → core-api-gateway (YARP) — entrada única del API
+#   - files.flit.co   → minio:9000 — presigned URLs upload/download (ADR-0016)
+#   - admin.flit.co   → minio:9001 — console MinIO (con IP allowlist)
+#   - app.flit.co     → web (Next.js)
+#
+# CRÍTICO: MinIO necesita el host original para validar firmas presigned URL.
+# Por eso `header_up Host {host}` en files.flit.co.
+
+{
+    email admin@flit.co
+    # En staging: usar Let's Encrypt staging para no agotar rate limit:
+    # acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+}
+
+# ============================================================================
+# API público — YARP gateway → core-api (Flit.Api) + python-ml + SignalR
+# ============================================================================
+api.flit.co {
+    encode gzip zstd
+    reverse_proxy core-api-gateway:8080
+
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "geolocation=(), microphone=(), camera=()"
+        -Server
+    }
+}
+
+# ============================================================================
+# Files — MinIO S3 API (presigned URL upload/download directo browser ↔ MinIO)
+# ============================================================================
+files.flit.co {
+    encode gzip
+
+    # MinIO requiere el host original para validar firmas presigned.
+    reverse_proxy minio:9000 {
+        header_up Host {host}
+    }
+
+    # Permite uploads grandes (cliente sube directo, no pasa por API).
+    request_body {
+        max_size 100MB
+    }
+
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options "nosniff"
+        -Server
+    }
+}
+
+# ============================================================================
+# Admin Console MinIO — RESTRINGIDO por IP (oficina + bastion)
+# ============================================================================
+admin.flit.co {
+    # IP allowlist: descomentar y poner las IPs reales de oficina/bastion.
+    # @blocked not remote_ip 200.x.x.x/32 10.0.0.0/8
+    # respond @blocked 403
+
+    reverse_proxy minio:9001 {
+        header_up Host {host}
+    }
+
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        -Server
+    }
+}
+
+# ============================================================================
+# Frontend Next.js (PWA + Server Components)
+# ============================================================================
+app.flit.co {
+    encode gzip zstd
+    reverse_proxy web:3000
+
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        -Server
+    }
+}
+
+# ============================================================================
+# Endpoint salud Caddy (interno)
+# ============================================================================
+:2019 {
+    handle {
+        respond "caddy ok" 200
+    }
+}

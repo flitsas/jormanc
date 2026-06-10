@@ -1,0 +1,49 @@
+# FLIT — paths excluidos de Prettier
+# Frontend usa Biome (ADR-0002 Fase 2). Servicios .NET/Python tienen sus propios formatters.
+# Prettier solo aplica a: contracts/, .ai/, docs/, raíz.
+
+# === Frontend (Biome manda ahí) ===
+frontend/
+
+# === Servicios con formatters propios ===
+services/core-api/      # dotnet format
+services/python-ml/     # ruff format
+
+# === Build & artefactos ===
+**/node_modules/
+**/dist/
+**/build/
+**/.next/
+**/coverage/
+**/.turbo/
+**/.nuxt/
+**/bin/
+**/obj/
+**/.venv/
+**/__pycache__/
+
+# === Lockfiles ===
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+uv.lock
+go.sum
+
+# === Auto-generado por sync-agents.sh ===
+.ai/_generated/
+.ai/_legacy/
+AGENTS.md
+.junie/
+.agents/
+.claude/agents/
+.claude/commands/
+.claude/skills/
+.cursor/rules/
+.github/copilot-instructions.md
+.github/instructions/
+
+# === Secretos ===
+.env
+.env.*
+!.env.example
+infra/secrets/

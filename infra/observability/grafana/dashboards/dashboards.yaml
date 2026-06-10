@@ -1,0 +1,15 @@
+# Provisioning de dashboards (Grafana ≥ 8).
+# Grafana lee este archivo en /etc/grafana/provisioning/dashboards/dashboards.yaml
+# y carga automaticamente los .json del directorio `path`.
+apiVersion: 1
+
+providers:
+  - name: 'flit-mvp'
+    orgId: 1
+    folder: 'FLIT MVP'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards/json

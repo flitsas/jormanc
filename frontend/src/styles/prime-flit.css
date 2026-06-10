@@ -1,0 +1,916 @@
+/**
+ * PrimeReact × FLIT — visibilidad y consistencia sin cambiar la paleta.
+ * Tema base Prime: lara-light-blue / lara-dark-blue (cambio dinámico en prime-theme.ts).
+ * Colores claro: primary #3B82F6, heading #1E3A5F, muted #64748B, border #E2E8F0, canvas #F8FAFC
+ * Overrides oscuro: bloque html.dark al final del archivo (InputText, Calendar, DataTable, etc.)
+ */
+
+/* ── Detalle trámite (acordeón) ─────────────────────────────────────────── */
+.flit-tramite-detail-accordion.p-accordion .p-accordion-tab {
+  margin-bottom: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgb(30 58 95 / 0.05);
+}
+
+.flit-tramite-detail-accordion.p-accordion .p-accordion-header-link {
+  padding: 0.875rem 1rem;
+  background: #ffffff;
+  border: none;
+  font-weight: 600;
+}
+
+.flit-tramite-detail-accordion.p-accordion .p-accordion-header-link:hover {
+  background: #f8fafc;
+}
+
+.flit-tramite-detail-accordion.p-accordion .p-accordion-content {
+  padding: 1rem 1.25rem 1.25rem;
+  border: none;
+  background: #ffffff;
+}
+
+.flit-tramite-detail-hero {
+  box-shadow: 0 4px 14px rgb(30 58 95 / 0.06);
+}
+
+html.dark .flit-tramite-detail-hero {
+  background: linear-gradient(
+    to right,
+    rgb(59 130 246 / 0.12),
+    #1e293b 45%,
+    rgb(45 212 191 / 0.08)
+  ) !important;
+  border-color: #334155 !important;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.35);
+}
+
+html.dark .flit-tramite-detail-hero .text-flit-heading,
+html.dark .flit-tramite-detail-hero strong.text-flit-heading {
+  color: #f1f5f9 !important;
+}
+
+html.dark .flit-tramite-detail-hero .text-flit-muted {
+  color: #cbd5e1 !important;
+}
+
+html.dark .flit-tramite-detail-hero a.text-flit-muted:hover {
+  color: #93c5fd !important;
+}
+
+/* ── Inputs ─────────────────────────────────────────────────────────────── */
+.p-inputtext.flit-input-control,
+.p-inputtext,
+.p-dropdown,
+.p-inputnumber-input,
+.p-inputnumber .p-inputtext {
+  width: 100%;
+  border: 1px solid #cbd5e1 !important;
+  background-color: #ffffff !important;
+  color: #1e3a5f !important;
+  border-radius: 0.5rem !important;
+  font-size: 0.875rem !important;
+  min-height: 2.5rem;
+  padding: 0.5rem 0.75rem !important;
+  box-shadow: 0 1px 2px rgb(30 58 95 / 0.06);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.p-inputtext.flit-input-control:not(:placeholder-shown),
+.p-inputwrapper-filled .p-inputtext,
+.p-dropdown.p-inputwrapper-filled {
+  border-color: #94a3b8 !important;
+  background-color: #ffffff !important;
+}
+
+.p-inputtext:enabled:hover,
+.p-dropdown:not(.p-disabled):hover,
+.p-calendar:not(.p-disabled) .p-inputtext:enabled:hover {
+  border-color: #94a3b8 !important;
+}
+
+.p-inputtext:enabled:focus,
+.p-dropdown.p-focus,
+.p-calendar.p-focus .p-inputtext:enabled:focus {
+  outline: none !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgb(59 130 246 / 0.18) !important;
+}
+
+.p-inputtext:disabled,
+.p-dropdown.p-disabled,
+.p-calendar.p-disabled .p-inputtext {
+  background-color: #f8fafc !important;
+  color: #64748b !important;
+  opacity: 1;
+}
+
+.p-dropdown {
+  display: inline-flex;
+  align-items: center;
+}
+
+.p-dropdown .p-dropdown-label {
+  padding: 0.5rem 0.75rem;
+  color: #1e3a5f !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  min-height: unset !important;
+}
+
+.p-dropdown .p-dropdown-trigger {
+  color: #64748b;
+  width: 2.25rem;
+}
+
+/* Dropdown en barra de filtros: un solo borde exterior */
+.flit-dropdown-field.p-dropdown {
+  width: 100%;
+  min-height: 2.75rem;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 0.5rem !important;
+  background: #ffffff !important;
+  box-shadow: 0 1px 2px rgb(30 58 95 / 0.06);
+}
+
+.flit-dropdown-field.p-dropdown:not(.p-disabled):hover {
+  border-color: #94a3b8 !important;
+}
+
+.flit-dropdown-field.p-dropdown.p-focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgb(59 130 246 / 0.18) !important;
+}
+
+.flit-dropdown-field .p-dropdown-label {
+  padding: 0.625rem 2rem 0.625rem 0.75rem !important;
+  font-size: 0.875rem !important;
+  line-height: 1.25 !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+}
+
+.flit-dropdown-field .p-dropdown-label.p-placeholder {
+  color: #64748b !important;
+}
+
+/* Búsqueda FLIT: el borde va en el contenedor, no en el input */
+.flit-search-field .p-inputtext.flit-search-field__input {
+  width: 100% !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.p-dropdown-panel {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px -2px rgb(30 58 95 / 0.12);
+}
+
+.p-dropdown-panel .p-dropdown-item.p-highlight {
+  background: rgb(59 130 246 / 0.1);
+  color: #1e40af;
+}
+
+/* Calendario: un solo control (input + icono integrados) */
+.p-calendar.flit-date-field,
+.p-calendar.flit-date-field.p-inputwrapper {
+  display: inline-flex !important;
+  align-items: stretch !important;
+  width: 100% !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 0.5rem !important;
+  background: #ffffff !important;
+  box-shadow: 0 1px 2px rgb(30 58 95 / 0.06);
+  overflow: hidden;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.p-calendar.flit-date-field .p-inputtext {
+  flex: 1 1 auto !important;
+  width: 1% !important;
+  min-width: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  min-height: 2.5rem;
+}
+
+.p-calendar.flit-date-field .p-datepicker-trigger {
+  flex-shrink: 0 !important;
+  width: 2.75rem !important;
+  min-width: 2.75rem !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  border-left: 1px solid #e2e8f0 !important;
+  border-radius: 0 !important;
+  background: #f8fafc !important;
+  color: #3b82f6 !important;
+  box-shadow: none !important;
+}
+
+.p-calendar.flit-date-field:not(.p-disabled):hover {
+  border-color: #94a3b8 !important;
+}
+
+.p-calendar.flit-date-field.p-focus,
+.p-calendar.flit-date-field.p-inputwrapper-focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgb(59 130 246 / 0.18) !important;
+}
+
+.p-calendar.flit-date-field.p-inputwrapper-filled {
+  border-color: #94a3b8 !important;
+}
+
+.p-calendar.flit-date-field.p-disabled {
+  background: #f8fafc !important;
+  opacity: 1;
+}
+
+.p-calendar.flit-date-field.p-disabled .p-inputtext {
+  background: transparent !important;
+}
+
+/* IconField (si se usa en otro sitio) */
+.p-icon-field.p-icon-field-left .p-inputtext,
+.p-icon-field-left .p-inputtext {
+  padding-left: 2.5rem !important;
+}
+
+.p-icon-field .p-input-icon,
+.p-icon-field > .p-input-icon {
+  color: #64748b;
+  left: 0.875rem;
+  margin-top: 0;
+}
+
+/* ── Botones FLIT (base + variantes) ─────────────────────────────────────── */
+.p-button.flit-btn,
+.p-button:not(.p-button-link):not(.p-selectbutton .p-button) {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-direction: row !important;
+  gap: 0.5rem !important;
+  padding: 0.625rem 1.25rem !important;
+  min-height: 2.75rem !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  line-height: 1.25 !important;
+  border-radius: 0.5rem !important;
+  white-space: nowrap !important;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.p-button.flit-btn .p-button-label,
+.p-button .p-button-label {
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+  flex: 0 1 auto !important;
+}
+
+.p-button.flit-btn .p-button-icon,
+.p-button .p-button-icon {
+  margin: 0 !important;
+  font-size: 0.875rem !important;
+  line-height: 1 !important;
+}
+
+.p-button.flit-btn.p-button-icon-left .p-button-icon,
+.p-button.p-button-icon-left .p-button-icon {
+  order: 0;
+}
+
+.p-button.flit-btn.p-button-icon-right .p-button-icon,
+.p-button.p-button-icon-right .p-button-icon {
+  order: 1;
+}
+
+.p-button.flit-btn:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+/* Primario */
+.p-button.flit-btn-primary,
+.p-button.p-button-info.flit-btn,
+.p-button.flit-btn.flit-btn-primary {
+  background: #3b82f6 !important;
+  border: 1px solid #3b82f6 !important;
+  color: #ffffff !important;
+  box-shadow: 0 1px 2px rgb(59 130 246 / 0.4);
+}
+
+.p-button.flit-btn-primary:not(:disabled):hover,
+.p-button.flit-btn.flit-btn-primary:not(:disabled):hover {
+  background: #2563eb !important;
+  border-color: #2563eb !important;
+  box-shadow: 0 2px 6px rgb(59 130 246 / 0.35);
+}
+
+.p-button.flit-btn-primary .p-button-icon,
+.p-button.flit-btn.flit-btn-primary .p-button-icon {
+  color: #ffffff !important;
+}
+
+.p-button.flit-btn-primary:disabled,
+.p-button.flit-btn.flit-btn-primary:disabled {
+  background: #cbd5e1 !important;
+  border-color: #cbd5e1 !important;
+  color: #f8fafc !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+  cursor: not-allowed !important;
+}
+
+/* Outline */
+.p-button.flit-btn-outline,
+.p-button.p-button-outlined.flit-btn,
+.p-button.flit-btn.flit-btn-outline {
+  background: #ffffff !important;
+  border: 1px solid #3b82f6 !important;
+  color: #3b82f6 !important;
+  box-shadow: 0 1px 2px rgb(30 58 95 / 0.06);
+}
+
+.p-button.flit-btn-outline:not(:disabled):hover,
+.p-button.flit-btn.flit-btn-outline:not(:disabled):hover {
+  background: rgb(59 130 246 / 0.08) !important;
+}
+
+.p-button.flit-btn-outline .p-button-icon,
+.p-button.flit-btn.flit-btn-outline .p-button-icon {
+  color: #3b82f6 !important;
+}
+
+/* Consultar (secundario compacto) */
+.p-button.flit-btn-consult,
+.p-button.flit-btn.flit-btn-consult {
+  padding: 0.5rem 1rem !important;
+  min-height: 2.5rem !important;
+  font-size: 0.8125rem !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #1e3a5f !important;
+  box-shadow: 0 1px 2px rgb(30 58 95 / 0.06);
+}
+
+.p-button.flit-btn-consult:not(:disabled):hover,
+.p-button.flit-btn.flit-btn-consult:not(:disabled):hover {
+  border-color: #3b82f6 !important;
+  color: #3b82f6 !important;
+  background: rgb(59 130 246 / 0.06) !important;
+}
+
+.p-button.p-button-sm.flit-btn,
+.p-button.flit-btn.p-button-sm {
+  padding: 0.5rem 0.875rem !important;
+  min-height: 2.375rem !important;
+  font-size: 0.8125rem !important;
+}
+
+.p-button.p-button-link {
+  color: #3b82f6 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  min-height: auto !important;
+  padding: 0.25rem 0.5rem !important;
+}
+
+.p-button.flit-btn:disabled,
+.p-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Checkbox ───────────────────────────────────────────────────────────── */
+.p-checkbox .p-checkbox-box {
+  border: 1px solid #cbd5e1;
+  border-radius: 0.25rem;
+  width: 1.125rem;
+  height: 1.125rem;
+  background: #fff;
+}
+
+.p-checkbox.p-highlight .p-checkbox-box {
+  background: #3b82f6 !important;
+  border-color: #3b82f6 !important;
+}
+
+/* Paginator: dropdown de filas — un solo control, sin doble borde */
+.p-paginator .p-dropdown,
+.flit-paginator--compact .p-paginator-rpp-options .p-dropdown {
+  width: 4.5rem !important;
+  min-width: 4.5rem !important;
+  max-width: 5rem !important;
+  min-height: 2.25rem !important;
+  height: 2.25rem !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 0.5rem !important;
+  background: #ffffff !important;
+  box-shadow: 0 1px 2px rgb(30 58 95 / 0.06) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.p-paginator .p-dropdown .p-dropdown-label,
+.flit-paginator--compact .p-paginator-rpp-options .p-dropdown .p-dropdown-label {
+  padding: 0.25rem 1.75rem 0.25rem 0.625rem !important;
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  color: #1e3a5f !important;
+  line-height: 1.25 !important;
+}
+
+.p-paginator .p-dropdown .p-inputtext,
+.p-paginator .p-dropdown input {
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  min-height: unset !important;
+  width: 100% !important;
+  background: transparent !important;
+}
+
+.flit-paginator--compact.p-paginator {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.375rem;
+  padding: 0;
+  margin: 0;
+  background: transparent !important;
+  border: none !important;
+}
+
+.flit-paginator--compact .p-paginator-pages .p-paginator-page,
+.flit-paginator--compact .p-paginator-prev,
+.flit-paginator--compact .p-paginator-next {
+  min-width: 2rem;
+  height: 2rem;
+  border-radius: 0.375rem;
+  margin: 0 0.125rem;
+}
+
+.flit-paginator--compact .p-paginator-page.p-highlight {
+  background: #3b82f6 !important;
+  color: #fff !important;
+}
+
+/* ── DataTable ──────────────────────────────────────────────────────────── */
+.flit-datatable.p-datatable {
+  border: none;
+}
+
+.flit-list-panel .flit-datatable .p-datatable-wrapper {
+  border: none;
+}
+
+.flit-datatable .p-datatable-header {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.flit-datatable .p-datatable-thead > tr > th {
+  background: #ffffff;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.625rem 1rem;
+  border-color: #e2e8f0;
+  border-width: 0 0 1px 0;
+  white-space: nowrap;
+}
+
+.flit-datatable .p-datatable-tbody > tr {
+  transition: background 0.12s ease;
+}
+
+.flit-datatable .p-datatable-tbody > tr > td {
+  padding: 0.5rem 1rem;
+  border-color: #f1f5f9;
+  color: #334155;
+  font-size: 0.8125rem;
+  vertical-align: middle;
+}
+
+.flit-datatable .p-datatable-tbody > tr {
+  background: #ffffff;
+}
+
+.flit-datatable .p-datatable-tbody > tr:nth-child(even) {
+  background: #fafbfc;
+}
+
+.flit-datatable .p-datatable-tbody > tr:hover {
+  background: rgb(59 130 246 / 0.06) !important;
+}
+
+.flit-datatable .p-datatable-tbody > tr:last-child > td {
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.flit-datatable .p-datatable-scrollable .p-datatable-scrollable-body {
+  max-height: none !important;
+}
+
+/* ── Paginator ──────────────────────────────────────────────────────────── */
+.flit-paginator.p-paginator {
+  background: transparent;
+  border: none;
+  padding: 0.75rem 0.5rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.flit-paginator .p-paginator-page.p-highlight {
+  background: #3b82f6 !important;
+  border-color: #3b82f6 !important;
+  color: #fff !important;
+  border-radius: 0.375rem;
+}
+
+/* ── SelectButton (firmas) ──────────────────────────────────────────────── */
+.flit-selectbutton.p-selectbutton {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.flit-selectbutton .p-button {
+  flex: 1 1 auto;
+  min-width: 8rem;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #1e3a5f !important;
+  box-shadow: none;
+}
+
+.flit-selectbutton .p-button.p-highlight {
+  background: rgb(59 130 246 / 0.1) !important;
+  border-color: #3b82f6 !important;
+  color: #1e40af !important;
+}
+
+/* ── InputNumber ────────────────────────────────────────────────────────── */
+.p-inputnumber,
+.flit-inputnumber-field {
+  width: 100%;
+}
+
+.flit-inputnumber-field .p-inputnumber-input {
+  width: 100% !important;
+}
+
+.p-inputnumber-button {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  color: #64748b !important;
+}
+
+/* ── Toast ──────────────────────────────────────────────────────────────── */
+.p-toast .p-toast-message {
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px -2px rgb(30 58 95 / 0.15);
+}
+
+/* ── Dialog firma ───────────────────────────────────────────────────────── */
+.flit-signature-dialog .p-dialog-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.flit-signature-dialog .p-dialog-content {
+  padding: 1rem 1.25rem;
+}
+
+.flit-signature-dialog .p-dialog-footer {
+  padding: 0.75rem 1.25rem 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* ── Acordeón firma ───────────────────────────────────────────────────────── */
+.flit-signature-accordion.p-accordion .p-accordion-header-link {
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+
+.flit-signature-accordion.p-accordion .p-accordion-content {
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  border-top: none;
+  border-radius: 0 0 0.5rem 0.5rem;
+  background: #ffffff;
+}
+
+/* ── Acordeón reglas de negocio (SOAT / RTM / RNMC / prenda) ─────────────── */
+.flit-rules-accordion.p-accordion .p-accordion-tab {
+  margin-bottom: 0.35rem;
+}
+
+.flit-rules-accordion.p-accordion .p-accordion-header-link {
+  padding: 0.65rem 0.85rem;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  font-weight: 500;
+}
+
+.flit-rules-accordion.p-accordion .p-accordion-header-link:focus-visible {
+  box-shadow: 0 0 0 2px rgb(59 130 246 / 0.35);
+}
+
+.flit-rules-accordion.p-accordion .p-accordion-content {
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-top: none;
+  border-radius: 0 0 0.375rem 0.375rem;
+  background: #ffffff;
+}
+
+.flit-file-upload .p-button {
+  font-size: 0.8125rem;
+}
+
+/* ── Tema oscuro (Prime lara-dark-blue + overrides FLIT) ─────────────────── */
+html.dark .flit-tramite-detail-accordion.p-accordion .p-accordion-tab {
+  border-color: #334155;
+  background: #1e293b;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+}
+
+html.dark .flit-tramite-detail-accordion.p-accordion .p-accordion-header-link,
+html.dark .flit-tramite-detail-accordion.p-accordion .p-accordion-content {
+  background: #1e293b;
+  color: #f1f5f9;
+}
+
+html.dark .flit-tramite-detail-accordion.p-accordion .p-accordion-header-link:hover {
+  background: #334155;
+}
+
+html.dark .p-inputtext.flit-input-control,
+html.dark .p-inputtext,
+html.dark .p-dropdown,
+html.dark .p-inputnumber-input,
+html.dark .p-inputnumber .p-inputtext {
+  border-color: #475569 !important;
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+}
+
+html.dark .p-inputtext.flit-input-control:not(:placeholder-shown),
+html.dark .p-inputwrapper-filled .p-inputtext,
+html.dark .p-dropdown.p-inputwrapper-filled {
+  border-color: #64748b !important;
+  background-color: #1e293b !important;
+}
+
+html.dark .p-inputtext:enabled:hover,
+html.dark .p-dropdown:not(.p-disabled):hover,
+html.dark .p-calendar:not(.p-disabled) .p-inputtext:enabled:hover {
+  border-color: #94a3b8 !important;
+}
+
+html.dark .p-inputtext:disabled,
+html.dark .p-dropdown.p-disabled,
+html.dark .p-calendar.p-disabled .p-inputtext {
+  background-color: #0f172a !important;
+  color: #94a3b8 !important;
+}
+
+html.dark .p-dropdown .p-dropdown-label {
+  color: #f1f5f9 !important;
+}
+
+html.dark .p-dropdown .p-dropdown-trigger {
+  color: #94a3b8;
+}
+
+html.dark .flit-dropdown-field.p-dropdown {
+  border-color: #475569 !important;
+  background: #1e293b !important;
+}
+
+html.dark .flit-dropdown-field .p-dropdown-label.p-placeholder {
+  color: #94a3b8 !important;
+}
+
+html.dark .p-dropdown-panel {
+  border-color: #334155;
+  background: #1e293b;
+  box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.35);
+}
+
+html.dark .p-dropdown-panel .p-dropdown-item {
+  color: #e2e8f0;
+}
+
+html.dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+  background: rgb(59 130 246 / 0.2);
+  color: #93c5fd;
+}
+
+html.dark .p-calendar.flit-date-field,
+html.dark .p-calendar.flit-date-field.p-inputwrapper {
+  border-color: #475569 !important;
+  background: #1e293b !important;
+}
+
+html.dark .p-calendar.flit-date-field .p-datepicker-trigger {
+  border-left-color: #334155 !important;
+  background: #0f172a !important;
+  color: #60a5fa !important;
+}
+
+html.dark .p-calendar.flit-date-field.p-disabled {
+  background: #0f172a !important;
+}
+
+html.dark .p-icon-field .p-input-icon,
+html.dark .p-icon-field > .p-input-icon {
+  color: #94a3b8;
+}
+
+html.dark .p-button.flit-btn-outline,
+html.dark .p-button.p-button-outlined.flit-btn,
+html.dark .p-button.flit-btn.flit-btn-outline {
+  background: #1e293b !important;
+  border-color: #3b82f6 !important;
+  color: #93c5fd !important;
+}
+
+html.dark .p-button.flit-btn-outline:not(:disabled):hover,
+html.dark .p-button.flit-btn.flit-btn-outline:not(:disabled):hover {
+  background: rgb(59 130 246 / 0.15) !important;
+}
+
+html.dark .p-button.flit-btn-consult,
+html.dark .p-button.flit-btn.flit-btn-consult {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+html.dark .p-checkbox .p-checkbox-box {
+  border-color: #475569;
+  background: #1e293b;
+}
+
+html.dark .p-paginator .p-dropdown,
+html.dark .flit-paginator--compact .p-paginator-rpp-options .p-dropdown {
+  border-color: #475569 !important;
+  background: #1e293b !important;
+}
+
+html.dark .p-paginator .p-dropdown .p-dropdown-label,
+html.dark .flit-paginator--compact .p-paginator-rpp-options .p-dropdown .p-dropdown-label {
+  color: #f1f5f9 !important;
+}
+
+html.dark .flit-datatable .p-datatable-thead > tr > th {
+  background: #1e293b;
+  color: #94a3b8;
+  border-color: #334155;
+}
+
+html.dark .flit-datatable .p-datatable-tbody > tr > td {
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+html.dark .flit-datatable .p-datatable-tbody > tr {
+  background: #1e293b;
+}
+
+html.dark .flit-datatable .p-datatable-tbody > tr:nth-child(even) {
+  background: #0f172a;
+}
+
+html.dark .flit-datatable .p-datatable-tbody > tr:hover {
+  background: rgb(59 130 246 / 0.12) !important;
+}
+
+html.dark .flit-datatable .p-datatable-tbody > tr:last-child > td {
+  border-bottom-color: #334155;
+}
+
+html.dark .flit-paginator.p-paginator {
+  color: #94a3b8;
+}
+
+html.dark .flit-selectbutton .p-button {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+html.dark .flit-selectbutton .p-button.p-highlight {
+  background: rgb(59 130 246 / 0.2) !important;
+  border-color: #3b82f6 !important;
+  color: #93c5fd !important;
+}
+
+html.dark .p-inputnumber-button {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #94a3b8 !important;
+}
+
+html.dark .flit-signature-dialog .p-dialog-header,
+html.dark .flit-signature-dialog .p-dialog-footer {
+  border-color: #334155;
+}
+
+html.dark .flit-signature-accordion.p-accordion .p-accordion-header-link {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+html.dark .flit-signature-accordion.p-accordion .p-accordion-content,
+html.dark .flit-rules-accordion.p-accordion .p-accordion-content {
+  border-color: #334155;
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
+html.dark .flit-rules-accordion.p-accordion .p-accordion-header-link {
+  background: #334155;
+  border-color: #475569;
+  color: #f1f5f9;
+}
+
+/* ── Diálogos PrimeReact (modales compartidos) ───────────────────────────── */
+html.dark .p-dialog-mask {
+  background: rgb(0 0 0 / 0.72) !important;
+}
+
+html.dark .p-dialog {
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #f1f5f9;
+  box-shadow: 0 8px 24px -4px rgb(0 0 0 / 0.45);
+}
+
+html.dark .p-dialog .p-dialog-header {
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+  color: #f1f5f9;
+}
+
+html.dark .p-dialog .p-dialog-header .p-dialog-title {
+  color: #f1f5f9;
+}
+
+html.dark .p-dialog .p-dialog-header .p-dialog-header-icon {
+  color: #94a3b8;
+}
+
+html.dark .p-dialog .p-dialog-header .p-dialog-header-icon:hover {
+  color: #f1f5f9;
+  background: #334155;
+}
+
+html.dark .p-dialog .p-dialog-content {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
+html.dark .p-dialog .p-dialog-footer {
+  background: #1e293b;
+  border-top: 1px solid #334155;
+}
+
+html.dark .p-dialog .p-button.p-button-text {
+  color: #93c5fd;
+}
+
+html.dark .p-dialog .p-button.p-button-text:not(:disabled):hover {
+  background: rgb(59 130 246 / 0.15);
+  color: #bfdbfe;
+}

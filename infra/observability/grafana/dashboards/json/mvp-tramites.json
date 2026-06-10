@@ -1,0 +1,106 @@
+{
+  "annotations": { "list": [] },
+  "description": "MVP FLIT — KPIs del flujo Tramite (Borrador -> Radicado -> EnRevision -> Aprobado/Rechazado).",
+  "editable": true,
+  "graphTooltip": 1,
+  "id": null,
+  "panels": [
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "drawStyle": "bars", "lineWidth": 1, "fillOpacity": 60 },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "id": 1,
+      "title": "Tramites creados / hora",
+      "targets": [
+        {
+          "expr": "sum(increase(http_server_request_duration_seconds_count{http_method=\"POST\", http_route=\"/api/v1/tramites\", http_response_status_code=\"201\"}[1h]))",
+          "legendFormat": "Creados",
+          "refId": "A"
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "drawStyle": "bars", "lineWidth": 1, "fillOpacity": 60 },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "id": 2,
+      "title": "Tramites radicados / hora",
+      "targets": [
+        {
+          "expr": "sum(increase(http_server_request_duration_seconds_count{http_method=\"POST\", http_route=~\"/api/v1/tramites/.+/radicar\", http_response_status_code=\"200\"}[1h]))",
+          "legendFormat": "Radicados",
+          "refId": "A"
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 30 },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 8 },
+      "id": 3,
+      "title": "Cambios de estado (funcionario) / hora",
+      "targets": [
+        {
+          "expr": "sum by (http_response_status_code) (increase(http_server_request_duration_seconds_count{http_route=~\"/api/v1/tramites/.+/cambiar-estado\"}[1h]))",
+          "legendFormat": "{{http_response_status_code}}",
+          "refId": "A"
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10 },
+          "unit": "s"
+        }
+      },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 16 },
+      "id": 4,
+      "title": "Latencia consultar vehiculo (Verifik)",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, sum(rate(http_server_request_duration_seconds_bucket{http_route=\"/api/v1/vehiculos/{placa}\"}[5m])) by (le))",
+          "legendFormat": "p50",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(http_server_request_duration_seconds_bucket{http_route=\"/api/v1/vehiculos/{placa}\"}[5m])) by (le))",
+          "legendFormat": "p99",
+          "refId": "B"
+        }
+      ],
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 38,
+  "tags": ["flit", "mvp", "tramites"],
+  "templating": { "list": [] },
+  "time": { "from": "now-24h", "to": "now" },
+  "title": "FLIT MVP - Tramites flow",
+  "uid": "flit-mvp-tramites",
+  "version": 1
+}

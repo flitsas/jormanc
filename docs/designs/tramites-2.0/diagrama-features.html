@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Poppins','Segoe UI',Roboto,Helvetica,Arial,sans-serif; background:#ffffff; color:#162744; width:1720px; padding:28px 32px; }
+  h1 { font-size:26px; color:#162744; }
+  .sub { font-size:13px; color:#557EFF; margin-top:2px; font-weight:600; }
+  .legend { display:flex; gap:18px; margin:14px 0 20px; font-size:12px; flex-wrap:wrap; }
+  .legend span { display:inline-flex; align-items:center; gap:6px; }
+  .dot { width:12px; height:12px; border-radius:3px; display:inline-block; }
+  .layout { display:grid; grid-template-columns: 1fr 300px; gap:22px; }
+  .band { border:1px solid #DFE5ED; border-radius:12px; padding:14px 16px; margin-bottom:16px; background:#FBFCFE; }
+  .band-title { font-size:13px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#557EFF; margin-bottom:12px; }
+  .row { display:flex; gap:14px; align-items:stretch; }
+  .row > * { flex:1; }
+  .card { border-radius:10px; padding:12px 14px; color:#fff; box-shadow:0 2px 6px rgba(22,39,68,.10); }
+  .card h3 { font-size:14px; margin-bottom:4px; }
+  .card .desc { font-size:11.5px; opacity:.95; line-height:1.35; }
+  .card .hu { font-size:10.5px; margin-top:7px; background:rgba(255,255,255,.18); border-radius:5px; padding:3px 6px; display:inline-block; }
+  .card .svc { font-size:10.5px; margin-top:7px; line-height:1.3; }
+  .svc b { font-weight:700; }
+  .c-identity { background:#557EFF; }
+  .c-companies { background:#FF7A33; }
+  .c-companies2 { background:#FF4E00; }
+  .c-ot { background:#00B3AE; }
+  .c-ot2 { background:#00DBD5; color:#0a2e2c; }
+  .c-engine { background:#162744; }
+  .c-engine-alt { background:#27406b; }
+  .c-dash { background:#7A5Cff; }
+  .arrow { text-align:center; color:#557EFF; font-size:22px; font-weight:bold; margin:6px 0; }
+  .harrow { display:flex; align-items:center; justify-content:center; color:#FF4E00; font-size:24px; font-weight:bold; width:34px; flex:0 0 34px; }
+  .side { }
+  .svcbox { border:1px solid #DFE5ED; border-radius:12px; padding:14px; margin-bottom:16px; background:#FBFCFE; }
+  .svcbox h4 { font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:#162744; margin-bottom:10px; }
+  .pill { display:block; border-radius:8px; padding:7px 10px; font-size:11.5px; margin-bottom:7px; border:1px solid #DFE5ED; background:#fff; }
+  .pill b { color:#557EFF; }
+  .ext { border-left:4px solid #00DBD5; }
+  .inf { border-left:4px solid #FF4E00; }
+  .infra { display:flex; gap:14px; margin-top:2px; }
+  .infra .ibox { flex:1; border-radius:10px; padding:11px 13px; background:#162744; color:#fff; font-size:11.5px; }
+  .infra .ibox b { color:#00DBD5; }
+  .foot { font-size:11px; color:#6b7890; margin-top:14px; }
+  .acc { display:flex; gap:12px; }
+  .acc .mini { flex:1; background:#eef2fb; border:1px solid #DFE5ED; border-radius:10px; padding:10px 12px; font-size:12px; color:#162744; }
+  .acc .mini b { color:#557EFF; }
+</style>
+</head>
+<body>
+  <h1>FLIT 2.0 · Mapa funcional de Trámites de Tránsito</h1>
+  <div class="sub">9 Features · 54 Historias de Usuario · 293 SP — flujo, relaciones y servicios</div>
+  <div class="legend">
+    <span><i class="dot" style="background:#557EFF"></i> Identidad/Fundación</span>
+    <span><i class="dot" style="background:#FF4E00"></i> Compañías</span>
+    <span><i class="dot" style="background:#00B3AE"></i> Organismos de Tránsito</span>
+    <span><i class="dot" style="background:#162744"></i> Motor de Trámites</span>
+    <span><i class="dot" style="background:#7A5Cff"></i> Dashboard</span>
+    <span><i class="dot" style="background:#00DBD5"></i> Servicios externos</span>
+  </div>
+
+  <div class="layout">
+    <div class="main">
+      <!-- ACCESO -->
+      <div class="band">
+        <div class="band-title">Acceso</div>
+        <div class="acc">
+          <div class="mini"><b>Frontend</b> · React 19 + Vite + PrimeReact (Feature-Sliced)</div>
+          <div class="harrow">▶</div>
+          <div class="mini"><b>API Gateway</b> · YARP (valida slugs y tenant por petición)</div>
+        </div>
+      </div>
+      <div class="arrow">▼</div>
+
+      <!-- FUNDACIÓN -->
+      <div class="band">
+        <div class="band-title">Fundación · Identidad & Multi-tenant</div>
+        <div class="row">
+          <div class="card c-identity">
+            <h3>#9370 · Identidad, Auth y Gobernanza multi-tenant</h3>
+            <div class="desc">Login unificado, RBAC por slugs dinámicos, tenants (Compañía B2B), bloqueos, onboarding criptográfico 24h, perfil autoservicio. RLS en toda fila de negocio.</div>
+            <span class="hu">12 HUs · IDN-01..08, F0-01, F0-03, SEC-01, INF-01</span>
+            <div class="svc"><b>Servicios:</b> EF Core + RLS · Gateway YARP · mensajería (onboarding) · auditoría</div>
+          </div>
+        </div>
+      </div>
+      <div class="arrow">▼ &nbsp; el contexto de tenant habilita todos los módulos</div>
+
+      <!-- ADMIN / CONFIG -->
+      <div class="band">
+        <div class="band-title">Administración y Configuración (SuperAdmin / Tenant Admin)</div>
+        <div class="row">
+          <div class="card c-companies">
+            <h3>#9381 · Compañías B2B + Contingencia RUNT</h3>
+            <div class="desc">Consola SaaS, config modular hot-reload, bal de firmas, interceptor de propiedad, failover RUNT.</div>
+            <span class="hu">6 HUs · CMP-01..06</span>
+            <div class="svc"><b>Servicios:</b> RUNT + Verifik/Intempo (failover)</div>
+          </div>
+          <div class="card c-companies2">
+            <h3>#9383 · Escrituras</h3>
+            <div class="desc">Repositorio legal por compañía (visibilidad condicional), adjuntos PDF.</div>
+            <span class="hu">4 HUs · ESC-01..03, FIL-01</span>
+            <div class="svc"><b>Servicios:</b> MinIO (PDF)</div>
+          </div>
+          <div class="card c-ot">
+            <h3>#9378 · Organismos de Tránsito + QX</h3>
+            <div class="desc">Trámites unificados (Dashboard + colas QX), reglas OT, vistas base. Referencia cross-tenant.</div>
+            <span class="hu">6 HUs · OT-01..05, INT-02</span>
+            <div class="svc"><b>Servicios:</b> QX/Quipux (webhooks)</div>
+          </div>
+          <div class="card c-ot2">
+            <h3>#9379 · Orden del Consolidado</h3>
+            <div class="desc">Orden parametrizable del expediente por OT (drag&drop, &lt;500ms).</div>
+            <span class="hu">3 HUs · ORD-01..03</span>
+            <div class="svc"><b>Servicios:</b> persistencia + frontend D&D</div>
+          </div>
+        </div>
+      </div>
+      <div class="arrow">▼ &nbsp; la parametrización alimenta el motor</div>
+
+      <!-- MOTOR -->
+      <div class="band">
+        <div class="band-title">Motor de Trámites (núcleo dinámico)</div>
+        <div class="row">
+          <div class="card c-engine">
+            <h3>#9409 · Matriz / Config + Consultas</h3>
+            <div class="desc">Familias→tipos→4 aristas→matriz; formularios, documentos y consultas externas por configuración.</div>
+            <span class="hu">9 HUs · F0-02, MTR-01..06, INT-01, QA-01</span>
+            <div class="svc"><b>Servicios:</b> RUNT·SIMIT·RNMC·RESOLUCIONES·RUES·FASECOLDA</div>
+          </div>
+          <div class="harrow">▶</div>
+          <div class="card c-engine-alt">
+            <h3>#9408 · Runtime + Snapshot + Validación ID</h3>
+            <div class="desc">Wizard ≤4 pasos, ciclo de vida (Borrador editable), snapshot inmutable al radicar, validación de identidad a los actores.</div>
+            <span class="hu">4 HUs · TRA-01..04</span>
+            <div class="svc"><b>Servicios:</b> Verifik (liveness) · MinIO · RabbitMQ</div>
+          </div>
+          <div class="harrow">◀</div>
+          <div class="card c-engine">
+            <h3>#9410 · Reglas no-code + Documental</h3>
+            <div class="desc">Constructor If/Else (árbol JSONB validado), acciones (popup, sección, endpoint); plantillas y generación documental.</div>
+            <span class="hu">7 HUs · RGL-01..05, DOC-01..02</span>
+            <div class="svc"><b>Servicios:</b> Catálogo de endpoints · QuestPDF</div>
+          </div>
+        </div>
+      </div>
+      <div class="arrow">▼ &nbsp; las instancias radicadas alimentan el read model</div>
+
+      <!-- DASHBOARD -->
+      <div class="band">
+        <div class="band-title">Lectura / Analítica</div>
+        <div class="row">
+          <div class="card c-dash">
+            <h3>#9369 · Dashboard multitenant</h3>
+            <div class="desc">KPIs por estado en tiempo real, filtros (fechas/OT/cliente), visibilidad por rol (tenant vs cross-tenant SuperAdmin), exportación Excel y PDF ejecutivo.</div>
+            <span class="hu">3 HUs · DSH-01..03</span>
+            <div class="svc"><b>Servicios:</b> vistas/MV (security_invoker) · ClosedXML · QuestPDF</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="side">
+      <div class="svcbox">
+        <h4>Servicios externos (interoperabilidad)</h4>
+        <span class="pill ext"><b>RUNT</b> — datos de vehículo/persona, gravámenes</span>
+        <span class="pill ext"><b>SIMIT</b> — multas y sanciones</span>
+        <span class="pill ext"><b>RNMC</b> — medidas correctivas</span>
+        <span class="pill ext"><b>RESOLUCIONES</b> — normatividad</span>
+        <span class="pill ext"><b>RUES</b> — persona jurídica (NIT, rep. legal)</span>
+        <span class="pill ext"><b>FASECOLDA</b> — técnicos / avalúo / pólizas</span>
+        <span class="pill ext"><b>Verifik / Intempo</b> — validación identidad + contingencia RUNT</span>
+        <span class="pill ext"><b>QX / Quipux</b> — colas externas (webhooks)</span>
+      </div>
+      <div class="svcbox">
+        <h4>Resolución de configuración</h4>
+        <span class="pill"><b>Precedencia:</b> OT &gt; Tenant &gt; Global</span>
+        <span class="pill"><b>Snapshot</b> inmutable al radicar (ADR-0010)</span>
+        <span class="pill"><b>Reglas</b> árbol JSONB validado (ADR-0011)</span>
+        <span class="pill"><b>OT</b> sin tenant_id, scoping por agencia (ADR-0012)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFRA -->
+  <div class="band" style="margin-top:4px;">
+    <div class="band-title">Plataforma de datos e infraestructura (.NET 10 · modular monolith)</div>
+    <div class="infra">
+      <div class="ibox"><b>PostgreSQL 17+</b><br>11 schemas · RLS multi-tenant · UUID v7 · auditoría · snapshot</div>
+      <div class="ibox"><b>MinIO</b><br>archivos: escrituras, evidencias biométricas, plantillas</div>
+      <div class="ibox"><b>RabbitMQ</b><br>outbox / eventos de estado de trámite</div>
+      <div class="ibox"><b>QuestPDF / ClosedXML</b><br>generación documental y exportación</div>
+      <div class="ibox"><b>Gateway YARP</b><br>enrutamiento, autenticación y rate limiting</div>
+    </div>
+  </div>
+
+  <div class="foot">FLIT 2.0 — Trámites de Tránsito · Principio rector: parametrización total (ningún trámite/documento/actor/consulta/regla quemado en código). Ver docs/designs/tramites-2.0/.</div>
+</body>
+</html>

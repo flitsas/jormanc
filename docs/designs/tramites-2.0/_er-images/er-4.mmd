@@ -1,0 +1,20 @@
+erDiagram
+  procedure_instances ||..o{ v_procedure_kpis : "agrega"
+  procedure_instances ||..o{ v_user_productivity : "agrega"
+  procedure_instances ||..o{ v_ot_distribution : "agrega"
+  procedure_instances ||..o{ mv_procedure_kpis : "materializa"
+
+  v_procedure_kpis {
+    uuid tenant_id
+    uuid traffic_agency_id
+    text state
+    date day
+    bigint total
+  }
+  mv_procedure_kpis {
+    uuid tenant_id
+    uuid traffic_agency_id
+    text state
+    date day
+    bigint total
+  }
