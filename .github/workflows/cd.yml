@@ -15,8 +15,8 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  CORE_API_IMAGE: ghcr.io/flitsas/jormanc-pdn/core-api
-  FRONTEND_IMAGE: ghcr.io/flitsas/jormanc-pdn/frontend
+  CORE_API_IMAGE: ghcr.io/flitsas/jormanc-dev/core-api
+  FRONTEND_IMAGE: ghcr.io/flitsas/jormanc-dev/frontend
 
 jobs:
   build-core-api:

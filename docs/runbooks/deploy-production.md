@@ -55,7 +55,7 @@ PostgreSQL 16 (en el HOST · 5432)  ·  DB: flit_dev  OWNER: flit
 
 **Puntos clave de esta arquitectura (esquema de puertos 4xxx, ver `docs/designs/port-allocation-flit.md`):**
 
-- **Una sola imagen** `ghcr.io/flitsas/jormanc-pdn/core-api` corre **dos** servicios; cada uno elige su DLL con `command` y su `working_dir` (necesario para que .NET encuentre su `appsettings.json`):
+- **Una sola imagen** `ghcr.io/flitsas/jormanc-dev/core-api` corre **dos** servicios; cada uno elige su DLL con `command` y su `working_dir` (necesario para que .NET encuentre su `appsettings.json`):
   - `gateway`  → `dotnet /app/gateway/Flit.Gateway.dll`, `working_dir: /app/gateway`
   - `core-api` → `dotnet /app/api/Flit.Api.dll`, `working_dir: /app/api`
 - El **frontend** llama a la API por **URL absoluta** (`https://api.orca.flitsas.com/...`), no por proxy de nginx. Esas URLs se **hornean en el bundle al hacer build** (build-args), no en runtime.
@@ -75,7 +75,7 @@ PostgreSQL 16 (en el HOST · 5432)  ·  DB: flit_dev  OWNER: flit
 - PostgreSQL 16 instalado **en el host**
 
 ### En GitHub
-- GitHub Actions habilitado e imágenes en GHCR (`ghcr.io/flitsas/jormanc-pdn/*`)
+- GitHub Actions habilitado e imágenes en GHCR (`ghcr.io/flitsas/jormanc-dev/*`)
 - Secrets configurados (ver §7)
 
 ### DNS (registros A → IP del VPS)
