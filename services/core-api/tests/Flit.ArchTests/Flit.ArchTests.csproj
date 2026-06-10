@@ -21,8 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- FLIT 2.0: el modulo Procedures se reescribira; validamos reglas sobre Identity. -->
-    <ProjectReference Include="..\..\src\Flit.Modules.Identity\Flit.Modules.Identity.csproj" />
+    <!-- Esqueleto base FLIT 2.0: reglas arquitectonicas sobre SharedKernel.
+         Los modulos de dominio agregaran sus propias referencias y reglas. -->
     <ProjectReference Include="..\..\src\Flit.SharedKernel\Flit.SharedKernel.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
-# Reinicia Postgres local (Docker) y aplica el schema SQL del shell.
+# Reinicia Postgres local (Docker). La base arranca VACIA: el esquema lo crean
+# las migraciones EF Core (`pnpm migrate`) a medida que se implementan features.
 $ErrorActionPreference = "Stop"
 $Root = Resolve-Path (Join-Path $PSScriptRoot "..\..")
 Set-Location $Root
@@ -11,9 +12,5 @@ pnpm docker:up:infra
 
 Start-Sleep -Seconds 8
 
-Write-Host "Aplicando schema flit-shell-schema.sql..."
-Get-Content -Raw (Join-Path $PSScriptRoot "flit-shell-schema.sql") |
-    docker compose -f infra/docker-compose.yml exec -T postgres `
-        psql -U flit -d flit_dev -v ON_ERROR_STOP=1
-
-Write-Host "Listo. Ejecuta: pnpm dev"
+Write-Host "Postgres listo (base vacia). Aplica migraciones con: pnpm migrate"
+Write-Host "Luego ejecuta: pnpm dev"

@@ -13,8 +13,7 @@ Registro de decisiones arquitectónicas del proyecto.
 
 | ADR | Título | Estado |
 |-----|--------|--------|
-| [ADR-0001](ADR-0001-clean-architecture-backend.md) | Clean Architecture para backend Node.js | Aceptado |
-| [ADR-0002](ADR-0002-closedxml-excel-export.md) | ClosedXML para export Excel | Aceptado |
+| [ADR-0001](ADR-0001-clean-architecture-backend.md) | Clean Architecture para backend | Aceptado |
 | [ADR-0004](ADR-0004-consolidacion-stack-dotnet-python.md) | Consolidación del stack a .NET 10 + Python ML | **Aceptado 2026-05-27** |
 | [ADR-0005](ADR-0005-pdf-in-process-questpdf.md) | Generación de PDF in-process con QuestPDF | **Aceptado 2026-05-27** |
 | [ADR-0006](ADR-0006-gestion-archivos-vps-minio.md) | Gestión de archivos en VPS con MinIO + PostgreSQL | **Aceptado 2026-05-27** |
@@ -22,6 +21,8 @@ Registro de decisiones arquitectónicas del proyecto.
 | [ADR-0008](ADR-0008-database-agent-convenciones-persistencia.md) | Agente de BD y convenciones normativas de persistencia | **Propuesto 2026-06-02** |
 
 > **Nota:** ADR-0003 (Feature-sliced architecture frontend) estaba listado pero el archivo nunca se creó. Se omite del índice hasta que exista.
+
+> **Reset 2026-06-10:** al limpiar la implementación de trámites se eliminaron los ADR atados a ese dominio (0002 ClosedXML/export Excel, 0009 parametrización, 0010 snapshot al radicar, 0011 motor de reglas JSONB, 0012 OT cross-tenant). Se conservan los ADR transversales de arquitectura, stack e infra. La nueva implementación creará sus propios ADR a partir del correlativo siguiente.
 
 ## Bloque de ADRs portados desde repo hermano (2026-05-27)
 

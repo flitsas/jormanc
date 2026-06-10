@@ -20,22 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\Sql\AddProceduresConfigRulesRgl01_up.sql" />
-    <EmbeddedResource Include="Migrations\Sql\AddProceduresConfigRulesRgl01_down.sql" />
-    <EmbeddedResource Include="Migrations\Sql\AddIntegrationsEndpointCallLogRgl02_up.sql" />
-    <EmbeddedResource Include="Migrations\Sql\AddIntegrationsEndpointCallLogRgl02_down.sql" />
-    <EmbeddedResource Include="Migrations\Sql\AddProceduresConfigParametrization50_up.sql" />
-    <EmbeddedResource Include="Migrations\Sql\AddProceduresConfigParametrization50_down.sql" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Flit.SharedKernel\Flit.SharedKernel.csproj" />
-    <ProjectReference Include="..\Flit.Modules.Identity\Flit.Modules.Identity.csproj" />
-    <ProjectReference Include="..\Flit.Modules.Users\Flit.Modules.Users.csproj" />
-    <ProjectReference Include="..\Flit.Modules.Auth\Flit.Modules.Auth.csproj" />
-    <ProjectReference Include="..\Flit.Modules.Rbac\Flit.Modules.Rbac.csproj" />
-    <ProjectReference Include="..\Flit.Modules.Notifications\Flit.Modules.Notifications.csproj" />
-    <ProjectReference Include="..\Flit.Modules.ProceduresConfig\Flit.Modules.ProceduresConfig.csproj" />
   </ItemGroup>
 
 </Project>

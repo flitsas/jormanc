@@ -6,13 +6,11 @@ import "primeicons/primeicons.css";
 import "./styles/prime-flit.css";
 import "./index.css";
 import { PRIME_LOCALE_ES } from "./shared/lib/prime-setup.js";
-import { initHomeStyleFromStorage } from "./shared/lib/home-style.js";
 import { syncPrimeThemeFromDocument } from "./shared/lib/prime-theme.js";
 import { App } from "./App.js";
 
 addLocale("es", PRIME_LOCALE_ES);
 syncPrimeThemeFromDocument();
-initHomeStyleFromStorage();
 
 const root = document.getElementById("root");
 if (!root) throw new Error("No #root element found");

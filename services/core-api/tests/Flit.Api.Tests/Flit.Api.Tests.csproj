@@ -17,22 +17,11 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="FluentAssertions" />
-    <PackageReference Include="Npgsql" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- FLIT 2.0 backend foundations: modulos vivos -->
-    <ProjectReference Include="..\..\src\Flit.Modules.Identity\Flit.Modules.Identity.csproj" />
-    <ProjectReference Include="..\..\src\Flit.Modules.Users\Flit.Modules.Users.csproj" />
-    <ProjectReference Include="..\..\src\Flit.Modules.Auth\Flit.Modules.Auth.csproj" />
-    <ProjectReference Include="..\..\src\Flit.Modules.Rbac\Flit.Modules.Rbac.csproj" />
-    <ProjectReference Include="..\..\src\Flit.Modules.Notifications\Flit.Modules.Notifications.csproj" />
-    <ProjectReference Include="..\..\src\Flit.Infrastructure\Flit.Infrastructure.csproj" />
+    <!-- Esqueleto base FLIT 2.0: las features agregan aqui sus referencias y tests. -->
     <ProjectReference Include="..\..\src\Flit.SharedKernel\Flit.SharedKernel.csproj" />
-    <ProjectReference Include="..\..\src\Flit.Modules.ProceduresConfig\Flit.Modules.ProceduresConfig.csproj" />
-    <PackageReference Include="Microsoft.Extensions.Http" />
   </ItemGroup>
 
 </Project>

@@ -13,12 +13,6 @@
         var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         var isDark = stored === "dark" || (stored !== "light" && prefersDark);
         if (isDark) document.documentElement.classList.add("dark");
-        var styleKey = "flit-home-style";
-        var styleStored = localStorage.getItem(styleKey);
-        var validStyles = ["classic", "corporate", "high-contrast"];
-        var homeStyle =
-          styleStored && validStyles.indexOf(styleStored) >= 0 ? styleStored : "classic";
-        document.documentElement.dataset.homeStyle = homeStyle;
       })();
     </script>
   </head>

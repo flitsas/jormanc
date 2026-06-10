@@ -3,7 +3,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { DashboardLayout } from "./shared/components/ui/DashboardLayout.js";
-import { HomeStyleProvider } from "./shared/hooks/use-home-style.js";
 import { ThemeProvider } from "./shared/hooks/use-theme.js";
 import { HomePage } from "./features/home/pages/HomePage.js";
 
@@ -41,11 +40,9 @@ export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <HomeStyleProvider>
-          <BrowserRouter>
-            <AppRoutes />
-          </BrowserRouter>
-        </HomeStyleProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
       </ThemeProvider>
       {import.meta.env.DEV && <ReactQueryDevtools />}
     </QueryClientProvider>
