@@ -135,8 +135,9 @@ jobs:
           printf '%s\n' "$SSH_KEY" > /tmp/deploy_key
           chmod 600 /tmp/deploy_key
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
-          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts \
-            || { echo "ssh-keyscan no pudo alcanzar el host"; exit 1; }
+          # Best-effort: precarga la host key. Si ssh-keyscan falla (es intermitente),
+          # StrictHostKeyChecking=accept-new la aceptara en la primera conexion igual.
+          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
 
           ssh -i /tmp/deploy_key -o BatchMode=yes -o StrictHostKeyChecking=accept-new \
             "$SSH_USER@$SSH_HOST" "mkdir -p '$DEPLOY_PATH'"
