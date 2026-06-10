@@ -15,8 +15,10 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  CORE_API_IMAGE: ghcr.io/flitsas/jormanc-dev/core-api
-  FRONTEND_IMAGE: ghcr.io/flitsas/jormanc-dev/frontend
+  # Namespace del paquete GHCR segun la rama (Opcion A: paquetes separados por ambiente):
+  #   release -> jormanc-pdn   |   develop -> jormanc-dev
+  CORE_API_IMAGE: ghcr.io/flitsas/${{ github.ref == 'refs/heads/release' && 'jormanc-pdn' || 'jormanc-dev' }}/core-api
+  FRONTEND_IMAGE: ghcr.io/flitsas/${{ github.ref == 'refs/heads/release' && 'jormanc-pdn' || 'jormanc-dev' }}/frontend
 
 jobs:
   build-core-api:
