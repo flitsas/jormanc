@@ -2,7 +2,7 @@ name: CD - Build & Deploy to VPS
 
 on:
   push:
-    branches: [develop]
+    branches: [release]
   workflow_dispatch:
 
 concurrency:
@@ -15,8 +15,8 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  CORE_API_IMAGE: ghcr.io/flitsas/flit-boilerplate/core-api
-  FRONTEND_IMAGE: ghcr.io/flitsas/flit-boilerplate/frontend
+  CORE_API_IMAGE: ghcr.io/flitsas/jormanc-pdn/core-api
+  FRONTEND_IMAGE: ghcr.io/flitsas/jormanc-pdn/frontend
 
 jobs:
   build-core-api:
