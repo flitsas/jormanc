@@ -94,6 +94,8 @@ Si faltan campos, haz **UNA sola pregunta consolidada** — no preguntes campo p
 
 Skills: `feature-creator`, `planification-wiki`.
 
+> **Origen spec-driven (spec-kit):** si existe `specs/NNN-*/spec.md` (generado por `/speckit-specify`), redacta el Feature a partir de ese spec usando la skill `flit-spec-to-ado` (Modo A), que mapea User Scenarios → OBJETIVO, Functional Requirements → DESCRIPTION y Success Criteria → CRITERIOS FUNCIONALES, y delega la creación en `feature-creator`. Mantén el gate de aprobación humana del borrador.
+
 ---
 
 ## Mode B — Descomposición de Features
@@ -109,6 +111,8 @@ Skills: `feature-creator`, `planification-wiki`.
 5. Presenta el listado completo y espera confirmación humana.
 
 Skill: `skill-crear-hu`.
+
+> **Origen spec-driven (spec-kit):** si existe `specs/NNN-*/tasks.md` (generado por `/speckit-tasks`), descompón agrupando las tasks por capa en HUs mediante la skill `flit-spec-to-ado` (Modo B), que delega cada HU en `flit-crear-hu` y registra la trazabilidad en `specs/NNN-*/ado-link.json`. El `/speckit-taskstoissues` está reenrutado a esta misma ruta ADO (nunca GitHub Issues).
 
 ---
 

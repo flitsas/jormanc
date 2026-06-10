@@ -29,6 +29,8 @@ Cuando el workflow o el usuario pide una tarea, delegar **siempre** al agente in
 | Deploy DEV/QA/PDN, Docker, CI/CD | `infra-agent` | `flit-rollback-procedure` |
 | TCs, E2E, bugs | `qa-agent` | `playwright-runner`, `bug-reporter` |
 | Activar/cerrar HU en ADO | skill `flit-gestion-hu` | — |
+| Spec-driven: especificar, planear, generar tasks, implementar | spec-kit (`/speckit-*`) | `flit-spec-to-ado` (puente a ADO) |
+| Crear Feature/HU en ADO desde `spec.md`/`tasks.md` | `tech-lead-agent` | `flit-spec-to-ado` → `feature-creator`, `flit-crear-hu` |
 
 ### Cuándo invocar `database-agent`
 
@@ -51,6 +53,7 @@ Cuando el workflow o el usuario pide una tarea, delegar **siempre** al agente in
 | Si el usuario quiere… | Lee este workflow |
 |-----------------------|-------------------|
 | Desarrollar un requerimiento nuevo | `.cursor/workflows/requirement-to-delivery.md` |
+| Desarrollar con spec-kit (spec → plan → tasks → implement) | `.cursor/workflows/spec-driven-delivery.md` |
 | Implementar una Historia de Usuario ya existente | `.cursor/workflows/implement-story.md` |
 | Revisar un PR | `.cursor/workflows/review-pr.md` |
 | Descomponer un Feature en HUs | `.cursor/workflows/decompose-feature.md` |

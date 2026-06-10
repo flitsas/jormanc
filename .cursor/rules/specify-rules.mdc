@@ -1,0 +1,27 @@
+---
+alwaysApply: true
+---
+
+<!-- SPECKIT START -->
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan
+<!-- SPECKIT END -->
+
+<!-- FLIT START -->
+## Capa spec-driven FLIT
+
+Al ejecutar cualquier fase de spec-kit (`/speckit-specify`, `/speckit-plan`, `/speckit-tasks`,
+`/speckit-implement`, `/speckit-taskstoissues`) en este repositorio, además del plan, **leer y respetar**:
+
+- `.specify/memory/constitution.md` — principios innegociables FLIT (stack fijo, gates humanos, calidad, seguridad).
+- `AGENTS.md` y `agent-templates/` — fuente canónica de convenciones; **prevalecen** ante conflicto.
+
+Reglas de enrutamiento del flujo spec-driven:
+
+1. La gestión de Features/HU vive en **Azure DevOps Boards**, NO en GitHub Issues.
+2. `spec.md` → **Feature** y `tasks.md` → **Historias de Usuario** se crean en ADO mediante la skill
+   **`flit-spec-to-ado`** (que reusa `feature-creator`, `flit-crear-hu` y el contrato `flit-azure-devops`).
+3. `/speckit-taskstoissues` está reenrutado a ADO (NO crear GitHub Issues).
+4. PR, merge, `Custom.Commits`, `Custom.Evidences` y Deploy* siguen siendo responsabilidad de los agentes
+   `integration-agent`, `dev-tester`/`qa-agent`, respetando los gates humanos (activar HU, merge, cerrar Feature).
+<!-- FLIT END -->

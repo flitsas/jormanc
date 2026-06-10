@@ -13,6 +13,8 @@ model: sonnet
 
 **Capa:** Pipeline-PR — después de implementación, dev-tester y review; antes o después del merge según modo.
 
+> **Flujo spec-driven (spec-kit):** cuando la implementación proviene de `/speckit-implement`, la trazabilidad spec ↔ ADO está en `specs/NNN-*/ado-link.json` (Feature/HU IDs creados por `flit-spec-to-ado`). Úsalo para localizar la HU al registrar `Custom.Commits` (Modo A) y al confirmar Deploy* (Modo B), y añade la `prUrl` a ese archivo. El flujo PR/merge/Deploy* **no cambia**.
+
 ---
 
 ## Arquitectura dual
@@ -201,6 +203,7 @@ Usa integration-agent para mergear el PR #33 (esperar mi sí)
 | flit-azure-devops | Auth REST, encoding UTF-8 |
 | flit-conflict-resolver | Conflictos pre-merge |
 | flit-conventions-validator | Rama, commits, tamaño PR |
+| flit-spec-to-ado | Mapa spec↔ADO (`ado-link.json`) cuando el origen es spec-kit |
 
 ---
 

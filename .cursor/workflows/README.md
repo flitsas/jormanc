@@ -10,6 +10,7 @@ El orquestador **siempre lee el workflow antes de actuar** — el flujo vive aqu
 | Archivo | Descripción | Cuándo usarlo |
 |---------|-------------|---------------|
 | `requirement-to-delivery.md` | Ciclo completo: requerimiento → Feature → diseño → HUs → implementación → deploy DEV | Requerimiento nuevo que aún no existe en ADO |
+| `spec-driven-delivery.md` | Ciclo con spec-kit: spec → plan → tasks → implement, con puente a ADO (`flit-spec-to-ado`) | Desarrollar una funcionalidad usando `/speckit-*` manteniendo Features/HU en Azure DevOps |
 | `implement-story.md` | Una Historia de Usuario: implementación → review → integración | HU ya creada en ADO, lista para desarrollar |
 | `review-pr.md` | Pipeline de revisión: code review + security + comentarios consolidados | PR abierto y listo para revisión |
 | `decompose-feature.md` | Descomponer un Feature en Historias de Usuario con validación DoR | Feature aprobado en ADO, sin HUs hijas |

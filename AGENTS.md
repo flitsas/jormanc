@@ -101,6 +101,25 @@ Resumen del resto:
 | `flit-conventions-validator` | Convenciones FLIT en PRs (7 dimensiones) |
 | `flit-dor-dod-validator` | DoR/DoD por transición de estado |
 | `flit-integration-ado` | Custom.Commits, Deploy DEV/QA/PDN |
+| `flit-spec-to-ado` | Puente spec-kit → ADO: `spec.md`→Feature, `tasks.md`→HU |
+
+## Capa spec-driven (spec-kit)
+
+Instalada con `specify init --here --ai cursor-agent` (skills bajo `.cursor/skills/speckit-*`, constitución en `.specify/memory/constitution.md`, scripts PowerShell en `.specify/scripts/powershell/`). **Aditiva**: no reemplaza ningún agente/skill FLIT.
+
+Flujo: `constitution → /speckit-specify → (/speckit-clarify) → /speckit-plan → /speckit-tasks → [puente ADO] → /speckit-implement → dev-tester → integration-agent`.
+
+| Fase spec-kit | Salida | Puente / agente FLIT |
+|---|---|---|
+| `/speckit-specify` | `specs/NNN-*/spec.md` | `flit-spec-to-ado` (Modo A) → `feature-creator` crea **Feature** ADO |
+| `/speckit-plan` | `plan.md` | alineado al stack y ADRs (ver constitución) |
+| `/speckit-tasks` | `tasks.md` | `flit-spec-to-ado` (Modo B) → `flit-crear-hu` crea **HU** ADO |
+| `/speckit-taskstoissues` | — | **reenrutado a ADO** (override FLIT; nunca GitHub Issues) |
+| `/speckit-implement` | código | motor de implementación, guiado por la constitución |
+
+- **Constitución FLIT:** `.specify/memory/constitution.md` (18 reglas + stack + gates). Fuente canónica sigue siendo `AGENTS.md`/`agent-templates/`.
+- **Gestión de work items:** SIEMPRE Azure DevOps Boards. La trazabilidad spec ↔ ADO vive en `specs/NNN-*/ado-link.json`.
+- Workflow end-to-end: `.cursor/workflows/spec-driven-delivery.md`.
 
 ## Slash commands
 
