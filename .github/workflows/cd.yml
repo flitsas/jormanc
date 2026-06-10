@@ -2,7 +2,7 @@ name: CD - Build & Deploy to VPS
 
 on:
   push:
-    branches: [release]
+    branches: [release, develop]
   workflow_dispatch:
 
 concurrency:
@@ -45,7 +45,8 @@ jobs:
           images: ${{ env.CORE_API_IMAGE }}
           tags: |
             type=sha,prefix=sha-
-            type=raw,value=latest
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/release' }}
+            type=raw,value=develop,enable=${{ github.ref == 'refs/heads/develop' }}
 
       - name: Build and push core-api
         uses: docker/build-push-action@v6
@@ -84,7 +85,8 @@ jobs:
           images: ${{ env.FRONTEND_IMAGE }}
           tags: |
             type=sha,prefix=sha-
-            type=raw,value=latest
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/release' }}
+            type=raw,value=develop,enable=${{ github.ref == 'refs/heads/develop' }}
 
       - name: Build and push frontend
         uses: docker/build-push-action@v6
@@ -95,8 +97,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            VITE_API_BASE_URL=https://api.orca.flitsas.com/api/v1
-            VITE_TRASPASOS_API_BASE_URL=https://api.orca.flitsas.com/api/v1/procedures
+            VITE_API_BASE_URL=https://${{ github.ref == 'refs/heads/release' && 'api.jormanc.flitsas.online' || 'api.dev.jormanc.flitsas.online' }}/api/v1
+            VITE_TRASPASOS_API_BASE_URL=https://${{ github.ref == 'refs/heads/release' && 'api.jormanc.flitsas.online' || 'api.dev.jormanc.flitsas.online' }}/api/v1/procedures
             VITE_DEV_USER_ID=01900000-100b-7001-8001-000000000001
           cache-from: type=gha,scope=frontend
           cache-to: type=gha,mode=max,scope=frontend
@@ -107,7 +109,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment:
-      name: production
+      name: ${{ github.ref == 'refs/heads/release' && 'production' || 'develop' }}
       url: ${{ vars.PUBLIC_DOMAIN && format('https://{0}', vars.PUBLIC_DOMAIN) || '' }}
 
     steps:
@@ -162,14 +164,20 @@ jobs:
             # Remove dangling images to free space
             docker image prune -f
 
-            # Health check: hit the container directly (bypass host nginx)
-            echo "Waiting for application to start..."
+            # Health check: hit the container directly (bypass host nginx).
+            # Lee los puertos del .env del proyecto (defaults = prod) para que
+            # funcione igual en produccion y develop con sus propios puertos.
+            FE_PORT="$(grep -E '^FRONTEND_PORT=' .env 2>/dev/null | head -1 | cut -d= -f2 || true)"
+            GW_PORT="$(grep -E '^GATEWAY_PORT=' .env 2>/dev/null | head -1 | cut -d= -f2 || true)"
+            FE_PORT="${FE_PORT:-60106}"
+            GW_PORT="${GW_PORT:-60206}"
+            echo "Waiting for application to start (front:$FE_PORT gateway:$GW_PORT)..."
             sleep 15
             ok=0
             for i in 1 2 3 4 5 6; do
-              # Front (60106) + API publica del gateway (60206) deben responder.
-              if curl -fsS http://127.0.0.1:60106/ > /dev/null \
-                 && curl -fsS http://127.0.0.1:60206/health > /dev/null; then
+              # Front + API publica del gateway deben responder.
+              if curl -fsS "http://127.0.0.1:${FE_PORT}/" > /dev/null \
+                 && curl -fsS "http://127.0.0.1:${GW_PORT}/health" > /dev/null; then
                 echo "Health check OK (attempt $i)"
                 ok=1
                 break
