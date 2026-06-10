@@ -3,9 +3,9 @@
 # Postgres NO esta aqui: corre en el HOST (host.docker.internal:5432).
 # El reverse-proxy del HOST termina TLS y enruta los dominios a los puertos
 # publicados en 127.0.0.1:
-#   jormanc.flitsas.online      -> frontend  (127.0.0.1:600106)
-#   api.jormanc.flitsas.online  -> gateway   (127.0.0.1:600206)  [API publica YARP]
-#   core.jormanc.flitsas.online -> core-api  (127.0.0.1:600306)  [Flit.Api interno/debug]
+#   jormanc.flitsas.online      -> frontend  (127.0.0.1:60106)
+#   api.jormanc.flitsas.online  -> gateway   (127.0.0.1:60206)  [API publica YARP]
+#   core.jormanc.flitsas.online -> core-api  (127.0.0.1:60306)  [Flit.Api interno/debug]
 #
 # Variables requeridas en .env (junto al compose):
 #   CONNECTION_STRING_CORE  cadena Npgsql .NET (Host=...;Port=5432;Database=...;Username=...;Password=...)
@@ -52,7 +52,7 @@ services:
       Verifik__BaseUrl: ${VERIFIK_BASE_URL:-https://api.verifik.co}
       Verifik__TimeoutSeconds: ${VERIFIK_TIMEOUT_SECONDS:-30}
     ports:
-      - "127.0.0.1:600306:80"
+      - "127.0.0.1:60306:80"
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:80/api/v1/health"]
       interval: 30s
@@ -75,7 +75,7 @@ services:
       # Login deshabilitado temporalmente: sin llave JWT el gateway no valida firma
       # ni exige autenticación (ver Flit.Gateway/Program.cs).
     ports:
-      - "127.0.0.1:600206:80"
+      - "127.0.0.1:60206:80"
     depends_on:
       core-api:
         condition: service_started
@@ -92,7 +92,7 @@ services:
   frontend:
     image: ghcr.io/flitsas/jormanc-pdn/frontend:${FRONTEND_TAG:-latest}
     ports:
-      - "127.0.0.1:600106:80"
+      - "127.0.0.1:60106:80"
     depends_on:
       - gateway
     restart: *restart
