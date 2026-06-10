@@ -45,7 +45,7 @@ jobs:
           images: ${{ env.CORE_API_IMAGE }}
           tags: |
             type=sha,prefix=sha-
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=latest
 
       - name: Build and push core-api
         uses: docker/build-push-action@v6
@@ -84,7 +84,7 @@ jobs:
           images: ${{ env.FRONTEND_IMAGE }}
           tags: |
             type=sha,prefix=sha-
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=latest
 
       - name: Build and push frontend
         uses: docker/build-push-action@v6
@@ -167,9 +167,9 @@ jobs:
             sleep 15
             ok=0
             for i in 1 2 3 4 5 6; do
-              # Front (4001) + API publica del gateway (4002) deben responder.
-              if curl -fsS http://127.0.0.1:4001/ > /dev/null \
-                 && curl -fsS http://127.0.0.1:4002/health > /dev/null; then
+              # Front (60106) + API publica del gateway (60206) deben responder.
+              if curl -fsS http://127.0.0.1:60106/ > /dev/null \
+                 && curl -fsS http://127.0.0.1:60206/health > /dev/null; then
                 echo "Health check OK (attempt $i)"
                 ok=1
                 break
