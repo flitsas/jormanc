@@ -115,16 +115,30 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Copy compose file to VPS
+        env:
+          SSH_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
+          SSH_HOST: ${{ secrets.HOSTINGER_SSH_HOST }}
+          SSH_USER: ${{ secrets.HOSTINGER_SSH_USER }}
+          DEPLOY_PATH: ${{ secrets.HOSTINGER_DEPLOY_PATH }}
         run: |
-          echo "${{ secrets.HOSTINGER_SSH_KEY }}" > /tmp/deploy_key
+          set -euo pipefail
+          # Falla rapido y nombra el secret faltante (en vez de un exit 1 opaco)
+          : "${SSH_HOST:?Falta el secret HOSTINGER_SSH_HOST}"
+          : "${SSH_USER:?Falta el secret HOSTINGER_SSH_USER}"
+          : "${DEPLOY_PATH:?Falta el secret HOSTINGER_DEPLOY_PATH}"
+          [ -n "$SSH_KEY" ] || { echo "Falta el secret HOSTINGER_SSH_KEY"; exit 1; }
+
+          printf '%s\n' "$SSH_KEY" > /tmp/deploy_key
           chmod 600 /tmp/deploy_key
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
-          ssh-keyscan -H ${{ secrets.HOSTINGER_SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
-          ssh -i /tmp/deploy_key ${{ secrets.HOSTINGER_SSH_USER }}@${{ secrets.HOSTINGER_SSH_HOST }} \
-            "mkdir -p ${{ secrets.HOSTINGER_DEPLOY_PATH }}"
-          scp -i /tmp/deploy_key \
+          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts \
+            || { echo "ssh-keyscan no pudo alcanzar el host"; exit 1; }
+
+          ssh -i /tmp/deploy_key -o BatchMode=yes -o StrictHostKeyChecking=accept-new \
+            "$SSH_USER@$SSH_HOST" "mkdir -p '$DEPLOY_PATH'"
+          scp -i /tmp/deploy_key -o BatchMode=yes -o StrictHostKeyChecking=accept-new \
             docker-compose.prod.yml \
-            ${{ secrets.HOSTINGER_SSH_USER }}@${{ secrets.HOSTINGER_SSH_HOST }}:${{ secrets.HOSTINGER_DEPLOY_PATH }}/docker-compose.prod.yml
+            "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/docker-compose.prod.yml"
           rm -f /tmp/deploy_key
 
       - name: Deploy via SSH
