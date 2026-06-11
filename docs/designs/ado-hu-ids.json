@@ -1,0 +1,274 @@
+[
+  {
+    "hu_key": "9567-HU1",
+    "ado_id": 9769,
+    "feature_id": 9567,
+    "title": "[BACKEND] – Identidad – Autenticación JWT y perfil de usuario",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9769"
+  },
+  {
+    "hu_key": "9567-HU2",
+    "ado_id": 9770,
+    "feature_id": 9567,
+    "title": "[BACKEND] – Identidad – CRUD de roles, permisos y asignación multi-tenant",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9770"
+  },
+  {
+    "hu_key": "9567-HU3",
+    "ado_id": 9771,
+    "feature_id": 9567,
+    "title": "[BACKEND] – Identidad – Invalidación de sesión en tiempo real",
+    "story_points": 3,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9771"
+  },
+  {
+    "hu_key": "9567-HU4",
+    "ado_id": 9772,
+    "feature_id": 9567,
+    "title": "[BACKEND] – Identidad – Onboarding por invitación y reset de contraseña",
+    "story_points": 3,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9772"
+  },
+  {
+    "hu_key": "9567-HU5",
+    "ado_id": 9773,
+    "feature_id": 9567,
+    "title": "[FRONTEND] – Identidad – Pantallas de login, invitación, reset y gestión de usuarios/roles",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9773"
+  },
+  {
+    "hu_key": "9565-HU1",
+    "ado_id": 9774,
+    "feature_id": 9565,
+    "title": "[BACKEND] – Compañías – CRUD de compañías con creación de tenant y configuración multi-pestaña",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9774"
+  },
+  {
+    "hu_key": "9565-HU2",
+    "ado_id": 9775,
+    "feature_id": 9565,
+    "title": "[BACKEND] – Compañías – Proxy RUNT con patrón Strategy y failover automático",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9775"
+  },
+  {
+    "hu_key": "9565-HU3",
+    "ado_id": 9776,
+    "feature_id": 9565,
+    "title": "[BACKEND] – Compañías – Matriz de firmas, excepciones de usuario y OTs habilitadas",
+    "story_points": 3,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9776"
+  },
+  {
+    "hu_key": "9565-HU4",
+    "ado_id": 9777,
+    "feature_id": 9565,
+    "title": "[FRONTEND] – Compañías – Consola de compañías con filtros, paginación y formulario multi-pestaña",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9777"
+  },
+  {
+    "hu_key": "9565-HU5",
+    "ado_id": 9778,
+    "feature_id": 9565,
+    "title": "[FRONTEND] – Compañías – Matriz de firmas, excepciones de usuario y visor de logs",
+    "story_points": 3,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9778"
+  },
+  {
+    "hu_key": "9568-HU1",
+    "ado_id": 9779,
+    "feature_id": 9568,
+    "title": "[BACKEND] – Parametrizador – CRUD de tipos de trámite, pasos, secciones y campos",
+    "story_points": 8,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9779"
+  },
+  {
+    "hu_key": "9568-HU2",
+    "ado_id": 9780,
+    "feature_id": 9568,
+    "title": "[BACKEND] – Parametrizador – Motor de reglas de negocio con simulador de coherencia",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9780"
+  },
+  {
+    "hu_key": "9568-HU3",
+    "ado_id": 9781,
+    "feature_id": 9568,
+    "title": "[BACKEND] – Parametrizador – Definición de actores, reglas de consulta y clave de vehículo",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9781"
+  },
+  {
+    "hu_key": "9568-HU4",
+    "ado_id": 9782,
+    "feature_id": 9568,
+    "title": "[FRONTEND] – Parametrizador – Pipeline builder visual, editor de campos y conectores API",
+    "story_points": 8,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9782"
+  },
+  {
+    "hu_key": "9568-HU5",
+    "ado_id": 9783,
+    "feature_id": 9568,
+    "title": "[FRONTEND] – Parametrizador – Diseñador de reglas AND/OR, coherencia y definición de actores",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9783"
+  },
+  {
+    "hu_key": "9731-HU1",
+    "ado_id": 9784,
+    "feature_id": 9731,
+    "title": "[BACKEND] – Trámites – Creación de trámite en draft y consulta de vehículo RUNT",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9784"
+  },
+  {
+    "hu_key": "9731-HU2",
+    "ado_id": 9785,
+    "feature_id": 9731,
+    "title": "[BACKEND] – Trámites – Gestión de actores: natural, jurídica, representante legal y copropietarios",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9785"
+  },
+  {
+    "hu_key": "9731-HU3",
+    "ado_id": 9786,
+    "feature_id": 9731,
+    "title": "[BACKEND] – Trámites – Submit: snapshot, pipeline Wolverine, firmas y adjuntos",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9786"
+  },
+  {
+    "hu_key": "9731-HU4",
+    "ado_id": 9787,
+    "feature_id": 9731,
+    "title": "[FRONTEND] – Trámites – Stepper dinámico data-driven, captura de vehículo y actores",
+    "story_points": 8,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9787"
+  },
+  {
+    "hu_key": "9731-HU5",
+    "ado_id": 9788,
+    "feature_id": 9731,
+    "title": "[FRONTEND] – Trámites – Grilla central, banners de hallazgos, vendedores secundarios y adjuntos",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9788"
+  },
+  {
+    "hu_key": "9729-HU1",
+    "ado_id": 9789,
+    "feature_id": 9729,
+    "title": "[BACKEND] – Documentos – Maestro documental y asociación a tipos de trámite",
+    "story_points": 3,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9789"
+  },
+  {
+    "hu_key": "9729-HU2",
+    "ado_id": 9790,
+    "feature_id": 9729,
+    "title": "[BACKEND] – Documentos – Plantillas HTML versionadas, resolución de marcadores y generación PDF/A",
+    "story_points": 8,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9790"
+  },
+  {
+    "hu_key": "9729-HU3",
+    "ado_id": 9791,
+    "feature_id": 9729,
+    "title": "[BACKEND] – Documentos – Pipeline de consolidación: merge PDF, prelación, descarga y versionamiento",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9791"
+  },
+  {
+    "hu_key": "9729-HU4",
+    "ado_id": 9792,
+    "feature_id": 9729,
+    "title": "[FRONTEND] – Documentos – Panel de estado documental, descarga y visor de paquete consolidado",
+    "story_points": 3,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9792"
+  },
+  {
+    "hu_key": "9729-HU5",
+    "ado_id": 9793,
+    "feature_id": 9729,
+    "title": "[FRONTEND] – Documentos – Admin de plantillas: upload, preview de marcadores y versiones",
+    "story_points": 3,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9793"
+  },
+  {
+    "hu_key": "9728-HU1",
+    "ado_id": 9794,
+    "feature_id": 9728,
+    "title": "[BACKEND] – Dashboard – Vistas materializadas y endpoints de KPIs",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9794"
+  },
+  {
+    "hu_key": "9728-HU2",
+    "ado_id": 9795,
+    "feature_id": 9728,
+    "title": "[BACKEND] – Dashboard – Export Excel streaming y Export PDF Resumen Ejecutivo",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9795"
+  },
+  {
+    "hu_key": "9728-HU3",
+    "ado_id": 9796,
+    "feature_id": 9728,
+    "title": "[FRONTEND] – Dashboard – Gráfico circular, filtro de fechas reactivo y tabla de detalle lateral",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9796"
+  },
+  {
+    "hu_key": "9728-HU4",
+    "ado_id": 9797,
+    "feature_id": 9728,
+    "title": "[FRONTEND] – Dashboard – Cards Top 5 radicadores, selector multiselección y exports",
+    "story_points": 3,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9797"
+  },
+  {
+    "hu_key": "9566-HU1",
+    "ado_id": 9798,
+    "feature_id": 9566,
+    "title": "[BACKEND] – OT – CRUD de Organismos de Tránsito y switch Modo Dashboard/QX",
+    "story_points": 3,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9798"
+  },
+  {
+    "hu_key": "9566-HU2",
+    "ado_id": 9799,
+    "feature_id": 9566,
+    "title": "[BACKEND] – OT – Prelación documental < 500ms y CRUD de etiquetas con validación de impacto",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9799"
+  },
+  {
+    "hu_key": "9566-HU3",
+    "ado_id": 9800,
+    "feature_id": 9566,
+    "title": "[BACKEND] – OT – Integración Quipux: webhook hot-update de estados y logs de integración",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9800"
+  },
+  {
+    "hu_key": "9566-HU4",
+    "ado_id": 9801,
+    "feature_id": 9566,
+    "title": "[FRONTEND] – OT – Gestión de OT, switch de modo, reglas dinámicas y logs Quipux",
+    "story_points": 5,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9801"
+  },
+  {
+    "hu_key": "9566-HU5",
+    "ado_id": 9802,
+    "feature_id": 9566,
+    "title": "[FRONTEND] – OT – Editor drag-and-drop de prelación documental y CRUD de etiquetas",
+    "story_points": 3,
+    "url": "https://dev.azure.com/FlitDevOps/FLIT%20-%20EVOLUTION/_workitems/edit/9802"
+  }
+]

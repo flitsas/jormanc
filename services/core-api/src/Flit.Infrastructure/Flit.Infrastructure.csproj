@@ -6,7 +6,7 @@
     <PublishAot>false</PublishAot>
     <IsAotCompatible>false</IsAotCompatible>
     <NuGetAuditMode>direct</NuGetAuditMode>
-    <NoWarn>$(NoWarn);CA1861</NoWarn>
+    <NoWarn>$(NoWarn);CA1861;CA1725;CA1805</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

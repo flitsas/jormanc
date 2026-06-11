@@ -4,9 +4,25 @@
     <Project Path="src/Flit.Gateway/Flit.Gateway.csproj" />
     <Project Path="src/Flit.SharedKernel/Flit.SharedKernel.csproj" />
     <Project Path="src/Flit.Infrastructure/Flit.Infrastructure.csproj" />
+    <Project Path="src/Flit.Modules.Identity/Flit.Modules.Identity.csproj" />
+    <Project Path="src/Flit.Modules.Companies/Flit.Modules.Companies.csproj" />
+    <Project Path="src/Flit.Modules.Integrations/Flit.Modules.Integrations.csproj" />
+    <Project Path="src/Flit.Modules.ProceduresConfig/Flit.Modules.ProceduresConfig.csproj" />
+    <Project Path="src/Flit.Modules.Procedures/Flit.Modules.Procedures.csproj" />
+    <Project Path="src/Flit.Modules.Documents/Flit.Modules.Documents.csproj" />
+    <Project Path="src/Flit.Modules.Analytics/Flit.Modules.Analytics.csproj" />
+    <Project Path="src/Flit.Modules.OT/Flit.Modules.OT.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Flit.Api.Tests/Flit.Api.Tests.csproj" />
     <Project Path="tests/Flit.ArchTests/Flit.ArchTests.csproj" />
+    <Project Path="tests/Flit.Identity.Tests/Flit.Identity.Tests.csproj" />
+    <Project Path="tests/Flit.Companies.Tests/Flit.Companies.Tests.csproj" />
+    <Project Path="tests/Flit.Integrations.Tests/Flit.Integrations.Tests.csproj" />
+    <Project Path="tests/Flit.ProceduresConfig.Tests/Flit.ProceduresConfig.Tests.csproj" />
+    <Project Path="tests/Flit.Procedures.Tests/Flit.Procedures.Tests.csproj" />
+    <Project Path="tests/Flit.Documents.Tests/Flit.Documents.Tests.csproj" />
+    <Project Path="tests/Flit.Analytics.Tests/Flit.Analytics.Tests.csproj" />
+    <Project Path="tests/Flit.OT.Tests/Flit.OT.Tests.csproj" />
   </Folder>
 </Solution>
