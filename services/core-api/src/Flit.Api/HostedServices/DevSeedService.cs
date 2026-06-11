@@ -51,6 +51,8 @@ public sealed class DevSeedService(
             logger.LogInformation("Dev seed: Tenant 'acme' creado ({Id})", tenant.Id);
         }
 
+        await ApplySessionContextAsync(db, tenant.Id, ct);
+
         // Permissions
         var permSlugs = new[]
         {
@@ -174,4 +176,13 @@ public sealed class DevSeedService(
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    /// <summary>RLS + fn_audit_log requieren app.tenant_id / app.user_id en la sesión PG.</summary>
+    private static async Task ApplySessionContextAsync(FlitDbContext db, Guid tenantId, CancellationToken ct)
+    {
+        await db.Database.ExecuteSqlRawAsync(
+            "SELECT set_config('app.tenant_id', {0}, false), set_config('app.user_id', {1}, false)",
+            tenantId.ToString(),
+            SystemSeedId.ToString());
+    }
 }

@@ -13,7 +13,20 @@ namespace Flit.Infrastructure.Persistence.Migrations
             // ============================================================
             // Extensions
             // ============================================================
-            migrationBuilder.Sql("CREATE EXTENSION IF NOT EXISTS \"pg_uuidv7\";");
+            migrationBuilder.Sql("""
+                DO $ef$
+                BEGIN
+                  CREATE EXTENSION IF NOT EXISTS "pg_uuidv7";
+                EXCEPTION
+                  WHEN OTHERS THEN
+                    IF to_regprocedure('uuidv7()') IS NULL THEN
+                      CREATE OR REPLACE FUNCTION public.uuidv7() RETURNS uuid
+                      LANGUAGE sql VOLATILE PARALLEL SAFE
+                      AS $fn$ SELECT gen_random_uuid() $fn$;
+                    END IF;
+                END
+                $ef$;
+                """);
 
             // ============================================================
             // Shared trigger functions
@@ -41,6 +54,9 @@ namespace Flit.Infrastructure.Persistence.Migrations
 
                   IF TG_OP = 'DELETE' THEN
                     v_record_id := OLD.id;
+                    IF v_tenant_id IS NULL AND to_jsonb(OLD) ? 'tenant_id' THEN
+                      v_tenant_id := (OLD.tenant_id)::uuid;
+                    END IF;
                     INSERT INTO audit.audit_log
                       (tenant_id, schema_name, table_name, record_id, operation, changed_by, old_values, new_values)
                     VALUES
@@ -49,6 +65,9 @@ namespace Flit.Infrastructure.Persistence.Migrations
                     RETURN OLD;
                   ELSIF TG_OP = 'INSERT' THEN
                     v_record_id := NEW.id;
+                    IF v_tenant_id IS NULL AND to_jsonb(NEW) ? 'tenant_id' THEN
+                      v_tenant_id := (NEW.tenant_id)::uuid;
+                    END IF;
                     INSERT INTO audit.audit_log
                       (tenant_id, schema_name, table_name, record_id, operation, changed_by, old_values, new_values)
                     VALUES
@@ -56,6 +75,9 @@ namespace Flit.Infrastructure.Persistence.Migrations
                        NULL, to_jsonb(NEW));
                   ELSE
                     v_record_id := NEW.id;
+                    IF v_tenant_id IS NULL AND to_jsonb(NEW) ? 'tenant_id' THEN
+                      v_tenant_id := (NEW.tenant_id)::uuid;
+                    END IF;
                     INSERT INTO audit.audit_log
                       (tenant_id, schema_name, table_name, record_id, operation, changed_by, old_values, new_values)
                     VALUES
@@ -133,7 +155,11 @@ namespace Flit.Infrastructure.Persistence.Migrations
                 ALTER TABLE companies.company_configs ENABLE ROW LEVEL SECURITY;
                 ALTER TABLE companies.company_configs FORCE ROW LEVEL SECURITY;
                 CREATE POLICY tenant_isolation ON companies.company_configs
-                  USING (tenant_id = NULLIF(current_setting('app.tenant_id', true), '')::uuid);
+                  USING (EXISTS (
+                    SELECT 1 FROM companies.companies c
+                    WHERE c.id = company_id
+                      AND c.tenant_id = NULLIF(current_setting('app.tenant_id', true), '')::uuid
+                  ));
                 CREATE TRIGGER trg_row_version_company_configs
                   BEFORE UPDATE ON companies.company_configs
                   FOR EACH ROW EXECUTE FUNCTION public.fn_increment_row_version();
@@ -143,7 +169,11 @@ namespace Flit.Infrastructure.Persistence.Migrations
                 ALTER TABLE companies.company_signature_matrix ENABLE ROW LEVEL SECURITY;
                 ALTER TABLE companies.company_signature_matrix FORCE ROW LEVEL SECURITY;
                 CREATE POLICY tenant_isolation ON companies.company_signature_matrix
-                  USING (tenant_id = NULLIF(current_setting('app.tenant_id', true), '')::uuid);
+                  USING (EXISTS (
+                    SELECT 1 FROM companies.companies c
+                    WHERE c.id = company_id
+                      AND c.tenant_id = NULLIF(current_setting('app.tenant_id', true), '')::uuid
+                  ));
                 CREATE TRIGGER trg_row_version_company_sig_matrix
                   BEFORE UPDATE ON companies.company_signature_matrix
                   FOR EACH ROW EXECUTE FUNCTION public.fn_increment_row_version();
@@ -153,7 +183,11 @@ namespace Flit.Infrastructure.Persistence.Migrations
                 ALTER TABLE companies.company_ot_enabled ENABLE ROW LEVEL SECURITY;
                 ALTER TABLE companies.company_ot_enabled FORCE ROW LEVEL SECURITY;
                 CREATE POLICY tenant_isolation ON companies.company_ot_enabled
-                  USING (tenant_id = NULLIF(current_setting('app.tenant_id', true), '')::uuid);
+                  USING (EXISTS (
+                    SELECT 1 FROM companies.companies c
+                    WHERE c.id = company_id
+                      AND c.tenant_id = NULLIF(current_setting('app.tenant_id', true), '')::uuid
+                  ));
                 """);
 
             // ============================================================

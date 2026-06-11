@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Flit.Modules.Procedures</RootNamespace>
+    <PublishAot>false</PublishAot>
+    <IsAotCompatible>false</IsAotCompatible>
+    <NuGetAuditMode>direct</NuGetAuditMode>
+    <NoWarn>$(NoWarn);CA1862;CA1848;CA1873;CA1859</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Flit.Infrastructure\Flit.Infrastructure.csproj" />
+    <ProjectReference Include="..\Flit.SharedKernel\Flit.SharedKernel.csproj" />
+    <ProjectReference Include="..\Flit.Modules.ProceduresConfig\Flit.Modules.ProceduresConfig.csproj" />
+    <ProjectReference Include="..\Flit.Modules.Integrations\Flit.Modules.Integrations.csproj" />
+    <ProjectReference Include="..\Flit.Modules.Companies\Flit.Modules.Companies.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+  </ItemGroup>
+
+</Project>

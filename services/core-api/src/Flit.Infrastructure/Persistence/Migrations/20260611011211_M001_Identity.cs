@@ -11,6 +11,22 @@ namespace Flit.Infrastructure.Persistence.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            // PG 17+: uuidv7() via pg_uuidv7 when packaged; dev fallback uses gen_random_uuid() (convenciones §4).
+            migrationBuilder.Sql("""
+                DO $ef$
+                BEGIN
+                  CREATE EXTENSION IF NOT EXISTS "pg_uuidv7";
+                EXCEPTION
+                  WHEN OTHERS THEN
+                    IF to_regprocedure('uuidv7()') IS NULL THEN
+                      CREATE OR REPLACE FUNCTION public.uuidv7() RETURNS uuid
+                      LANGUAGE sql VOLATILE PARALLEL SAFE
+                      AS $fn$ SELECT gen_random_uuid() $fn$;
+                    END IF;
+                END
+                $ef$;
+                """);
+
             migrationBuilder.EnsureSchema(
                 name: "procedures_config");
 
@@ -1722,7 +1738,7 @@ namespace Flit.Infrastructure.Persistence.Migrations
                 schema: "identity",
                 table: "sessions",
                 column: "user_id",
-                filter: "is_revoked = false AND expires_at > now()");
+                filter: "is_revoked = false");
 
             migrationBuilder.CreateIndex(
                 name: "ix_sessions_user_id_is_revoked",

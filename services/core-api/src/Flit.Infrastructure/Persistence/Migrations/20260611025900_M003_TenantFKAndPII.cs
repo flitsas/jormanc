@@ -21,17 +21,8 @@ public partial class M003_TenantFKAndPII : Migration
         // of tenant data; Tenant deactivation is soft-delete, not hard-delete.
         // ================================================================
 
-        // --- identity schema --- (FK cross-schema: sessions, invitations, user_roles)
-        // roles y users ya tienen FK a identity.tenants en M001 vía EF Core.
+        // --- identity schema --- user_roles tenant FK (sessions/invitations ya en M001)
         migrationBuilder.Sql(@"
-            ALTER TABLE identity.sessions
-                ADD CONSTRAINT fk_sessions_tenants
-                FOREIGN KEY (tenant_id) REFERENCES identity.tenants(id) ON DELETE RESTRICT;
-
-            ALTER TABLE identity.invitations
-                ADD CONSTRAINT fk_invitations_tenants
-                FOREIGN KEY (tenant_id) REFERENCES identity.tenants(id) ON DELETE RESTRICT;
-
             ALTER TABLE identity.user_roles
                 ADD CONSTRAINT fk_user_roles_tenants
                 FOREIGN KEY (tenant_id) REFERENCES identity.tenants(id) ON DELETE RESTRICT;
@@ -80,9 +71,8 @@ public partial class M003_TenantFKAndPII : Migration
             ALTER TABLE procedures_config.query_rules
                 ADD CONSTRAINT fk_query_rules_tenants
                 FOREIGN KEY (tenant_id) REFERENCES identity.tenants(id) ON DELETE RESTRICT;
-
-        // procedure_type_snapshots no tiene tenant_id (snapshot inmutable, heredado por FK a procedure_types)
         ");
+        // procedure_type_snapshots: sin tenant_id (heredado por FK a procedure_types)
 
         // --- procedures schema ---
         migrationBuilder.Sql(@"
@@ -211,10 +201,14 @@ public partial class M003_TenantFKAndPII : Migration
                 '@pii:medium — Payload de respuesta de sistema externo. Puede contener datos personales según conector.';
         ");
 
-        // procedures.procedure_actors — actor snapshot con datos personales
+        // procedures.procedure_actors — datos personales del actor
         migrationBuilder.Sql(@"
-            COMMENT ON COLUMN procedures.procedure_actors.actor_snapshot IS
-                '@pii:medium — Snapshot del actor al momento del trámite (nombre, documento, roles). Habeas Data: Ley 1581/2012.';
+            COMMENT ON COLUMN procedures.procedure_actors.full_name IS
+                '@pii:medium — Nombre del actor en el trámite. Habeas Data: Ley 1581/2012.';
+            COMMENT ON COLUMN procedures.procedure_actors.document_number IS
+                '@pii:high — Número de documento del actor.';
+            COMMENT ON COLUMN procedures.procedure_actors.query_results IS
+                '@pii:medium — Resultados de consultas externas (JSONB). Puede contener datos personales.';
         ");
 
         // identity.users — datos del usuario
@@ -243,7 +237,9 @@ public partial class M003_TenantFKAndPII : Migration
             COMMENT ON COLUMN integrations.integration_logs.request_payload IS NULL;
             COMMENT ON COLUMN integrations.integration_logs.response_payload IS NULL;
 
-            COMMENT ON COLUMN procedures.procedure_actors.actor_snapshot IS NULL;
+            COMMENT ON COLUMN procedures.procedure_actors.full_name IS NULL;
+            COMMENT ON COLUMN procedures.procedure_actors.document_number IS NULL;
+            COMMENT ON COLUMN procedures.procedure_actors.query_results IS NULL;
 
             COMMENT ON COLUMN identity.users.email IS NULL;
             COMMENT ON COLUMN identity.users.full_name IS NULL;
@@ -287,8 +283,6 @@ public partial class M003_TenantFKAndPII : Migration
             ALTER TABLE companies.companies DROP CONSTRAINT IF EXISTS fk_companies_tenants;
 
             ALTER TABLE identity.user_roles DROP CONSTRAINT IF EXISTS fk_user_roles_tenants;
-            ALTER TABLE identity.invitations DROP CONSTRAINT IF EXISTS fk_invitations_tenants;
-            ALTER TABLE identity.sessions DROP CONSTRAINT IF EXISTS fk_sessions_tenants;
         ");
     }
 }
