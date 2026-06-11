@@ -55,4 +55,51 @@ test.describe('HU #9769 — Identidad Auth API', () => {
     expect(profile.tenantId).toBeTruthy();
     expect(Array.isArray(profile.permissions)).toBe(true);
   });
+
+  test('QA_TC04_IDENTIDAD_AUTH - Caso Borde Multitenant', async ({ request }) => {
+    const res = await request.post(`${API_BASE}/auth/login`, {
+      data: {
+        email: QA_SEED.email,
+        password: QA_SEED.password,
+        tenantSlug: 'tenant-inexistente',
+      },
+    });
+    expect(res.status()).toBe(401);
+    const body = await res.json();
+    expect(body.code).toMatch(/INVALID_CREDENTIALS/i);
+  });
+
+  test('QA_TC05_IDENTIDAD_AUTH - Validacion Contrato API', async ({ request }) => {
+    const login = await request.post(`${API_BASE}/auth/login`, {
+      data: {
+        email: QA_SEED.email,
+        password: QA_SEED.password,
+        tenantSlug: QA_SEED.tenantSlug,
+      },
+    });
+    expect(login.status()).toBe(200);
+    const { accessToken: token } = await login.json();
+
+    const me = await request.get(`${API_BASE}/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    expect(me.status()).toBe(200);
+    const profile = await me.json();
+
+    expect(profile.id).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+    );
+    expect(profile.name).toBeTruthy();
+    expect(profile.email).toBe(QA_SEED.email);
+    expect(profile.tenantId).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+    );
+    expect(profile.tenantName).toBeTruthy();
+    expect(Array.isArray(profile.roles)).toBe(true);
+    expect(profile.roles.length).toBeGreaterThan(0);
+    expect(Array.isArray(profile.permissions)).toBe(true);
+    for (const perm of profile.permissions as string[]) {
+      expect(perm).toMatch(/^[a-z0-9_.:-]+$/i);
+    }
+  });
 });
