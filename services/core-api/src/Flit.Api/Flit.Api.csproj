@@ -6,15 +6,26 @@
     <UserSecretsId>tramites-api-dev</UserSecretsId>
     <PublishAot>false</PublishAot>
     <IsAotCompatible>false</IsAotCompatible>
+    <!-- CA1848/CA1873: logger performance hints — no aplican a dev seed y hosted services de infra -->
+    <NoWarn>$(NoWarn);CA1848;CA1873</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Flit.SharedKernel\Flit.SharedKernel.csproj" />
     <ProjectReference Include="..\Flit.Infrastructure\Flit.Infrastructure.csproj" />
+    <ProjectReference Include="..\Flit.Modules.Identity\Flit.Modules.Identity.csproj" />
+    <ProjectReference Include="..\Flit.Modules.Companies\Flit.Modules.Companies.csproj" />
+    <ProjectReference Include="..\Flit.Modules.Integrations\Flit.Modules.Integrations.csproj" />
+    <ProjectReference Include="..\Flit.Modules.ProceduresConfig\Flit.Modules.ProceduresConfig.csproj" />
+    <ProjectReference Include="..\Flit.Modules.Procedures\Flit.Modules.Procedures.csproj" />
+    <ProjectReference Include="..\Flit.Modules.Documents\Flit.Modules.Documents.csproj" />
+    <ProjectReference Include="..\Flit.Modules.Analytics\Flit.Modules.Analytics.csproj" />
+    <ProjectReference Include="..\Flit.Modules.OT\Flit.Modules.OT.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
