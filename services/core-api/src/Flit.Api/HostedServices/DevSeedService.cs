@@ -154,7 +154,7 @@ public sealed class DevSeedService(
             logger.LogInformation("Dev seed: Usuario 'admin@acme.com' creado ({Id})", user.Id);
         }
 
-        // UserRole
+        // UserRole (admin)
         var hasRole = await db.UserRoles
             .AnyAsync(ur => ur.UserId == user.Id && ur.RoleId == role.Id, ct);
 
@@ -171,8 +171,85 @@ public sealed class DevSeedService(
             await db.SaveChangesAsync(ct);
         }
 
+        // Role superadmin (consola SaaS — HU-9774 E2E)
+        var superRole = await db.Roles.FirstOrDefaultAsync(
+            r => r.Slug == "superadmin" && r.TenantId == tenant.Id, ct);
+        if (superRole is null)
+        {
+            superRole = new Role
+            {
+                Id = Guid.NewGuid(),
+                TenantId = tenant.Id,
+                Slug = "superadmin",
+                Name = "Super Administrador",
+                Description = "Gobierno SaaS multi-tenant",
+                IsSystem = true,
+                CreatedAt = now,
+                CreatedBy = SystemSeedId,
+                UpdatedAt = now,
+                UpdatedBy = SystemSeedId
+            };
+            db.Roles.Add(superRole);
+            await db.SaveChangesAsync(ct);
+            logger.LogInformation("Dev seed: Role 'superadmin' creado ({Id})", superRole.Id);
+        }
+
+        var hasSuperRole = await db.UserRoles
+            .AnyAsync(ur => ur.UserId == user.Id && ur.RoleId == superRole.Id, ct);
+        if (!hasSuperRole)
+        {
+            db.UserRoles.Add(new UserRole
+            {
+                UserId = user.Id,
+                RoleId = superRole.Id,
+                TenantId = tenant.Id,
+                AssignedAt = now,
+                AssignedBy = SystemSeedId
+            });
+            await db.SaveChangesAsync(ct);
+        }
+
+        // Usuario tenant-admin sin superadmin (TC04 E2E — 403 en /admin/companies)
+        var tenantAdmin = await db.Users
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(u => u.Email == "operador@acme.com" && u.TenantId == tenant.Id, ct);
+        if (tenantAdmin is null)
+        {
+            tenantAdmin = new User
+            {
+                Id = Guid.NewGuid(),
+                TenantId = tenant.Id,
+                Email = "operador@acme.com",
+                FullName = "Operador Tenant",
+                PasswordHash = passwordHasher.Hash("Flit2026@Dev!"),
+                Status = "active",
+                MustResetPwd = false,
+                CreatedAt = now,
+                CreatedBy = SystemSeedId,
+                UpdatedAt = now,
+                UpdatedBy = SystemSeedId
+            };
+            db.Users.Add(tenantAdmin);
+            await db.SaveChangesAsync(ct);
+        }
+
+        var operadorHasAdmin = await db.UserRoles
+            .AnyAsync(ur => ur.UserId == tenantAdmin.Id && ur.RoleId == role.Id, ct);
+        if (!operadorHasAdmin)
+        {
+            db.UserRoles.Add(new UserRole
+            {
+                UserId = tenantAdmin.Id,
+                RoleId = role.Id,
+                TenantId = tenant.Id,
+                AssignedAt = now,
+                AssignedBy = SystemSeedId
+            });
+            await db.SaveChangesAsync(ct);
+        }
+
         logger.LogInformation(
-            "Dev seed completo. Login: admin@acme.com / Flit2026@Dev! · tenant_slug: acme");
+            "Dev seed completo. SuperAdmin: admin@acme.com / Flit2026@Dev! · tenant_slug: acme · Operador: operador@acme.com");
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;

@@ -77,6 +77,8 @@ gateway
 *.pid
 *.seed
 storage/
+!**/Infrastructure/Storage/
+!**/Infrastructure/Storage/**
 
 # Test artifacts
 playwright-report/
