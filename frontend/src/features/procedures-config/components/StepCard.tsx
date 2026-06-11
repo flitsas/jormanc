@@ -55,7 +55,9 @@ export function StepCard({
       <div className="flex items-center gap-2">
         <i className="pi pi-bars text-flit-muted" aria-hidden="true" />
         <span className="text-xs font-semibold text-flit-muted">#{step.orderIndex}</span>
-        <span className="font-medium text-flit-heading dark:text-flit-heading-dark">{step.name}</span>
+        <span className="font-medium text-flit-heading dark:text-flit-heading-dark">
+          {step.name}
+        </span>
         <span className="ml-auto text-xs text-flit-muted">{step.stepType}</span>
       </div>
     </div>

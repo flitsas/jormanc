@@ -6,10 +6,7 @@ import {
   DashboardTopUsersSchema,
   type DashboardFamily,
 } from "./dashboard.schemas.js";
-import {
-  parseContentDispositionFilename,
-  triggerBlobDownload,
-} from "../lib/downloadBlob.js";
+import { parseContentDispositionFilename, triggerBlobDownload } from "../lib/downloadBlob.js";
 
 export interface DashboardDateRange {
   from: string;

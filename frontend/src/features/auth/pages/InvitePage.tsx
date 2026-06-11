@@ -89,11 +89,7 @@ export function InvitePage() {
             Crea tu contraseña para acceder a la plataforma
           </p>
 
-          <InvitationForm
-            token={token}
-            email={data.email}
-            tenantName={data.tenant_name}
-          />
+          <InvitationForm token={token} email={data.email} tenantName={data.tenant_name} />
         </div>
       </div>
     </div>

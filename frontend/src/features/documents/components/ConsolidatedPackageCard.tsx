@@ -142,15 +142,21 @@ export function ConsolidatedPackageCard({
         </h3>
         <dl className="mt-2 grid gap-1 text-sm text-flit-muted dark:text-flit-muted-dark sm:grid-cols-2">
           <div>
-            <dt className="inline font-medium text-flit-heading dark:text-flit-heading-dark">Versión: </dt>
+            <dt className="inline font-medium text-flit-heading dark:text-flit-heading-dark">
+              Versión:{" "}
+            </dt>
             <dd className="inline">{latestPackage.version}</dd>
           </div>
           <div>
-            <dt className="inline font-medium text-flit-heading dark:text-flit-heading-dark">Documentos: </dt>
+            <dt className="inline font-medium text-flit-heading dark:text-flit-heading-dark">
+              Documentos:{" "}
+            </dt>
             <dd className="inline">{latestPackage.docCount}</dd>
           </div>
           <div className="sm:col-span-2">
-            <dt className="inline font-medium text-flit-heading dark:text-flit-heading-dark">Generado: </dt>
+            <dt className="inline font-medium text-flit-heading dark:text-flit-heading-dark">
+              Generado:{" "}
+            </dt>
             <dd className="inline">{formatDate(latestPackage.createdAt)}</dd>
           </div>
           <div className="sm:col-span-2">
@@ -216,7 +222,10 @@ export function ConsolidatedPackageCard({
             onClick={(e) => e.stopPropagation()}
           >
             <header className="flex items-center justify-between border-b border-flit-border px-4 py-3 dark:border-flit-border-dark">
-              <h2 id={viewerTitleId} className="text-base font-semibold text-flit-heading dark:text-flit-heading-dark">
+              <h2
+                id={viewerTitleId}
+                className="text-base font-semibold text-flit-heading dark:text-flit-heading-dark"
+              >
                 Visor — {latestPackage.downloadFilename}
               </h2>
               <button

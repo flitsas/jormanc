@@ -60,7 +60,11 @@ export function AttachmentsPanel({
 
   if (isLoading) {
     return (
-      <section aria-label="Cargando adjuntos" aria-busy="true" className="space-y-3 rounded-lg border border-flit-border p-4 dark:border-flit-border-dark">
+      <section
+        aria-label="Cargando adjuntos"
+        aria-busy="true"
+        className="space-y-3 rounded-lg border border-flit-border p-4 dark:border-flit-border-dark"
+      >
         {Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="h-10 animate-pulse rounded bg-flit-border/30" />
         ))}
@@ -70,10 +74,19 @@ export function AttachmentsPanel({
 
   if (error) {
     return (
-      <section role="alert" className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950/30">
-        <p className="text-sm font-medium text-red-800 dark:text-red-200">No se pudieron cargar los adjuntos</p>
+      <section
+        role="alert"
+        className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950/30"
+      >
+        <p className="text-sm font-medium text-red-800 dark:text-red-200">
+          No se pudieron cargar los adjuntos
+        </p>
         <p className="text-sm text-red-700 dark:text-red-300">{error.message}</p>
-        <button type="button" onClick={onRetry} className="mt-2 rounded-lg border px-3 py-1.5 text-sm">
+        <button
+          type="button"
+          onClick={onRetry}
+          className="mt-2 rounded-lg border px-3 py-1.5 text-sm"
+        >
           Reintentar
         </button>
       </section>
@@ -83,8 +96,14 @@ export function AttachmentsPanel({
   const grouped = groupByLabel(attachments);
 
   return (
-    <section aria-labelledby="attachments-panel-title" className="space-y-4 rounded-lg border border-flit-border p-4 dark:border-flit-border-dark">
-      <h2 id="attachments-panel-title" className="text-lg font-semibold text-flit-heading dark:text-flit-heading-dark">
+    <section
+      aria-labelledby="attachments-panel-title"
+      className="space-y-4 rounded-lg border border-flit-border p-4 dark:border-flit-border-dark"
+    >
+      <h2
+        id="attachments-panel-title"
+        className="text-lg font-semibold text-flit-heading dark:text-flit-heading-dark"
+      >
         <i className="pi pi-paperclip mr-2 text-flit-primary" aria-hidden="true" />
         Adjuntos del trámite
       </h2>
@@ -150,7 +169,10 @@ export function AttachmentsPanel({
               </h3>
               <ul className="divide-y divide-flit-border rounded-md border border-flit-border dark:divide-flit-border-dark dark:border-flit-border-dark">
                 {items.map((att) => (
-                  <li key={att.id} className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 text-sm">
+                  <li
+                    key={att.id}
+                    className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 text-sm"
+                  >
                     <span className="font-medium text-flit-heading dark:text-flit-heading-dark">
                       {att.fileName}
                     </span>

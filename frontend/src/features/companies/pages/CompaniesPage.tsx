@@ -140,10 +140,7 @@ export function CompaniesPage() {
       )}
 
       {showCreate && (
-        <CreateCompanyModal
-          onClose={() => setShowCreate(false)}
-          onCreated={() => void refetch()}
-        />
+        <CreateCompanyModal onClose={() => setShowCreate(false)} onCreated={() => void refetch()} />
       )}
     </div>
   );

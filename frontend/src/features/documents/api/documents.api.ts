@@ -27,17 +27,12 @@ export function useDocumentTemplates(documentTypeId: string | null) {
   });
 }
 
-export function useDocumentTemplateDetail(
-  documentTypeId: string | null,
-  versionId: string | null,
-) {
+export function useDocumentTemplateDetail(documentTypeId: string | null, versionId: string | null) {
   return useQuery({
     queryKey: documentsQueryKeys.templateDetail(documentTypeId ?? "", versionId ?? ""),
     enabled: !!documentTypeId && !!versionId,
     queryFn: async () => {
-      const res = await apiClient.get(
-        `/document-types/${documentTypeId}/templates/${versionId}`,
-      );
+      const res = await apiClient.get(`/document-types/${documentTypeId}/templates/${versionId}`);
       return DocumentTemplateDetailSchema.parse(res.data);
     },
   });
@@ -57,11 +52,9 @@ export function useUploadDocumentTemplate() {
       formData.append("html_content", file);
       if (notes?.trim()) formData.append("notes", notes.trim());
 
-      const res = await apiClient.post(
-        `/document-types/${documentTypeId}/templates`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } },
-      );
+      const res = await apiClient.post(`/document-types/${documentTypeId}/templates`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       return DocumentTemplateSchema.parse(res.data);
     },
     onSuccess: (_data, variables) => {
@@ -135,7 +128,8 @@ export async function fetchConsolidatedPdfBlob(procedureId: string): Promise<Blo
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
   if (!res.ok) {
-    const message = res.status === 404 ? "Paquete consolidado no disponible." : "Error al cargar el PDF.";
+    const message =
+      res.status === 404 ? "Paquete consolidado no disponible." : "Error al cargar el PDF.";
     throw new Error(message);
   }
   return res.blob();

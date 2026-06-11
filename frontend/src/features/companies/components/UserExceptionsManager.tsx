@@ -29,10 +29,18 @@ export function UserExceptionsManager({ companyId, onSaved }: UserExceptionsMana
   }
 
   if (isLoading) {
-    return <p className="text-sm text-flit-muted" aria-busy="true">Cargando excepciones…</p>;
+    return (
+      <p className="text-sm text-flit-muted" aria-busy="true">
+        Cargando excepciones…
+      </p>
+    );
   }
   if (error) {
-    return <p className="text-sm text-red-600" role="alert">{error.message}</p>;
+    return (
+      <p className="text-sm text-red-600" role="alert">
+        {error.message}
+      </p>
+    );
   }
 
   const exceptions = data ?? [];
@@ -59,7 +67,9 @@ export function UserExceptionsManager({ companyId, onSaved }: UserExceptionsMana
       </div>
 
       {exceptions.length === 0 ? (
-        <p className="text-sm text-flit-muted" role="status">No hay usuarios en la lista blanca.</p>
+        <p className="text-sm text-flit-muted" role="status">
+          No hay usuarios en la lista blanca.
+        </p>
       ) : (
         <ul className="divide-y divide-slate-100 dark:divide-flit-border-dark/50">
           {exceptions.map((ex) => (

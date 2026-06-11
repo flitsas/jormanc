@@ -58,9 +58,7 @@ describe("OtModeSwitch", () => {
   it("switches back to dashboard from QX without confirmation", async () => {
     mutateAsync.mockResolvedValue({ ...BASE, mode: "dashboard", quipuxEnabled: false });
     const user = userEvent.setup();
-    renderWithProviders(
-      <OtModeSwitch organism={{ ...BASE, mode: "qx", quipuxEnabled: true }} />,
-    );
+    renderWithProviders(<OtModeSwitch organism={{ ...BASE, mode: "qx", quipuxEnabled: true }} />);
     await user.click(screen.getByRole("switch"));
     expect(mutateAsync).toHaveBeenCalledWith("dashboard");
   });

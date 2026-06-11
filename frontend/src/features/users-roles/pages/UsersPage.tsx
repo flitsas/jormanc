@@ -81,15 +81,10 @@ export function UsersPage() {
       </div>
 
       {rolesModalUser && (
-        <UserRolesModal
-          user={rolesModalUser}
-          onClose={() => setRolesModalUser(null)}
-        />
+        <UserRolesModal user={rolesModalUser} onClose={() => setRolesModalUser(null)} />
       )}
 
-      {showInviteModal && (
-        <InviteUserModal onClose={() => setShowInviteModal(false)} />
-      )}
+      {showInviteModal && <InviteUserModal onClose={() => setShowInviteModal(false)} />}
     </div>
   );
 }

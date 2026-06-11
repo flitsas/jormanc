@@ -88,7 +88,8 @@ export function useCaptureVehicle(procedureId: string) {
       const res = await apiClient.patch(`/procedures/${procedureId}/vehicle`, payload);
       return CaptureVehicleResponseSchema.parse(res.data);
     },
-    onSuccess: () => void qc.invalidateQueries({ queryKey: proceduresQueryKeys.detail(procedureId) }),
+    onSuccess: () =>
+      void qc.invalidateQueries({ queryKey: proceduresQueryKeys.detail(procedureId) }),
   });
 }
 
@@ -108,7 +109,8 @@ export function useAddActor(procedureId: string) {
         throw err;
       }
     },
-    onSuccess: () => void qc.invalidateQueries({ queryKey: proceduresQueryKeys.detail(procedureId) }),
+    onSuccess: () =>
+      void qc.invalidateQueries({ queryKey: proceduresQueryKeys.detail(procedureId) }),
   });
 }
 
@@ -119,7 +121,8 @@ export function useSubmitProcedure(procedureId: string) {
       const res = await apiClient.post(`/procedures/${procedureId}/submit`);
       return SubmitProcedureResponseSchema.parse(res.data);
     },
-    onSuccess: () => void qc.invalidateQueries({ queryKey: proceduresQueryKeys.detail(procedureId) }),
+    onSuccess: () =>
+      void qc.invalidateQueries({ queryKey: proceduresQueryKeys.detail(procedureId) }),
   });
 }
 

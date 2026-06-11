@@ -156,10 +156,9 @@ export function useUpdateDocumentOrder(otId: string) {
       procedureTypeId: string;
       orderedDocumentTypeIds: string[];
     }) => {
-      const res = await apiClient.put(
-        `/ot-organisms/${otId}/document-order/${procedureTypeId}`,
-        { orderedDocumentTypeIds },
-      );
+      const res = await apiClient.put(`/ot-organisms/${otId}/document-order/${procedureTypeId}`, {
+        orderedDocumentTypeIds,
+      });
       return UpdateDocumentOrderResponseSchema.parse(res.data);
     },
     onSuccess: () => {
@@ -205,13 +204,7 @@ export function useCreateOtLabel(otId: string) {
 export function useUpdateOtLabel(otId: string) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({
-      labelId,
-      data,
-    }: {
-      labelId: string;
-      data: UpdateOtLabelFormValues;
-    }) => {
+    mutationFn: async ({ labelId, data }: { labelId: string; data: UpdateOtLabelFormValues }) => {
       const body = UpdateOtLabelFormSchema.parse(data);
       const res = await apiClient.put(`/ot-organisms/${otId}/labels/${labelId}`, body);
       return OtDocumentLabelSchema.parse(res.data);

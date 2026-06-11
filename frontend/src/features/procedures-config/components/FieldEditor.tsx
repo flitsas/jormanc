@@ -33,7 +33,7 @@ export function FieldEditor({ field, onClose, onSave, isSaving = false }: FieldE
     const config: Record<string, unknown> =
       fieldType === "dropdown"
         ? { options: options.filter((o) => o.value.trim() && o.label.trim()) }
-        : (field.config as Record<string, unknown>) ?? {};
+        : ((field.config as Record<string, unknown>) ?? {});
 
     await onSave({ name, fieldType, isRequired, config });
     onClose();
@@ -52,7 +52,12 @@ export function FieldEditor({ field, onClose, onSave, isSaving = false }: FieldE
   }
 
   return (
-    <FlitModal title="Editar campo" subtitle={field.slug} onClose={onClose} maxWidthClass="max-w-xl">
+    <FlitModal
+      title="Editar campo"
+      subtitle={field.slug}
+      onClose={onClose}
+      maxWidthClass="max-w-xl"
+    >
       <div className="space-y-4">
         <label className="block text-sm">
           <span className="font-medium text-flit-heading dark:text-flit-heading-dark">Nombre</span>
@@ -65,7 +70,9 @@ export function FieldEditor({ field, onClose, onSave, isSaving = false }: FieldE
         </label>
 
         <label className="block text-sm">
-          <span className="font-medium text-flit-heading dark:text-flit-heading-dark">Tipo de campo</span>
+          <span className="font-medium text-flit-heading dark:text-flit-heading-dark">
+            Tipo de campo
+          </span>
           <select
             value={fieldType}
             onChange={(e) => setFieldType(e.target.value)}

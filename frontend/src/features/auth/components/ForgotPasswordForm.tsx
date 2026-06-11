@@ -33,7 +33,11 @@ export function ForgotPasswordForm() {
 
   if (submitted) {
     return (
-      <div className="flex flex-col items-center gap-4 py-4 text-center" role="status" aria-live="polite">
+      <div
+        className="flex flex-col items-center gap-4 py-4 text-center"
+        role="status"
+        aria-live="polite"
+      >
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-300">
           <i className="pi pi-check text-2xl" aria-hidden="true" />
         </div>
@@ -71,7 +75,10 @@ export function ForgotPasswordForm() {
 
       <div className="flit-field">
         <label htmlFor={`${uid}-email`} className="flit-label">
-          Correo electrónico <span className="text-flit-primary" aria-hidden="true">*</span>
+          Correo electrónico{" "}
+          <span className="text-flit-primary" aria-hidden="true">
+            *
+          </span>
         </label>
         <input
           id={`${uid}-email`}
@@ -92,7 +99,11 @@ export function ForgotPasswordForm() {
           className="h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-flit-heading placeholder-flit-muted/60 shadow-flit transition-colors focus:border-flit-primary focus:outline-none focus:ring-2 focus:ring-flit-primary/25 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:border-flit-border-dark dark:text-flit-heading-dark"
         />
         {emailError && (
-          <p id={`${uid}-email-err`} role="alert" className="text-xs text-red-600 dark:text-red-400">
+          <p
+            id={`${uid}-email-err`}
+            role="alert"
+            className="text-xs text-red-600 dark:text-red-400"
+          >
             {emailError}
           </p>
         )}

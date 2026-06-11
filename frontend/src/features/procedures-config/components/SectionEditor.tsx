@@ -11,7 +11,9 @@ export function SectionEditor({ section, onEditField }: SectionEditorProps) {
 
   return (
     <div className="rounded-lg border border-flit-border p-4 dark:border-flit-border-dark">
-      <h3 className="font-semibold text-flit-heading dark:text-flit-heading-dark">{section.name}</h3>
+      <h3 className="font-semibold text-flit-heading dark:text-flit-heading-dark">
+        {section.name}
+      </h3>
       <p className="text-xs text-flit-muted">{section.slug}</p>
 
       {fields.length === 0 ? (

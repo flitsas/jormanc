@@ -69,10 +69,15 @@ export function CompanyFormTabs({ company, onClose }: CompanyFormTabsProps) {
       <div className="flex max-h-[90vh] w-full max-w-3xl flex-col rounded-xl bg-white shadow-xl dark:bg-flit-surface-dark">
         <header className="flex items-center justify-between border-b border-slate-200 px-6 py-4 dark:border-flit-border-dark">
           <div>
-            <h2 id="company-form-title" className="text-lg font-semibold text-flit-heading dark:text-flit-heading-dark">
+            <h2
+              id="company-form-title"
+              className="text-lg font-semibold text-flit-heading dark:text-flit-heading-dark"
+            >
               {company.name}
             </h2>
-            <p className="text-sm text-flit-muted">NIT {company.nit} · {company.tenantSlug}</p>
+            <p className="text-sm text-flit-muted">
+              NIT {company.nit} · {company.tenantSlug}
+            </p>
           </div>
           <button
             type="button"
@@ -84,7 +89,10 @@ export function CompanyFormTabs({ company, onClose }: CompanyFormTabsProps) {
           </button>
         </header>
 
-        <nav className="flex gap-1 overflow-x-auto border-b border-slate-200 px-4 dark:border-flit-border-dark" role="tablist">
+        <nav
+          className="flex gap-1 overflow-x-auto border-b border-slate-200 px-4 dark:border-flit-border-dark"
+          role="tablist"
+        >
           {TABS.map((tab) => (
             <button
               key={tab.id}
@@ -175,7 +183,9 @@ export function CompanyFormTabs({ company, onClose }: CompanyFormTabsProps) {
             </div>
           )}
 
-          {activeTab === "firmas" && <SignatureMatrixEditor companyId={company.id} onSaved={showToast} />}
+          {activeTab === "firmas" && (
+            <SignatureMatrixEditor companyId={company.id} onSaved={showToast} />
+          )}
           {activeTab === "excepciones" && (
             <UserExceptionsManager companyId={company.id} onSaved={showToast} />
           )}

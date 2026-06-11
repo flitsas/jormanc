@@ -39,11 +39,7 @@ describe("CompaniesTable", () => {
     const onRetry = vi.fn();
     const user = userEvent.setup();
     render(
-      <CompaniesTable
-        {...defaultProps}
-        error={new Error("Error de red")}
-        onRetry={onRetry}
-      />,
+      <CompaniesTable {...defaultProps} error={new Error("Error de red")} onRetry={onRetry} />,
     );
     await user.click(screen.getByRole("button", { name: /reintentar/i }));
     expect(onRetry).toHaveBeenCalled();

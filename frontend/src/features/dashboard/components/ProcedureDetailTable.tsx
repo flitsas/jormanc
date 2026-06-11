@@ -81,7 +81,11 @@ export function ProcedureDetailTable({
       </div>
 
       {isLoading ? (
-        <div className="flit-list-panel__table" aria-label="Cargando detalle de trámites" aria-busy="true">
+        <div
+          className="flit-list-panel__table"
+          aria-label="Cargando detalle de trámites"
+          aria-busy="true"
+        >
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-flit-border text-left text-xs font-semibold uppercase tracking-wide text-flit-muted dark:border-flit-border-dark">

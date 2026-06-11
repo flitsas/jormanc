@@ -55,7 +55,10 @@ export function VehicleCaptureStep({
 
   return (
     <section aria-labelledby="vehicle-step-title" className="space-y-4">
-      <h2 id="vehicle-step-title" className="text-lg font-semibold text-flit-heading dark:text-flit-heading-dark">
+      <h2
+        id="vehicle-step-title"
+        className="text-lg font-semibold text-flit-heading dark:text-flit-heading-dark"
+      >
         Captura de vehículo
       </h2>
 
@@ -73,7 +76,12 @@ export function VehicleCaptureStep({
         </FlitFormField>
 
         {isSubmitting ? (
-          <p id="vehicle-loading-hint" className="text-sm text-flit-muted" role="status" aria-live="polite">
+          <p
+            id="vehicle-loading-hint"
+            className="text-sm text-flit-muted"
+            role="status"
+            aria-live="polite"
+          >
             Consultando RUNT…
           </p>
         ) : null}
@@ -92,7 +100,9 @@ export function VehicleCaptureStep({
 
       {result ? (
         <div className="rounded-lg border border-flit-border dark:border-flit-border-dark p-4 space-y-2">
-          <h3 className="font-medium text-flit-heading dark:text-flit-heading-dark">Datos del vehículo</h3>
+          <h3 className="font-medium text-flit-heading dark:text-flit-heading-dark">
+            Datos del vehículo
+          </h3>
           <dl className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
             {result.vehicle.plate ? (
               <>

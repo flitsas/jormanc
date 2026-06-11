@@ -45,7 +45,10 @@ function LogRow({ log }: { log: IntegrationLog }) {
           {new Date(log.loggedAt).toLocaleString()}
         </td>
         <td className="px-3 py-2 text-xs">
-          <i className={`pi ${expanded ? "pi-chevron-up" : "pi-chevron-down"}`} aria-hidden="true" />
+          <i
+            className={`pi ${expanded ? "pi-chevron-up" : "pi-chevron-down"}`}
+            aria-hidden="true"
+          />
         </td>
       </tr>
       {expanded && (
@@ -76,7 +79,11 @@ export function IntegrationLogsTable({ tenantId }: IntegrationLogsTableProps) {
   const { data, isLoading, error, refetch } = useIntegrationLogs(tenantId);
 
   if (isLoading) {
-    return <p className="text-sm text-flit-muted" aria-busy="true">Cargando logs de integración…</p>;
+    return (
+      <p className="text-sm text-flit-muted" aria-busy="true">
+        Cargando logs de integración…
+      </p>
+    );
   }
 
   if (error) {

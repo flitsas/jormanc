@@ -1,10 +1,7 @@
 import { useState, useId } from "react";
 import { useNavigate } from "react-router-dom";
 import { useResetPassword } from "../api/auth.api.js";
-import {
-  ResetPasswordFormSchema,
-  type ResetPasswordFormValues,
-} from "../api/auth.schemas.js";
+import { ResetPasswordFormSchema, type ResetPasswordFormValues } from "../api/auth.schemas.js";
 
 interface Props {
   token: string;
@@ -73,7 +70,10 @@ export function ResetPasswordForm({ token }: Props) {
 
       <div className="flit-field">
         <label htmlFor={`${uid}-pwd`} className="flit-label">
-          Nueva contraseña <span className="text-flit-primary" aria-hidden="true">*</span>
+          Nueva contraseña{" "}
+          <span className="text-flit-primary" aria-hidden="true">
+            *
+          </span>
         </label>
         <input
           id={`${uid}-pwd`}
@@ -102,7 +102,10 @@ export function ResetPasswordForm({ token }: Props) {
 
       <div className="flit-field">
         <label htmlFor={`${uid}-confirm`} className="flit-label">
-          Confirmar contraseña <span className="text-flit-primary" aria-hidden="true">*</span>
+          Confirmar contraseña{" "}
+          <span className="text-flit-primary" aria-hidden="true">
+            *
+          </span>
         </label>
         <input
           id={`${uid}-confirm`}
@@ -120,7 +123,11 @@ export function ResetPasswordForm({ token }: Props) {
           className="h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-flit-heading placeholder-flit-muted/60 shadow-flit transition-colors focus:border-flit-primary focus:outline-none focus:ring-2 focus:ring-flit-primary/25 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:border-flit-border-dark dark:text-flit-heading-dark"
         />
         {fieldErrors.password_confirm && (
-          <p id={`${uid}-confirm-err`} role="alert" className="text-xs text-red-600 dark:text-red-400">
+          <p
+            id={`${uid}-confirm-err`}
+            role="alert"
+            className="text-xs text-red-600 dark:text-red-400"
+          >
             {fieldErrors.password_confirm}
           </p>
         )}

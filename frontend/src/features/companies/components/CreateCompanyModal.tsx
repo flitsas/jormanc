@@ -41,7 +41,11 @@ export function CreateCompanyModal({ onClose, onCreated }: CreateCompanyModalPro
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+      role="dialog"
+      aria-modal="true"
+    >
       <form
         onSubmit={(e) => void handleSubmit(e)}
         className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl dark:bg-flit-surface-dark"

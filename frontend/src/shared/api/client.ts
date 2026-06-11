@@ -23,15 +23,13 @@ apiClient.interceptors.request.use((config) => {
 
 apiClient.interceptors.response.use(
   (res) => res,
-    (error) => {
+  (error) => {
     if (error.response?.status === 403) {
       const reason: string = error.response?.data?.reason ?? "";
       localStorage.removeItem(TOKEN_KEY);
       localStorage.removeItem(USER_KEY);
       const url =
-        reason === "session_revoked"
-          ? "/login?reason=session_revoked"
-          : "/login?reason=forbidden";
+        reason === "session_revoked" ? "/login?reason=session_revoked" : "/login?reason=forbidden";
       window.location.href = url;
     }
     const message = error.response?.data?.message ?? error.message ?? "Error de red";

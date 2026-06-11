@@ -45,9 +45,7 @@ export function QueryRulesEditor({
     setToggles((prev) => prev.map((t) => (t.type === type ? { ...t, isActive: active } : t)));
   }
 
-  const activeOrdered = toggles
-    .filter((t) => t.isActive)
-    .map((t, i) => ({ ...t, order: i + 1 }));
+  const activeOrdered = toggles.filter((t) => t.isActive).map((t, i) => ({ ...t, order: i + 1 }));
 
   return (
     <div className="rounded-lg border border-flit-border p-4 dark:border-flit-border-dark">

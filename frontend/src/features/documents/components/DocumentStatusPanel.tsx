@@ -1,7 +1,4 @@
-import {
-  useConsolidateDocuments,
-  useProcedureDocuments,
-} from "../api/documents.api.js";
+import { useConsolidateDocuments, useProcedureDocuments } from "../api/documents.api.js";
 import { getLatestConsolidatedPackage } from "../lib/consolidated.js";
 import { ConsolidatedPackageCard } from "./ConsolidatedPackageCard.js";
 import { DocumentItem } from "./DocumentItem.js";
@@ -23,7 +20,10 @@ export function DocumentStatusPanel({ procedureId }: DocumentStatusPanelProps) {
       >
         <div className="h-6 w-56 animate-pulse rounded bg-flit-border/40 dark:bg-flit-border-dark/40" />
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="h-14 animate-pulse rounded bg-flit-border/30 dark:bg-flit-border-dark/30" />
+          <div
+            key={i}
+            className="h-14 animate-pulse rounded bg-flit-border/30 dark:bg-flit-border-dark/30"
+          />
         ))}
       </section>
     );

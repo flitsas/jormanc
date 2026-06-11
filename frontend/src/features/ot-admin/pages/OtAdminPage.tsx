@@ -86,11 +86,15 @@ export function OtAdminPage() {
           aria-labelledby="delete-ot-title"
         >
           <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl dark:bg-flit-surface-dark">
-            <h2 id="delete-ot-title" className="text-lg font-semibold text-flit-heading dark:text-flit-heading-dark">
+            <h2
+              id="delete-ot-title"
+              className="text-lg font-semibold text-flit-heading dark:text-flit-heading-dark"
+            >
               Eliminar OT
             </h2>
             <p className="mt-2 text-sm text-flit-muted">
-              ¿Confirma eliminar <strong>{deleteTarget.name}</strong>? Esta acción no se puede deshacer.
+              ¿Confirma eliminar <strong>{deleteTarget.name}</strong>? Esta acción no se puede
+              deshacer.
             </p>
             {deleteError && (
               <p className="mt-2 text-sm text-red-600" role="alert">

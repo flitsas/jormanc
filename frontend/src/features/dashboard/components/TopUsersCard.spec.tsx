@@ -85,12 +85,14 @@ describe("TopUsersCard — AC1", () => {
       },
     ];
 
-    render(<TopUsersCard {...defaultProps} users={usersWithEmpty} selectableUsers={usersWithEmpty} />);
+    render(
+      <TopUsersCard {...defaultProps} users={usersWithEmpty} selectableUsers={usersWithEmpty} />,
+    );
 
+    expect(screen.getByText("Este usuario no ha radicado ningún trámite")).toBeInTheDocument();
     expect(
-      screen.getByText("Este usuario no ha radicado ningún trámite"),
+      screen.getByLabelText(/pedro vacío no ha radicado trámites en el período/i),
     ).toBeInTheDocument();
-    expect(screen.getByLabelText(/pedro vacío no ha radicado trámites en el período/i)).toBeInTheDocument();
   });
 
   it("muestra skeleton mientras carga", () => {

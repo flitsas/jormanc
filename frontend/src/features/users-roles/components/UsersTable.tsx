@@ -38,13 +38,7 @@ interface UsersTableProps {
   onManageRoles: (user: User) => void;
 }
 
-export function UsersTable({
-  users,
-  isLoading,
-  error,
-  onRetry,
-  onManageRoles,
-}: UsersTableProps) {
+export function UsersTable({ users, isLoading, error, onRetry, onManageRoles }: UsersTableProps) {
   if (isLoading) {
     return (
       <div className="flit-list-panel__table" aria-label="Cargando usuarios" aria-busy="true">
@@ -130,18 +124,22 @@ export function UsersTable({
                 </span>
               </td>
               <td className="px-4 py-3 text-flit-muted dark:text-flit-muted-dark">
-                {user.roles.length > 0
-                  ? user.roles.map((r) => r.name).join(", ")
-                  : <span className="italic">Sin roles</span>}
+                {user.roles.length > 0 ? (
+                  user.roles.map((r) => r.name).join(", ")
+                ) : (
+                  <span className="italic">Sin roles</span>
+                )}
               </td>
               <td className="px-4 py-3 text-flit-muted dark:text-flit-muted-dark tabular-nums">
-                {user.last_login_at
-                  ? new Date(user.last_login_at).toLocaleDateString("es-CO", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                    })
-                  : <span className="italic">Nunca</span>}
+                {user.last_login_at ? (
+                  new Date(user.last_login_at).toLocaleDateString("es-CO", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })
+                ) : (
+                  <span className="italic">Nunca</span>
+                )}
               </td>
               <td className="px-4 py-3 text-right">
                 <button

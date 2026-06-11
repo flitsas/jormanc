@@ -1,10 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import {
-  NO_MARKERS_WARNING,
-  TemplateUploadModal,
-} from "./TemplateUploadModal.js";
+import { NO_MARKERS_WARNING, TemplateUploadModal } from "./TemplateUploadModal.js";
 import type { DocumentTemplate } from "../api/documents.schemas.js";
 
 const DOC_TYPE_ID = "00000000-0000-0000-0000-000000000010";
@@ -31,14 +28,10 @@ describe("TemplateUploadModal", () => {
   it("AC1 muestra marcadores detectados antes de Confirmar", async () => {
     const user = userEvent.setup();
     render(
-      <TemplateUploadModal
-        documentTypeId={DOC_TYPE_ID}
-        onClose={onClose}
-        onUpload={onUpload}
-      />,
+      <TemplateUploadModal documentTypeId={DOC_TYPE_ID} onClose={onClose} onUpload={onUpload} />,
     );
 
-    const html = '<p>{{actor[vendedor].full_name}} — placa {{vehicle.plate}}</p>';
+    const html = "<p>{{actor[vendedor].full_name}} — placa {{vehicle.plate}}</p>";
     const input = screen.getByLabelText(/archivo html/i);
     await user.upload(input, makeHtmlFile(html));
 
@@ -54,11 +47,7 @@ describe("TemplateUploadModal", () => {
   it("AC1 permite confirmar o cancelar la subida", async () => {
     const user = userEvent.setup();
     render(
-      <TemplateUploadModal
-        documentTypeId={DOC_TYPE_ID}
-        onClose={onClose}
-        onUpload={onUpload}
-      />,
+      <TemplateUploadModal documentTypeId={DOC_TYPE_ID} onClose={onClose} onUpload={onUpload} />,
     );
 
     await user.upload(
@@ -76,11 +65,7 @@ describe("TemplateUploadModal", () => {
   it("AC3 advierte cuando no hay marcadores pero mantiene Confirmar habilitado", async () => {
     const user = userEvent.setup();
     render(
-      <TemplateUploadModal
-        documentTypeId={DOC_TYPE_ID}
-        onClose={onClose}
-        onUpload={onUpload}
-      />,
+      <TemplateUploadModal documentTypeId={DOC_TYPE_ID} onClose={onClose} onUpload={onUpload} />,
     );
 
     await user.upload(

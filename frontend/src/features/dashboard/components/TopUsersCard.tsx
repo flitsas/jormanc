@@ -168,7 +168,10 @@ export function TopUsersCard({
         <ol className="flex flex-col gap-4" aria-label="Ranking de radicadores">
           {users.slice(0, 5).map((user) => (
             <li key={user.userId}>
-              <UserProgressRow user={user} isLeader={user.pctOfTotal === leaderPct && user.count > 0} />
+              <UserProgressRow
+                user={user}
+                isLeader={user.pctOfTotal === leaderPct && user.count > 0}
+              />
             </li>
           ))}
         </ol>

@@ -1,11 +1,7 @@
 import { useMemo, useState } from "react";
 import { Button } from "primereact/button";
 import { FlitListPanelError } from "../../../../shared/components/ui/FlitListPanelError.js";
-import {
-  useAddActor,
-  useCaptureVehicle,
-  useProcedureDetail,
-} from "../../api/procedures.api.js";
+import { useAddActor, useCaptureVehicle, useProcedureDetail } from "../../api/procedures.api.js";
 import type { CopropietarioEntry } from "./CopropietariosManager.js";
 import { CopropietariosManager } from "./CopropietariosManager.js";
 import { DynamicFormStep } from "./DynamicFormStep.js";
@@ -27,7 +23,8 @@ export function DynamicStepper({
 
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [fieldValues, setFieldValues] = useState<Record<string, unknown>>({});
-  const [vehicleResult, setVehicleResult] = useState<ReturnType<typeof useCaptureVehicle>["data"]>(null);
+  const [vehicleResult, setVehicleResult] =
+    useState<ReturnType<typeof useCaptureVehicle>["data"]>(undefined);
   const [copropietarios, setCopropietarios] = useState<CopropietarioEntry[]>([]);
 
   const steps = useMemo(() => {
@@ -39,7 +36,11 @@ export function DynamicStepper({
 
   if (isLoading) {
     return (
-      <div aria-label="Cargando configuración del trámite" aria-busy="true" className="space-y-3 p-4">
+      <div
+        aria-label="Cargando configuración del trámite"
+        aria-busy="true"
+        className="space-y-3 p-4"
+      >
         {Array.from({ length: 3 }).map((_, index) => (
           <div
             key={index}
@@ -68,6 +69,8 @@ export function DynamicStepper({
     );
   }
 
+  const procedureDetail = data;
+
   function goNext() {
     setActiveStepIndex((current) => Math.min(current + 1, steps.length - 1));
   }
@@ -81,7 +84,7 @@ export function DynamicStepper({
       return (
         <VehicleCaptureStep
           procedureId={procedureId}
-          vehicleQueryKey={data.vehicleQueryKey}
+          vehicleQueryKey={procedureDetail.vehicleQueryKey}
           isSubmitting={captureVehicle.isPending}
           error={captureVehicle.error}
           result={vehicleResult ?? captureVehicle.data ?? null}
@@ -161,10 +164,7 @@ export function DynamicStepper({
         </ol>
       </nav>
 
-      <div
-        data-testid="dynamic-stepper-content"
-        data-snapshot-id={data.procedureTypeSnapshotId}
-      >
+      <div data-testid="dynamic-stepper-content" data-snapshot-id={data.procedureTypeSnapshotId}>
         {renderStepContent()}
       </div>
     </div>

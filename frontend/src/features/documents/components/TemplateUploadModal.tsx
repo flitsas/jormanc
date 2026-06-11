@@ -104,17 +104,26 @@ export function TemplateUploadModal({
 
         {showPreview ? (
           <section aria-labelledby="markers-preview-heading">
-            <h3 id="markers-preview-heading" className="text-sm font-semibold text-flit-heading dark:text-flit-heading-dark mb-2">
+            <h3
+              id="markers-preview-heading"
+              className="text-sm font-semibold text-flit-heading dark:text-flit-heading-dark mb-2"
+            >
               Marcadores detectados
             </h3>
             {markersDetected.length === 0 ? (
-              <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800" role="alert">
+              <p
+                className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800"
+                role="alert"
+              >
                 {NO_MARKERS_WARNING}
               </p>
             ) : (
               <ul className="max-h-40 overflow-y-auto rounded-lg border border-slate-200 dark:border-flit-border-dark divide-y divide-slate-100 dark:divide-flit-border-dark/60">
                 {markersDetected.map((marker) => (
-                  <li key={marker} className="px-3 py-2 font-mono text-xs text-flit-heading dark:text-flit-heading-dark">
+                  <li
+                    key={marker}
+                    className="px-3 py-2 font-mono text-xs text-flit-heading dark:text-flit-heading-dark"
+                  >
                     {`{{${marker}}}`}
                   </li>
                 ))}
