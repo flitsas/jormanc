@@ -18,14 +18,11 @@ export function useSignalR() {
     if (!token) return;
 
     const connection = new HubConnectionBuilder()
-      .withUrl(
-        `${import.meta.env.VITE_API_BASE_URL?.replace("/api/v1", "") ?? ""}/hubs/session`,
-        { accessTokenFactory: () => localStorage.getItem(TOKEN_KEY) ?? "" },
-      )
+      .withUrl(`${import.meta.env.VITE_API_BASE_URL?.replace("/api/v1", "") ?? ""}/hubs/session`, {
+        accessTokenFactory: () => localStorage.getItem(TOKEN_KEY) ?? "",
+      })
       .withAutomaticReconnect()
-      .configureLogging(
-        import.meta.env.DEV ? LogLevel.Information : LogLevel.Warning,
-      )
+      .configureLogging(import.meta.env.DEV ? LogLevel.Information : LogLevel.Warning)
       .build();
 
     connection.on("SessionRevoked", () => {

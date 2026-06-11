@@ -1,9 +1,10 @@
-import type { DocumentOrigin, DocumentStatus, ProcedureDocumentItem } from "../api/documents.schemas.js";
-
-const STATUS_CONFIG: Record<
+import type {
+  DocumentOrigin,
   DocumentStatus,
-  { label: string; icon: string; className: string }
-> = {
+  ProcedureDocumentItem,
+} from "../api/documents.schemas.js";
+
+const STATUS_CONFIG: Record<DocumentStatus, { label: string; icon: string; className: string }> = {
   pending: {
     label: "Pendiente",
     icon: "pi-clock",
@@ -67,7 +68,10 @@ export function DocumentItem({ document }: DocumentItemProps) {
           <p className="font-medium text-flit-heading dark:text-flit-heading-dark">
             {document.documentType.name}
             {document.isRequired ? (
-              <span className="ml-1 text-xs font-normal text-red-600 dark:text-red-400" aria-label="obligatorio">
+              <span
+                className="ml-1 text-xs font-normal text-red-600 dark:text-red-400"
+                aria-label="obligatorio"
+              >
                 *
               </span>
             ) : null}

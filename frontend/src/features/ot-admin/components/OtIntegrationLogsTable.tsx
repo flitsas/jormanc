@@ -48,7 +48,10 @@ function LogRow({ log }: { log: OtIntegrationLog }) {
           {new Date(log.loggedAt).toLocaleString()}
         </td>
         <td className="px-3 py-2 text-xs">
-          <i className={`pi ${expanded ? "pi-chevron-up" : "pi-chevron-down"}`} aria-hidden="true" />
+          <i
+            className={`pi ${expanded ? "pi-chevron-up" : "pi-chevron-down"}`}
+            aria-hidden="true"
+          />
         </td>
       </tr>
       {expanded && (
@@ -82,7 +85,11 @@ export function OtIntegrationLogsTable({ otId }: OtIntegrationLogsTableProps) {
 
   if (isLoading) {
     return (
-      <p className="text-sm text-flit-muted" aria-busy="true" aria-label="Cargando logs de integración">
+      <p
+        className="text-sm text-flit-muted"
+        aria-busy="true"
+        aria-label="Cargando logs de integración"
+      >
         Cargando logs de integración Quipux…
       </p>
     );

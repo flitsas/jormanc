@@ -64,7 +64,10 @@ export function DynamicFormStep({ stepName, sections, values, onChange }: Dynami
 
   return (
     <section aria-labelledby={`${baseId}-title`} className="space-y-6">
-      <h2 id={`${baseId}-title`} className="text-lg font-semibold text-flit-heading dark:text-flit-heading-dark">
+      <h2
+        id={`${baseId}-title`}
+        className="text-lg font-semibold text-flit-heading dark:text-flit-heading-dark"
+      >
         {stepName}
       </h2>
 

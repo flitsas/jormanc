@@ -50,7 +50,11 @@ export function UserRolesModal({ user, onClose }: Props) {
       onClose={onClose}
       maxWidthClass="max-w-md"
     >
-      <form onSubmit={handleSubmit} aria-label="Formulario de roles de usuario" className="flex flex-col gap-5">
+      <form
+        onSubmit={handleSubmit}
+        aria-label="Formulario de roles de usuario"
+        className="flex flex-col gap-5"
+      >
         {apiError && (
           <div role="alert" aria-live="assertive" className="flit-alert flit-alert--block">
             <i className="pi pi-times-circle mr-2" aria-hidden="true" />
@@ -69,9 +73,7 @@ export function UserRolesModal({ user, onClose }: Props) {
           </div>
         ) : (
           <fieldset className="flex flex-col gap-2">
-            <legend className="flit-label mb-2">
-              Roles disponibles
-            </legend>
+            <legend className="flit-label mb-2">Roles disponibles</legend>
             {allRoles.length === 0 ? (
               <p className="text-sm text-flit-muted dark:text-flit-muted-dark italic">
                 No hay roles configurados

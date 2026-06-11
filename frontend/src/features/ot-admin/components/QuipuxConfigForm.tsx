@@ -62,13 +62,18 @@ export function QuipuxConfigForm({ organism, onSaved }: QuipuxConfigFormProps) {
   }
 
   return (
-    <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4" aria-label="Configuración Quipux">
+    <form
+      onSubmit={(e) => void handleSubmit(e)}
+      className="space-y-4"
+      aria-label="Configuración Quipux"
+    >
       <div>
         <h3 className="text-sm font-semibold text-flit-heading dark:text-flit-heading-dark">
           Integración Quipux
         </h3>
         <p className="mt-1 text-sm text-flit-muted">
-          Configure el endpoint y el token del webhook. El token se almacena hasheado en el servidor.
+          Configure el endpoint y el token del webhook. El token se almacena hasheado en el
+          servidor.
         </p>
       </div>
 

@@ -73,7 +73,10 @@ describe("FamilyPieChart — AC1", () => {
 
   it("muestra skeleton mientras carga", () => {
     render(<FamilyPieChart {...defaultProps} isLoading={true} />);
-    expect(screen.getByLabelText(/cargando gráfico circular/i)).toHaveAttribute("aria-busy", "true");
+    expect(screen.getByLabelText(/cargando gráfico circular/i)).toHaveAttribute(
+      "aria-busy",
+      "true",
+    );
   });
 
   it("muestra estado vacío sin trámites en el período", () => {

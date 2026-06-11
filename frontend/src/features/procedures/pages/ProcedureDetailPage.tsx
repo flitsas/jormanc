@@ -50,7 +50,9 @@ export function ProcedureDetailPage() {
           {data ? (
             <p className="mt-0.5 text-sm text-flit-muted dark:text-flit-muted-dark">
               Snapshot: <code className="text-xs">{data.procedureTypeSnapshotId}</code> · Estado:{" "}
-              <span className="font-medium text-flit-heading dark:text-flit-heading-dark">{data.status}</span>
+              <span className="font-medium text-flit-heading dark:text-flit-heading-dark">
+                {data.status}
+              </span>
             </p>
           ) : null}
         </div>

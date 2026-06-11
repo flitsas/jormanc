@@ -53,7 +53,10 @@ export function DeleteLabelModal({
               onChange={(e) => setConfirmed(e.target.checked)}
               className="mt-0.5"
             />
-            <span>Entiendo que se eliminará la etiqueta &quot;{label.slug}&quot; y afectará adjuntos existentes.</span>
+            <span>
+              Entiendo que se eliminará la etiqueta &quot;{label.slug}&quot; y afectará adjuntos
+              existentes.
+            </span>
           </label>
         ) : null}
 
@@ -68,11 +71,7 @@ export function DeleteLabelModal({
           <button
             type="button"
             onClick={onConfirm}
-            disabled={
-              isDeleting ||
-              isLoadingImpact ||
-              (impactCount > 0 && !confirmed)
-            }
+            disabled={isDeleting || isLoadingImpact || (impactCount > 0 && !confirmed)}
             className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
           >
             {isDeleting ? "Eliminando…" : "Eliminar"}

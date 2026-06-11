@@ -12,6 +12,7 @@ import {
   type FormField,
 } from "./procedures-config.schemas.js";
 import type { VerificationToggle } from "../components/QueryRulesEditor.js";
+import type { ConditionTreeJson } from "../lib/conditionTree.js";
 
 export const proceduresConfigKeys = {
   detail: (id: string) => ["procedure-types", id] as const,
@@ -46,7 +47,8 @@ export function useUpdateProcedureStep(procedureTypeId: string) {
       });
       return ProcedureStepSchema.parse(res.data);
     },
-    onSuccess: () => void qc.invalidateQueries({ queryKey: proceduresConfigKeys.detail(procedureTypeId) }),
+    onSuccess: () =>
+      void qc.invalidateQueries({ queryKey: proceduresConfigKeys.detail(procedureTypeId) }),
   });
 }
 
@@ -71,7 +73,8 @@ export function useUpdateFormField(procedureTypeId: string, stepId: string, sect
       );
       return FormFieldSchema.parse(res.data);
     },
-    onSuccess: () => void qc.invalidateQueries({ queryKey: proceduresConfigKeys.detail(procedureTypeId) }),
+    onSuccess: () =>
+      void qc.invalidateQueries({ queryKey: proceduresConfigKeys.detail(procedureTypeId) }),
   });
 }
 
@@ -91,7 +94,8 @@ export function useUpdateApiConnector(procedureTypeId: string) {
       );
       return ApiConnectorSchema.parse(res.data);
     },
-    onSuccess: () => void qc.invalidateQueries({ queryKey: proceduresConfigKeys.detail(procedureTypeId) }),
+    onSuccess: () =>
+      void qc.invalidateQueries({ queryKey: proceduresConfigKeys.detail(procedureTypeId) }),
   });
 }
 
@@ -99,10 +103,13 @@ export function useSimulateCoherence(procedureTypeId: string) {
   return useMutation({
     mutationFn: async (payload: {
       name: string;
-      conditions: Record<string, unknown>;
+      conditions: ConditionTreeJson;
       actions: Array<Record<string, unknown>>;
     }) => {
-      const res = await apiClient.post(`/procedure-types/${procedureTypeId}/rules/simulate`, payload);
+      const res = await apiClient.post(
+        `/procedure-types/${procedureTypeId}/rules/simulate`,
+        payload,
+      );
       return CoherenceSimulationSchema.parse(res.data);
     },
   });
@@ -113,13 +120,14 @@ export function useCreateRuleSet(procedureTypeId: string) {
   return useMutation({
     mutationFn: async (payload: {
       name: string;
-      conditions: Record<string, unknown>;
+      conditions: ConditionTreeJson;
       actions: Array<Record<string, unknown>>;
     }) => {
       const res = await apiClient.post(`/procedure-types/${procedureTypeId}/rules`, payload);
       return RuleSetSchema.parse(res.data);
     },
-    onSuccess: () => void qc.invalidateQueries({ queryKey: proceduresConfigKeys.detail(procedureTypeId) }),
+    onSuccess: () =>
+      void qc.invalidateQueries({ queryKey: proceduresConfigKeys.detail(procedureTypeId) }),
   });
 }
 

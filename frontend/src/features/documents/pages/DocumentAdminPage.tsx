@@ -37,8 +37,7 @@ function DocumentTypeSelector() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const trimmed = documentTypeId.trim();
-    const uuidRegex =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     if (!uuidRegex.test(trimmed)) {
       setValidationError("Ingrese un UUID válido de tipo de documento.");
       return;
@@ -87,7 +86,10 @@ function DocumentTypeSelector() {
 
       {recentIds.length > 0 ? (
         <section aria-labelledby="recent-types-heading">
-          <h2 id="recent-types-heading" className="text-sm font-semibold text-flit-heading dark:text-flit-heading-dark mb-2">
+          <h2
+            id="recent-types-heading"
+            className="text-sm font-semibold text-flit-heading dark:text-flit-heading-dark mb-2"
+          >
             Tipos recientes
           </h2>
           <ul className="space-y-1">

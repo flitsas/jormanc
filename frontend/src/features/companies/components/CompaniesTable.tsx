@@ -85,7 +85,9 @@ export function CompaniesTable({
         <p className="text-flit-heading dark:text-flit-heading-dark font-medium">
           No hay compañías registradas
         </p>
-        <p className="text-sm text-flit-muted mt-1">Crea la primera compañía con el botón superior.</p>
+        <p className="text-sm text-flit-muted mt-1">
+          Crea la primera compañía con el botón superior.
+        </p>
       </div>
     );
   }

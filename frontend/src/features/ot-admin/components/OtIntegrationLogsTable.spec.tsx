@@ -39,9 +39,7 @@ function renderWithProviders(ui: React.ReactElement) {
 describe("OtIntegrationLogsTable", () => {
   it("expands JSON payload when row is clicked", async () => {
     const user = userEvent.setup();
-    renderWithProviders(
-      <OtIntegrationLogsTable otId="00000000-0000-0000-0000-000000000010" />,
-    );
+    renderWithProviders(<OtIntegrationLogsTable otId="00000000-0000-0000-0000-000000000010" />);
 
     expect(screen.getByText("status_changed")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /status_changed/i }));

@@ -96,8 +96,12 @@ describe("OtLabelsManager", () => {
 
     renderWithProviders(<OtLabelsManager otId={OT_ID} />);
     expect(screen.getByText("Paz y Salvo Municipal")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /editar etiqueta paz y salvo municipal/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /eliminar etiqueta paz y salvo municipal/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /editar etiqueta paz y salvo municipal/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /eliminar etiqueta paz y salvo municipal/i }),
+    ).toBeInTheDocument();
   });
 
   it("AC2 DeleteLabelModal muestra impacto y exige checkbox", async () => {
@@ -111,11 +115,11 @@ describe("OtLabelsManager", () => {
     const user = userEvent.setup();
     renderWithProviders(<OtLabelsManager otId={OT_ID} />);
 
-    await user.click(screen.getByRole("button", { name: /eliminar etiqueta paz y salvo municipal/i }));
+    await user.click(
+      screen.getByRole("button", { name: /eliminar etiqueta paz y salvo municipal/i }),
+    );
 
-    expect(
-      screen.getByText(/esta etiqueta está en uso en 23 adjuntos/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/esta etiqueta está en uso en 23 adjuntos/i)).toBeInTheDocument();
 
     const deleteBtn = screen.getByRole("button", { name: /^eliminar$/i });
     expect(deleteBtn).toBeDisabled();

@@ -21,7 +21,10 @@ export function DocumentOrderDragDrop({ otId }: DocumentOrderDragDropProps) {
 
   useEffect(() => {
     if (!entries?.length) return;
-    if (!selectedProcedureTypeId || !entries.some((e) => e.procedureTypeId === selectedProcedureTypeId)) {
+    if (
+      !selectedProcedureTypeId ||
+      !entries.some((e) => e.procedureTypeId === selectedProcedureTypeId)
+    ) {
       setSelectedProcedureTypeId(entries[0]!.procedureTypeId);
     }
   }, [entries, selectedProcedureTypeId]);

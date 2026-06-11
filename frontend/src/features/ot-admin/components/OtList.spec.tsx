@@ -55,9 +55,7 @@ describe("OtList", () => {
   it("shows error state with retry", async () => {
     const onRetry = vi.fn();
     const user = userEvent.setup();
-    render(
-      <OtList {...defaultProps} error={new Error("Error de red")} onRetry={onRetry} />,
-    );
+    render(<OtList {...defaultProps} error={new Error("Error de red")} onRetry={onRetry} />);
     await user.click(screen.getByRole("button", { name: /reintentar/i }));
     expect(onRetry).toHaveBeenCalled();
   });

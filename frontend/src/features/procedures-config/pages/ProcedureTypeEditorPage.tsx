@@ -76,7 +76,10 @@ export function ProcedureTypeEditorPage() {
       </header>
 
       <section aria-labelledby="pipeline-heading">
-        <h2 id="pipeline-heading" className="mb-3 text-lg font-semibold text-flit-heading dark:text-flit-heading-dark">
+        <h2
+          id="pipeline-heading"
+          className="mb-3 text-lg font-semibold text-flit-heading dark:text-flit-heading-dark"
+        >
           Pipeline
         </h2>
         <PipelineBuilder

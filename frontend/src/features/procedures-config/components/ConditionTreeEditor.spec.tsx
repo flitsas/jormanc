@@ -11,14 +11,23 @@ describe("ConditionTreeEditor", () => {
         operator="OR"
         leaves={[
           { ...newConditionLeaf(), field: "actor.nature", op: "==", value: "juridica" },
-          { ...newConditionLeaf(), field: "vehicle.restrictions", op: "Contains", value: "EMBARGO" },
+          {
+            ...newConditionLeaf(),
+            field: "vehicle.restrictions",
+            op: "Contains",
+            value: "EMBARGO",
+          },
         ]}
         onOperatorChange={vi.fn()}
         onLeavesChange={vi.fn()}
       />,
     );
-    expect(screen.getByLabelText(/json de condiciones generado/i)).toHaveTextContent('"operator": "OR"');
-    expect(screen.getByLabelText(/json de condiciones generado/i)).toHaveTextContent("actor.nature");
+    expect(screen.getByLabelText(/json de condiciones generado/i)).toHaveTextContent(
+      '"operator": "OR"',
+    );
+    expect(screen.getByLabelText(/json de condiciones generado/i)).toHaveTextContent(
+      "actor.nature",
+    );
   });
 
   it("AC1 cambia operador a AND", async () => {

@@ -28,10 +28,18 @@ export function SignatureMatrixEditor({ companyId, onSaved }: SignatureMatrixEdi
   }, [data]);
 
   if (isLoading) {
-    return <p className="text-sm text-flit-muted" aria-busy="true">Cargando matriz de firmas…</p>;
+    return (
+      <p className="text-sm text-flit-muted" aria-busy="true">
+        Cargando matriz de firmas…
+      </p>
+    );
   }
   if (error) {
-    return <p className="text-sm text-red-600" role="alert">{error.message}</p>;
+    return (
+      <p className="text-sm text-red-600" role="alert">
+        {error.message}
+      </p>
+    );
   }
 
   async function handleSave() {

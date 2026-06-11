@@ -1,9 +1,6 @@
 import type { DocumentTemplate } from "../api/documents.schemas.js";
 
-const STATUS_BADGE: Record<
-  DocumentTemplate["status"],
-  { label: string; className: string }
-> = {
+const STATUS_BADGE: Record<DocumentTemplate["status"], { label: string; className: string }> = {
   active: {
     label: "Activa",
     className:
@@ -53,7 +50,11 @@ export function TemplateVersionsList({
 }: TemplateVersionsListProps) {
   if (isLoading) {
     return (
-      <div className="flit-list-panel__table" aria-label="Cargando versiones de plantilla" aria-busy="true">
+      <div
+        className="flit-list-panel__table"
+        aria-label="Cargando versiones de plantilla"
+        aria-busy="true"
+      >
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-slate-200 dark:border-flit-border-dark text-left text-xs font-semibold uppercase tracking-wide text-flit-muted">

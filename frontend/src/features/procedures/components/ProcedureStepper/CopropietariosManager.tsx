@@ -84,7 +84,10 @@ export function CopropietariosManager({
 
   return (
     <section aria-labelledby="copropietarios-title" className="space-y-4">
-      <h2 id="copropietarios-title" className="text-lg font-semibold text-flit-heading dark:text-flit-heading-dark">
+      <h2
+        id="copropietarios-title"
+        className="text-lg font-semibold text-flit-heading dark:text-flit-heading-dark"
+      >
         Copropietarios
       </h2>
 

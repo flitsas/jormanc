@@ -27,17 +27,14 @@ function SkeletonRow() {
   );
 }
 
-export function OtList({
-  organisms,
-  isLoading,
-  error,
-  onRetry,
-  onSelect,
-  onDelete,
-}: OtListProps) {
+export function OtList({ organisms, isLoading, error, onRetry, onSelect, onDelete }: OtListProps) {
   if (isLoading) {
     return (
-      <div className="flit-list-panel__table" aria-label="Cargando organismos de tránsito" aria-busy="true">
+      <div
+        className="flit-list-panel__table"
+        aria-label="Cargando organismos de tránsito"
+        aria-busy="true"
+      >
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-slate-200 text-left text-xs font-semibold uppercase tracking-wide text-flit-muted dark:border-flit-border-dark">

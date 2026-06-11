@@ -65,9 +65,7 @@ export function ApiConnectorsPanel({
         <tbody>
           {connectors.map((conn) => (
             <Fragment key={conn.id}>
-              <tr
-                className="border-b border-flit-border dark:border-flit-border-dark"
-              >
+              <tr className="border-b border-flit-border dark:border-flit-border-dark">
                 <td className="p-2">{conn.name}</td>
                 <td className="p-2 font-mono text-xs">{conn.endpoint}</td>
                 <td className="p-2">{conn.httpVerb}</td>

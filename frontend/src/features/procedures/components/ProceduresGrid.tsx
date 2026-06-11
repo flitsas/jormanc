@@ -98,7 +98,10 @@ export function ProceduresGrid({
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="procedures-filter-fecha-from" className="text-xs font-medium text-flit-muted">
+          <label
+            htmlFor="procedures-filter-fecha-from"
+            className="text-xs font-medium text-flit-muted"
+          >
             Desde
           </label>
           <input
@@ -154,7 +157,9 @@ export function ProceduresGrid({
           <p className="text-flit-heading dark:text-flit-heading-dark font-medium">
             No hay trámites en este rango
           </p>
-          <p className="text-sm text-flit-muted mt-1">Ajusta los filtros o crea un nuevo trámite.</p>
+          <p className="text-sm text-flit-muted mt-1">
+            Ajusta los filtros o crea un nuevo trámite.
+          </p>
         </div>
       ) : (
         <div className="flit-list-panel__table">
@@ -187,7 +192,7 @@ export function ProceduresGrid({
                   <td className="px-4 py-3 font-mono text-xs font-medium text-flit-heading dark:text-flit-heading-dark">
                     {item.compositeId}
                   </td>
-                  <td className="px-4 py-3 capitalize">{item.status.replaceAll("_", " ")}</td>
+                  <td className="px-4 py-3 capitalize">{item.status.replace(/_/g, " ")}</td>
                   <td className="px-4 py-3 text-flit-muted">{formatDate(item.createdAt)}</td>
                   <td className="px-4 py-3">
                     <Link

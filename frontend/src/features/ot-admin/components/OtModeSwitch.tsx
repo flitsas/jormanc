@@ -34,10 +34,16 @@ export function OtModeSwitch({ organism, onModeChanged }: OtModeSwitchProps) {
   }
 
   return (
-    <section aria-labelledby="ot-mode-switch-title" className="rounded-lg border border-slate-200 p-4 dark:border-flit-border-dark">
+    <section
+      aria-labelledby="ot-mode-switch-title"
+      className="rounded-lg border border-slate-200 p-4 dark:border-flit-border-dark"
+    >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h3 id="ot-mode-switch-title" className="text-sm font-semibold text-flit-heading dark:text-flit-heading-dark">
+          <h3
+            id="ot-mode-switch-title"
+            className="text-sm font-semibold text-flit-heading dark:text-flit-heading-dark"
+          >
             Modo de operación
           </h3>
           <p className="mt-1 text-sm text-flit-muted">
@@ -92,7 +98,10 @@ export function OtModeSwitch({ organism, onModeChanged }: OtModeSwitchProps) {
           role="alertdialog"
           aria-labelledby="confirm-qx-title"
         >
-          <p id="confirm-qx-title" className="text-sm font-medium text-amber-900 dark:text-amber-200">
+          <p
+            id="confirm-qx-title"
+            className="text-sm font-medium text-amber-900 dark:text-amber-200"
+          >
             ¿Activar Modo QX?
           </p>
           <p className="mt-1 text-sm text-amber-800 dark:text-amber-300">

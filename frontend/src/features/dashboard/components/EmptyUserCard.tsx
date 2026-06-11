@@ -17,9 +17,7 @@ export function EmptyUserCard({ userName }: EmptyUserCardProps) {
       <p className="text-sm font-medium text-flit-heading dark:text-flit-heading-dark">
         Este usuario no ha radicado ningún trámite
       </p>
-      {userName ? (
-        <p className="mt-1 text-xs text-flit-muted">{userName}</p>
-      ) : null}
+      {userName ? <p className="mt-1 text-xs text-flit-muted">{userName}</p> : null}
     </div>
   );
 }

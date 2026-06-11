@@ -1,8 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import {
-  parseContentDispositionFilename,
-  triggerBlobDownload,
-} from "./downloadBlob.js";
+import { parseContentDispositionFilename, triggerBlobDownload } from "./downloadBlob.js";
 
 describe("downloadBlob", () => {
   it("parsea filename de Content-Disposition", () => {
@@ -25,9 +22,7 @@ describe("downloadBlob", () => {
     const createElementSpy = vi.spyOn(document, "createElement").mockReturnValue(anchor);
     const appendSpy = vi.spyOn(document.body, "appendChild").mockImplementation(() => anchor);
     const revokeSpy = vi.spyOn(URL, "revokeObjectURL").mockImplementation(() => {});
-    const createObjectUrlSpy = vi
-      .spyOn(URL, "createObjectURL")
-      .mockReturnValue("blob:mock-url");
+    const createObjectUrlSpy = vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:mock-url");
 
     triggerBlobDownload(new Blob(["x"]), "test.xlsx");
 

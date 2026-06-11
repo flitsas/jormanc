@@ -6,10 +6,7 @@ describe("DateRangeFilter — AC3", () => {
   it("propaga cambio de fecha desde al padre", () => {
     const onChange = vi.fn();
     render(
-      <DateRangeFilter
-        value={{ from: "2026-01-01", to: "2026-06-30" }}
-        onChange={onChange}
-      />,
+      <DateRangeFilter value={{ from: "2026-01-01", to: "2026-06-30" }} onChange={onChange} />,
     );
 
     const fromInput = screen.getByLabelText(/fecha inicial del período/i);
@@ -24,10 +21,7 @@ describe("DateRangeFilter — AC3", () => {
   it("propaga cambio de fecha hasta al padre", () => {
     const onChange = vi.fn();
     render(
-      <DateRangeFilter
-        value={{ from: "2026-01-01", to: "2026-06-30" }}
-        onChange={onChange}
-      />,
+      <DateRangeFilter value={{ from: "2026-01-01", to: "2026-06-30" }} onChange={onChange} />,
     );
 
     const toInput = screen.getByLabelText(/fecha final del período/i);
@@ -40,12 +34,7 @@ describe("DateRangeFilter — AC3", () => {
   });
 
   it("expone labels accesibles para ambos campos de fecha", () => {
-    render(
-      <DateRangeFilter
-        value={{ from: "2026-01-01", to: "2026-01-31" }}
-        onChange={vi.fn()}
-      />,
-    );
+    render(<DateRangeFilter value={{ from: "2026-01-01", to: "2026-01-31" }} onChange={vi.fn()} />);
     expect(screen.getByLabelText(/fecha inicial del período/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/fecha final del período/i)).toBeInTheDocument();
   });

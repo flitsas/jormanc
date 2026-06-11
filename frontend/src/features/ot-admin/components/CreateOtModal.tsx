@@ -47,7 +47,10 @@ export function CreateOtModal({ onClose, onCreated }: CreateOtModalProps) {
         onSubmit={(e) => void handleSubmit(e)}
         className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl dark:bg-flit-surface-dark"
       >
-        <h2 id="create-ot-title" className="mb-4 text-lg font-semibold text-flit-heading dark:text-flit-heading-dark">
+        <h2
+          id="create-ot-title"
+          className="mb-4 text-lg font-semibold text-flit-heading dark:text-flit-heading-dark"
+        >
           Nuevo organismo de tránsito
         </h2>
 

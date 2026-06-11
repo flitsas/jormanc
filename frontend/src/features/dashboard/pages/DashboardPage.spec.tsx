@@ -3,7 +3,11 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { DashboardPage } from "./DashboardPage.js";
-import type { DashboardSummary, DashboardProceduresPage, DashboardTopUsers } from "../api/dashboard.schemas.js";
+import type {
+  DashboardSummary,
+  DashboardProceduresPage,
+  DashboardTopUsers,
+} from "../api/dashboard.schemas.js";
 
 const mockUseDashboardSummary = vi.fn();
 const mockUseDashboardProcedures = vi.fn();

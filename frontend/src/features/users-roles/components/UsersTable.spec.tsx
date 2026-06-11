@@ -61,13 +61,7 @@ describe("UsersTable", () => {
   it("calls onRetry when retry button is clicked", async () => {
     const user = userEvent.setup();
     const onRetry = vi.fn();
-    render(
-      <UsersTable
-        {...defaultProps}
-        error={new Error("Error")}
-        onRetry={onRetry}
-      />,
-    );
+    render(<UsersTable {...defaultProps} error={new Error("Error")} onRetry={onRetry} />);
 
     await user.click(screen.getByRole("button", { name: /reintentar/i }));
     expect(onRetry).toHaveBeenCalledOnce();

@@ -91,8 +91,17 @@ export function InviteUserModal({ onClose }: Props) {
   }
 
   return (
-    <FlitModal title="Invitar usuario" subtitle="Se enviará un correo de activación" onClose={onClose} maxWidthClass="max-w-md">
-      <form onSubmit={handleSubmit} aria-label="Formulario de invitación de usuario" className="flex flex-col gap-5">
+    <FlitModal
+      title="Invitar usuario"
+      subtitle="Se enviará un correo de activación"
+      onClose={onClose}
+      maxWidthClass="max-w-md"
+    >
+      <form
+        onSubmit={handleSubmit}
+        aria-label="Formulario de invitación de usuario"
+        className="flex flex-col gap-5"
+      >
         {apiError && (
           <div role="alert" aria-live="assertive" className="flit-alert flit-alert--block">
             <i className="pi pi-times-circle mr-2" aria-hidden="true" />
@@ -102,7 +111,10 @@ export function InviteUserModal({ onClose }: Props) {
 
         <div className="flit-field">
           <label htmlFor={`${uid}-email`} className="flit-label">
-            Correo electrónico <span className="text-flit-primary" aria-hidden="true">*</span>
+            Correo electrónico{" "}
+            <span className="text-flit-primary" aria-hidden="true">
+              *
+            </span>
           </label>
           <input
             id={`${uid}-email`}
@@ -119,7 +131,11 @@ export function InviteUserModal({ onClose }: Props) {
             className="h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-flit-heading placeholder-flit-muted/60 shadow-flit transition-colors focus:border-flit-primary focus:outline-none focus:ring-2 focus:ring-flit-primary/25 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:border-flit-border-dark dark:text-flit-heading-dark"
           />
           {fieldErrors.email && (
-            <p id={`${uid}-email-err`} role="alert" className="text-xs text-red-600 dark:text-red-400">
+            <p
+              id={`${uid}-email-err`}
+              role="alert"
+              className="text-xs text-red-600 dark:text-red-400"
+            >
               {fieldErrors.email}
             </p>
           )}
@@ -127,7 +143,10 @@ export function InviteUserModal({ onClose }: Props) {
 
         <fieldset>
           <legend className="flit-label mb-2">
-            Roles <span className="text-flit-primary" aria-hidden="true">*</span>
+            Roles{" "}
+            <span className="text-flit-primary" aria-hidden="true">
+              *
+            </span>
           </legend>
           {rolesLoading ? (
             <div

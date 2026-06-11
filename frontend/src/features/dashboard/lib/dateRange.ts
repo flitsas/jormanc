@@ -33,8 +33,7 @@ export function defaultDateRange(): DateRangeValue {
   const now = new Date();
   const from = new Date(now.getFullYear(), now.getMonth(), 1);
   const pad = (n: number) => String(n).padStart(2, "0");
-  const fmt = (d: Date) =>
-    `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const fmt = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
   return {
     from: fmt(from),
