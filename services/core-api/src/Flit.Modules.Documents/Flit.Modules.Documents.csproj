@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Flit.Modules.Documents</RootNamespace>
+    <PublishAot>false</PublishAot>
+    <IsAotCompatible>false</IsAotCompatible>
+    <NuGetAuditMode>direct</NuGetAuditMode>
+    <NoWarn>$(NoWarn);CA1862;CA1848;CA1873</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Flit.Infrastructure\Flit.Infrastructure.csproj" />
+    <ProjectReference Include="..\Flit.SharedKernel\Flit.SharedKernel.csproj" />
+    <ProjectReference Include="..\Flit.Modules.Procedures\Flit.Modules.Procedures.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="QuestPDF" />
+    <PackageReference Include="HtmlAgilityPack" />
+    <PackageReference Include="PdfSharpCore" />
+    <PackageReference Include="SixLabors.ImageSharp" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+  </ItemGroup>
+
+</Project>

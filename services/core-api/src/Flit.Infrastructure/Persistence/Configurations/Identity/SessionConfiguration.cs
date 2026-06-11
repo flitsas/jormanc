@@ -31,7 +31,7 @@ public sealed class SessionConfiguration : IEntityTypeConfiguration<Session>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasIndex(s => s.Jti).IsUnique().HasDatabaseName("uq_sessions_jti");
-        builder.HasIndex(s => s.UserId).HasFilter("is_revoked = false AND expires_at > now()")
+        builder.HasIndex(s => s.UserId).HasFilter("is_revoked = false")
             .HasDatabaseName("ix_sessions_active_revoked");
         builder.HasIndex(s => new { s.UserId, s.IsRevoked })
             .HasDatabaseName("ix_sessions_user_id_is_revoked");

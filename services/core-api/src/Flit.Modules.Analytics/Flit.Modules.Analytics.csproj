@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Flit.Modules.Analytics</RootNamespace>
+    <PublishAot>false</PublishAot>
+    <IsAotCompatible>false</IsAotCompatible>
+    <NuGetAuditMode>direct</NuGetAuditMode>
+    <NoWarn>$(NoWarn);CA1862;CA1848;CA1873;CA1859</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Flit.Infrastructure\Flit.Infrastructure.csproj" />
+    <ProjectReference Include="..\Flit.SharedKernel\Flit.SharedKernel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="QuestPDF" />
+  </ItemGroup>
+
+</Project>

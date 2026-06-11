@@ -1133,7 +1133,7 @@ namespace Flit.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_sessions_active_revoked")
-                        .HasFilter("is_revoked = false AND expires_at > now()");
+                        .HasFilter("is_revoked = false");
 
                     b.HasIndex("UserId", "IsRevoked")
                         .HasDatabaseName("ix_sessions_user_id_is_revoked");
@@ -3065,6 +3065,18 @@ namespace Flit.Infrastructure.Persistence.Migrations
                         .HasDatabaseName("ix_rule_sets_tenant_type_active");
 
                     b.ToTable("rule_sets", "procedures_config");
+                });
+
+            modelBuilder.Entity("Flit.Infrastructure.Persistence.Entities.Companies.Company", b =>
+                {
+                    b.HasOne("Flit.Infrastructure.Persistence.Entities.Identity.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_companies_tenants");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Flit.Infrastructure.Persistence.Entities.Companies.CompanyConfig", b =>

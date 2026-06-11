@@ -103,6 +103,8 @@ builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
     {
+        // Preservar nombres JWT estándar (sub, tid) para endpoints que usan JwtRegisteredClaimNames.
+        opt.MapInboundClaims = false;
         opt.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = !string.IsNullOrEmpty(jwtOptions.Issuer),
