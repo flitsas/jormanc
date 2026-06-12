@@ -54,6 +54,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddMemoryCache();
 
 // ─── SignalR — notificaciones de sesión en tiempo real (ADR-0013, HU-9771) ───
+builder.Services.AddSingleton<Microsoft.AspNetCore.SignalR.IUserIdProvider, JwtSubUserIdProvider>();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ISessionNotifier, SignalRSessionNotifier>();
 builder.Services.AddScoped<IProcedureStatusNotifier, SignalRProcedureStatusNotifier>();
