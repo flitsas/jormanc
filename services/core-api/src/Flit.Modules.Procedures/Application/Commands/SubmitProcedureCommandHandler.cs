@@ -56,8 +56,13 @@ public sealed class SubmitProcedureCommandHandler(
             return Result<SubmitProcedureResponseDto, ProcedureError>.Failure(ProcedureError.ProcedureTypeNotFound);
 
         var now = clock.UtcNow;
-        var submitSnapshot = SnapshotHelper.BuildSnapshot(procedureType, now);
-        await procedureTypeRepository.AddSnapshotAsync(submitSnapshot, ct);
+        var submitSnapshot = await procedureTypeRepository.FindSnapshotAsync(
+            procedureType.Id, procedureType.Version, ct);
+        if (submitSnapshot is null)
+        {
+            submitSnapshot = SnapshotHelper.BuildSnapshot(procedureType, now);
+            await procedureTypeRepository.AddSnapshotAsync(submitSnapshot, ct);
+        }
 
         procedure.ProcedureTypeSnapshotId = submitSnapshot.Id;
         procedure.Status = "submitted";
