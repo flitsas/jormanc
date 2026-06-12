@@ -144,6 +144,7 @@ if (usePostgres)
 {
     builder.Services.AddHostedService<BlacklistRehydrationService>();
     builder.Services.AddHostedService<DevSeedService>();
+    builder.Services.AddHostedService<DevQaDemoSeedService>();
 }
 
 builder.Services.ConfigureHttpJsonOptions(opts =>
