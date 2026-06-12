@@ -41,10 +41,9 @@ public sealed class AnalyticsRepository(FlitDbContext db) : IAnalyticsRepository
         var pageSize = filter.PageSize < 1 ? 20 : Math.Min(filter.PageSize, 50);
 
         var pageProcedures = await query
-            .OrderByDescending(x => x.Procedure.SubmittedAt ?? x.Procedure.CreatedAt)
+            .OrderByDescending(p => p.SubmittedAt ?? p.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(x => x.Procedure)
             .ToListAsync(ct);
 
         var items = await MapProcedureRowsAsync(pageProcedures, ct);
@@ -63,10 +62,9 @@ public sealed class AnalyticsRepository(FlitDbContext db) : IAnalyticsRepository
         while (true)
         {
             var pageProcedures = await query
-                .OrderByDescending(x => x.Procedure.SubmittedAt ?? x.Procedure.CreatedAt)
+                .OrderByDescending(p => p.SubmittedAt ?? p.CreatedAt)
                 .Skip((page - 1) * effectiveBatchSize)
                 .Take(effectiveBatchSize)
-                .Select(x => x.Procedure)
                 .ToListAsync(ct);
 
             if (pageProcedures.Count == 0)
@@ -81,7 +79,7 @@ public sealed class AnalyticsRepository(FlitDbContext db) : IAnalyticsRepository
         }
     }
 
-    private IQueryable<ProcedureJoinRow> BuildProceduresQuery(
+    private IQueryable<Procedure> BuildProceduresQuery(
         Guid tenantId,
         DateTimeOffset fromDate,
         DateTimeOffset toDate,
@@ -89,26 +87,27 @@ public sealed class AnalyticsRepository(FlitDbContext db) : IAnalyticsRepository
         string? status,
         IReadOnlyList<Guid>? userIds)
     {
-        var query =
-            from p in db.Procedures.AsNoTracking()
-            join pt in db.ProcedureTypes.AsNoTracking() on p.ProcedureTypeId equals pt.Id
-            where p.TenantId == tenantId
-                  && p.DeletedAt == null
-                  && (p.SubmittedAt ?? p.CreatedAt) >= fromDate
-                  && (p.SubmittedAt ?? p.CreatedAt) <= toDate
-            select new ProcedureJoinRow(p, pt.Family);
+        var query = db.Procedures.AsNoTracking()
+            .Where(p => p.TenantId == tenantId
+                        && p.DeletedAt == null
+                        && (p.SubmittedAt ?? p.CreatedAt) >= fromDate
+                        && (p.SubmittedAt ?? p.CreatedAt) <= toDate);
 
         if (!string.IsNullOrWhiteSpace(family))
-            query = query.Where(x => x.TypeFamily == family);
+        {
+            query = query.Where(p =>
+                db.ProcedureTypes.AsNoTracking()
+                    .Any(pt => pt.Id == p.ProcedureTypeId && pt.Family == family));
+        }
 
         if (!string.IsNullOrWhiteSpace(status))
-            query = query.Where(x => x.Procedure.Status == status);
+            query = query.Where(p => p.Status == status);
 
         if (userIds is { Count: > 0 })
         {
-            query = query.Where(x =>
-                (x.Procedure.AssignedUserId != null && userIds.Contains(x.Procedure.AssignedUserId.Value))
-                || userIds.Contains(x.Procedure.CreatedBy));
+            query = query.Where(p =>
+                (p.AssignedUserId != null && userIds.Contains(p.AssignedUserId.Value))
+                || userIds.Contains(p.CreatedBy));
         }
 
         return query;
@@ -205,5 +204,4 @@ public sealed class AnalyticsRepository(FlitDbContext db) : IAnalyticsRepository
             .ToList();
     }
 
-    private sealed record ProcedureJoinRow(Procedure Procedure, string TypeFamily);
 }
