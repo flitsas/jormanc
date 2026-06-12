@@ -21,6 +21,9 @@ public interface ISessionRepository
     /// </summary>
     Task<IReadOnlyList<Session>> GetActiveByUserIdAsync(Guid userId, CancellationToken ct = default);
 
+    /// <summary>Busca sesión activa por JTI y usuario (logout).</summary>
+    Task<Session?> GetByJtiAsync(string jti, Guid userId, CancellationToken ct = default);
+
     /// <summary>
     /// Marca la sesión como revocada y registra quién/cuándo la revocó.
     /// </summary>

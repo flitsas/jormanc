@@ -50,6 +50,7 @@ public static class IdentityModuleExtensions
 
         // Command / Query handlers (scoped)
         services.AddScoped<LoginCommandHandler>();
+        services.AddScoped<LogoutCommandHandler>();
         services.AddScoped<GetUserProfileQueryHandler>();
 
         // HU-9770 handlers

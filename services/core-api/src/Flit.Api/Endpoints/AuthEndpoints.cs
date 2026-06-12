@@ -33,6 +33,12 @@ public static class AuthEndpoints
             .Produces<MeResponse>(StatusCodes.Status200OK)
             .Produces<ErrorResponse>(StatusCodes.Status401Unauthorized);
 
+        group.MapPost("/logout", HandleLogoutAsync)
+            .WithName("Logout")
+            .RequireAuthorization()
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces<ErrorResponse>(StatusCodes.Status401Unauthorized);
+
         // HU-9772 AC3: Forgot password
         group.MapPost("/forgot-password", HandleForgotPasswordAsync)
             .WithName("ForgotPassword")
@@ -113,6 +119,25 @@ public static class AuthEndpoints
             onFailure: err => Results.Json(
                 new ErrorResponse(err.Code, err.Message),
                 statusCode: StatusCodes.Status401Unauthorized));
+    }
+
+    private static async Task<IResult> HandleLogoutAsync(
+        HttpContext ctx,
+        LogoutCommandHandler handler,
+        CancellationToken ct)
+    {
+        var userIdStr = ctx.User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var jti = ctx.User.FindFirst(JwtRegisteredClaimNames.Jti)?.Value;
+
+        if (!Guid.TryParse(userIdStr, out var userId))
+        {
+            return Results.Json(
+                new ErrorResponse("UNAUTHORIZED", "Token inválido o expirado."),
+                statusCode: StatusCodes.Status401Unauthorized);
+        }
+
+        await handler.HandleAsync(new LogoutCommand(userId, jti ?? string.Empty), ct);
+        return Results.NoContent();
     }
 
     private static async Task<IResult> HandleForgotPasswordAsync(

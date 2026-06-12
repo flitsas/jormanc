@@ -36,6 +36,15 @@ public sealed class SessionRepository(FlitDbContext db) : ISessionRepository
         return list;
     }
 
+    public async Task<Session?> GetByJtiAsync(
+        string jti, Guid userId, CancellationToken ct = default)
+    {
+        return await db.Sessions
+            .FirstOrDefaultAsync(
+                s => s.Jti == jti && s.UserId == userId && !s.IsRevoked,
+                ct);
+    }
+
     public async Task RevokeAsync(
         Session session, Guid revokedBy, DateTimeOffset revokedAt, CancellationToken ct = default)
     {

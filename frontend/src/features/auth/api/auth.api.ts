@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { apiClient, TOKEN_KEY, USER_KEY } from "../../../shared/api/client.js";
 import {
   LoginResponseSchema,
@@ -120,10 +121,22 @@ export function useResetPassword(token: string) {
 
 export function useLogout() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
-  return () => {
-    clearAuth();
-    queryClient.clear();
-    window.location.href = "/login";
-  };
+  const mutation = useMutation({
+    mutationFn: async () => {
+      try {
+        await apiClient.post("/auth/logout");
+      } catch {
+        // Cierra sesión local aunque falle el servidor (token ya inválido, etc.)
+      }
+    },
+    onSettled: () => {
+      clearAuth();
+      queryClient.clear();
+      navigate("/login", { replace: true });
+    },
+  });
+
+  return () => mutation.mutateAsync();
 }
