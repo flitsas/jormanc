@@ -1,11 +1,4 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-  useId,
-  useCallback,
-  type KeyboardEvent,
-} from "react";
+import { useState, useEffect, useRef, useId, useCallback, type KeyboardEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { getStoredUser, useLogout } from "../../../features/auth/api/auth.api.js";
 
@@ -31,7 +24,14 @@ function UserAvatarIcon() {
           <stop offset="55%" stopColor="#3B82F6" />
           <stop offset="100%" stopColor="#1D4ED8" />
         </linearGradient>
-        <linearGradient id={bodyGrad} x1="12" y1="13" x2="12" y2="22" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id={bodyGrad}
+          x1="12"
+          y1="13"
+          x2="12"
+          y2="22"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop offset="0%" stopColor="#60A5FA" />
           <stop offset="100%" stopColor="#1E40AF" />
         </linearGradient>
@@ -154,11 +154,7 @@ export function UserSessionAvatar() {
         className="group relative inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-blue-400 via-blue-500 to-blue-700 p-[2px] shadow-[0_3px_0_0_#1d4ed8,0_5px_14px_rgba(37,99,235,0.45),inset_0_1px_0_rgba(255,255,255,0.35)] transition-transform duration-150 hover:translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-flit-primary focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-800 dark:from-blue-500 dark:via-blue-600 dark:to-blue-900"
       >
         <span className="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-b from-white/25 to-transparent text-[10px] font-bold text-white">
-          {initials.length <= 2 ? (
-            initials
-          ) : (
-            <UserAvatarIcon />
-          )}
+          {initials.length <= 2 ? initials : <UserAvatarIcon />}
         </span>
       </button>
 
