@@ -65,7 +65,9 @@ public sealed class DevSeedService(
             ("tramites.create", "tramites", "create", "Crear trámites"),
             ("tramites.read", "tramites", "read", "Ver trámites"),
             ("analytics.read", "analytics", "read", "Ver dashboard analítico"),
-            ("analytics.export", "analytics", "export", "Exportar dashboard Excel/PDF")
+            ("analytics.export", "analytics", "export", "Exportar dashboard Excel/PDF"),
+            ("ot.read", "ot", "read", "Consultar organismos de tránsito"),
+            ("ot.manage", "ot", "manage", "Administrar organismos de tránsito")
         };
 
         var existingPerms = await db.Permissions.ToListAsync(ct);
