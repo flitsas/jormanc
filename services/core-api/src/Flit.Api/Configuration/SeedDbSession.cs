@@ -1,6 +1,7 @@
 using System.Data;
 using System.Data.Common;
 using Flit.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
 namespace Flit.Api.Configuration;
