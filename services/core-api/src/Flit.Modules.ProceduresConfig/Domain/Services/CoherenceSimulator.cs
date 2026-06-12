@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json;
 using Flit.Modules.ProceduresConfig.Domain.Models;
 
@@ -55,16 +56,45 @@ public sealed class CoherenceSimulator : ICoherenceSimulator
         OpposingPairs.Contains(typeA) && OpposingPairs.Contains(typeB) &&
         !string.Equals(typeA, typeB, StringComparison.OrdinalIgnoreCase);
 
+    /// <summary>Canonicaliza JSON (claves ordenadas) para comparar condiciones persistidas en jsonb vs payload API.</summary>
     internal static string NormalizeConditions(string conditionsJson)
     {
         try
         {
             using var doc = JsonDocument.Parse(conditionsJson);
-            return JsonSerializer.Serialize(doc.RootElement);
+            using var stream = new MemoryStream();
+            using (var writer = new Utf8JsonWriter(stream))
+                WriteCanonicalJson(writer, doc.RootElement);
+            return Encoding.UTF8.GetString(stream.ToArray());
         }
         catch
         {
             return conditionsJson;
+        }
+    }
+
+    private static void WriteCanonicalJson(Utf8JsonWriter writer, JsonElement element)
+    {
+        switch (element.ValueKind)
+        {
+            case JsonValueKind.Object:
+                writer.WriteStartObject();
+                foreach (var prop in element.EnumerateObject().OrderBy(p => p.Name, StringComparer.Ordinal))
+                {
+                    writer.WritePropertyName(prop.Name);
+                    WriteCanonicalJson(writer, prop.Value);
+                }
+                writer.WriteEndObject();
+                break;
+            case JsonValueKind.Array:
+                writer.WriteStartArray();
+                foreach (var item in element.EnumerateArray())
+                    WriteCanonicalJson(writer, item);
+                writer.WriteEndArray();
+                break;
+            default:
+                element.WriteTo(writer);
+                break;
         }
     }
 
