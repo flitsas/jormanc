@@ -173,6 +173,11 @@ jobs:
             # VPS DEV: activar seed demo sin cambiar ASPNETCORE_ENVIRONMENT a Development
             if [ "${{ github.ref }}" = "refs/heads/develop" ]; then
               export FLIT_SEED_DEMO_DATA=true
+              if [ -f .env ] && grep -q '^FLIT_SEED_DEMO_DATA=' .env; then
+                sed -i 's/^FLIT_SEED_DEMO_DATA=.*/FLIT_SEED_DEMO_DATA=true/' .env
+              else
+                echo 'FLIT_SEED_DEMO_DATA=true' >> .env
+              fi
             fi
 
             docker compose -f docker-compose.prod.yml pull

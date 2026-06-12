@@ -8,6 +8,9 @@ internal static class DemoSeedGate
 {
     public const string ConfigKey = "Flit:SeedDemoData";
 
-    public static bool ShouldRun(IHostEnvironment env, IConfiguration config) =>
-        env.IsDevelopment() || config.GetValue(ConfigKey, false);
+    public static bool ShouldRun(IHostEnvironment env, IConfiguration config)
+    {
+        var enabled = env.IsDevelopment() || config.GetValue(ConfigKey, false);
+        return enabled;
+    }
 }

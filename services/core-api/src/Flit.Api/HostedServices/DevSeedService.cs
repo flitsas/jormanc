@@ -24,12 +24,26 @@ public sealed class DevSeedService(
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         if (!DemoSeedGate.ShouldRun(env, configuration))
+        {
+            logger.LogInformation(
+                "Dev seed omitido (entorno={Environment}, Flit:SeedDemoData={SeedFlag})",
+                env.EnvironmentName,
+                configuration.GetValue(DemoSeedGate.ConfigKey, false));
             return;
+        }
 
-        await using var scope = scopeFactory.CreateAsyncScope();
-        var db = scope.ServiceProvider.GetRequiredService<FlitDbContext>();
+        logger.LogInformation("Dev seed iniciando…");
 
-        await SeedAsync(db, cancellationToken);
+        try
+        {
+            await using var scope = scopeFactory.CreateAsyncScope();
+            var db = scope.ServiceProvider.GetRequiredService<FlitDbContext>();
+            await SeedAsync(db, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Dev seed falló — revisar RLS/conexión PG. La API continúa sin datos demo.");
+        }
     }
 
     private async Task SeedAsync(FlitDbContext db, CancellationToken ct)
@@ -54,8 +68,14 @@ public sealed class DevSeedService(
             logger.LogInformation("Dev seed: Tenant 'acme' creado ({Id})", tenant.Id);
         }
 
-        await ApplySessionContextAsync(db, tenant.Id, ct);
+        await SeedDbSession.RunAsync(db, tenant.Id, SystemSeedId, async seedCt =>
+        {
+            await SeedTenantDataAsync(db, tenant!, now, seedCt);
+        }, ct);
+    }
 
+    private async Task SeedTenantDataAsync(FlitDbContext db, Tenant tenant, DateTimeOffset now, CancellationToken ct)
+    {
         // Permissions
         var permSlugs = new[]
         {
@@ -92,7 +112,9 @@ public sealed class DevSeedService(
         await db.SaveChangesAsync(ct);
 
         // Role admin
-        var role = await db.Roles.FirstOrDefaultAsync(r => r.Slug == "admin" && r.TenantId == tenant.Id, ct);
+        var role = await db.Roles
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(r => r.Slug == "admin" && r.TenantId == tenant.Id, ct);
         if (role is null)
         {
             role = new Role
@@ -177,8 +199,9 @@ public sealed class DevSeedService(
         }
 
         // Role superadmin (consola SaaS — HU-9774 E2E)
-        var superRole = await db.Roles.FirstOrDefaultAsync(
-            r => r.Slug == "superadmin" && r.TenantId == tenant.Id, ct);
+        var superRole = await db.Roles
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(r => r.Slug == "superadmin" && r.TenantId == tenant.Id, ct);
         if (superRole is null)
         {
             superRole = new Role
@@ -295,13 +318,4 @@ public sealed class DevSeedService(
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-
-    /// <summary>RLS + fn_audit_log requieren app.tenant_id / app.user_id en la sesión PG.</summary>
-    private static async Task ApplySessionContextAsync(FlitDbContext db, Guid tenantId, CancellationToken ct)
-    {
-        await db.Database.ExecuteSqlRawAsync(
-            "SELECT set_config('app.tenant_id', {0}, false), set_config('app.user_id', {1}, false)",
-            tenantId.ToString(),
-            SystemSeedId.ToString());
-    }
 }

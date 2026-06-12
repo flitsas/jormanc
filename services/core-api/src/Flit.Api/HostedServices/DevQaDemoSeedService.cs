@@ -33,19 +33,32 @@ public sealed class DevQaDemoSeedService(
         if (!DemoSeedGate.ShouldRun(env, configuration))
             return;
 
-        await using var scope = scopeFactory.CreateAsyncScope();
-        var db = scope.ServiceProvider.GetRequiredService<FlitDbContext>();
-
-        var tenant = await db.Tenants.AsNoTracking()
-            .FirstOrDefaultAsync(t => t.Slug == "acme", cancellationToken);
-        if (tenant is null)
+        try
         {
-            logger.LogWarning("Dev QA seed omitido: tenant 'acme' no existe aún.");
-            return;
-        }
+            await using var scope = scopeFactory.CreateAsyncScope();
+            var db = scope.ServiceProvider.GetRequiredService<FlitDbContext>();
 
-        await ApplySessionContextAsync(db, tenant.Id, cancellationToken);
-        await SeedQaCatalogAsync(db, tenant.Id, cancellationToken);
+            var tenant = await db.Tenants.AsNoTracking()
+                .FirstOrDefaultAsync(t => t.Slug == "acme", cancellationToken);
+            if (tenant is null)
+            {
+                logger.LogWarning("Dev QA seed omitido: tenant 'acme' no existe aún (¿DevSeedService falló?).");
+                return;
+            }
+
+            logger.LogInformation("Dev QA seed iniciando para tenant acme ({TenantId})…", tenant.Id);
+
+            await SeedDbSession.RunAsync(db, tenant.Id, SystemSeedId, async seedCt =>
+            {
+                await SeedQaCatalogAsync(db, tenant.Id, seedCt);
+            }, cancellationToken);
+
+            logger.LogInformation("Dev QA seed completado.");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Dev QA seed falló — catálogo demo incompleto.");
+        }
     }
 
     private async Task SeedQaCatalogAsync(FlitDbContext db, Guid tenantId, CancellationToken ct)
@@ -54,10 +67,13 @@ public sealed class DevQaDemoSeedService(
 
         var company = await db.Companies
             .IgnoreQueryFilters()
-            .FirstOrDefaultAsync(c => c.TenantId == tenantId && c.Nit == "900000001", ct);
+            .FirstOrDefaultAsync(c => c.TenantId == tenantId && c.Nit == "900000001", ct)
+            ?? await db.Companies
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(c => c.TenantId == tenantId, ct);
         if (company is null)
         {
-            logger.LogWarning("Dev QA seed omitido: compañía Acme (NIT 900000001) no encontrada.");
+            logger.LogWarning("Dev QA seed omitido: compañía del tenant acme no encontrada.");
             return;
         }
 
@@ -430,12 +446,4 @@ public sealed class DevQaDemoSeedService(
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-
-    private static async Task ApplySessionContextAsync(FlitDbContext db, Guid tenantId, CancellationToken ct)
-    {
-        await db.Database.ExecuteSqlRawAsync(
-            "SELECT set_config('app.tenant_id', {0}, false), set_config('app.user_id', {1}, false)",
-            tenantId.ToString(),
-            SystemSeedId.ToString());
-    }
 }
