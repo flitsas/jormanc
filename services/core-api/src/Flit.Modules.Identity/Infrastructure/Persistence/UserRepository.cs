@@ -56,4 +56,35 @@ public sealed class UserRepository(FlitDbContext db) : IUserRepository
 
     public async Task UpdateAsync(CancellationToken ct = default) =>
         await db.SaveChangesAsync(ct);
+
+    public async Task<(IReadOnlyList<User> Items, int Total)> ListByTenantPaginatedAsync(
+        Guid tenantId,
+        int page,
+        int pageSize,
+        string? search,
+        CancellationToken ct = default)
+    {
+        var query = db.Users
+            .AsNoTracking()
+            .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+            .Where(u => u.TenantId == tenantId);
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var term = search.Trim();
+            query = query.Where(u =>
+                EF.Functions.ILike(u.Email, $"%{term}%") ||
+                EF.Functions.ILike(u.FullName, $"%{term}%"));
+        }
+
+        var total = await query.CountAsync(ct);
+        var items = await query
+            .OrderByDescending(u => u.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(ct);
+
+        return (items, total);
+    }
 }

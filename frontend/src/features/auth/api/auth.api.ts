@@ -50,7 +50,7 @@ export function useLogin() {
       return LoginResponseSchema.parse(res.data);
     },
     onSuccess: (data) => {
-      setAuth(data.access_token, data.user);
+      setAuth(data.accessToken, data.user);
       queryClient.setQueryData(authQueryKeys.me, data.user);
     },
   });
@@ -87,14 +87,13 @@ export function useAcceptInvitation(token: string) {
   return useMutation({
     mutationFn: async (data: AcceptInvitationFormValues) => {
       const res = await apiClient.post(`/invitations/${token}/accept`, {
-        full_name: data.full_name,
+        fullName: data.full_name,
         password: data.password,
-        password_confirm: data.password_confirm,
       });
       return AcceptInvitationResponseSchema.parse(res.data);
     },
     onSuccess: (data) => {
-      setAuth(data.access_token, data.user);
+      setAuth(data.accessToken, data.user);
       queryClient.setQueryData(authQueryKeys.me, data.user);
     },
   });
@@ -113,8 +112,7 @@ export function useResetPassword(token: string) {
     mutationFn: async (data: ResetPasswordFormValues) => {
       await apiClient.post("/auth/reset-password", {
         token,
-        password: data.password,
-        password_confirm: data.password_confirm,
+        newPassword: data.password,
       });
     },
   });

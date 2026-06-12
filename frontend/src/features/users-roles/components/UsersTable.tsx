@@ -111,7 +111,7 @@ export function UsersTable({ users, isLoading, error, onRetry, onManageRoles }: 
               <td className="px-4 py-3">
                 <div>
                   <p className="font-medium text-flit-heading dark:text-flit-heading-dark">
-                    {user.full_name}
+                    {user.fullName}
                   </p>
                   <p className="text-xs text-flit-muted dark:text-flit-muted-dark">{user.email}</p>
                 </div>
@@ -131,8 +131,8 @@ export function UsersTable({ users, isLoading, error, onRetry, onManageRoles }: 
                 )}
               </td>
               <td className="px-4 py-3 text-flit-muted dark:text-flit-muted-dark tabular-nums">
-                {user.last_login_at ? (
-                  new Date(user.last_login_at).toLocaleDateString("es-CO", {
+                {user.lastLoginAt ? (
+                  new Date(user.lastLoginAt).toLocaleDateString("es-CO", {
                     day: "2-digit",
                     month: "2-digit",
                     year: "numeric",
@@ -145,7 +145,7 @@ export function UsersTable({ users, isLoading, error, onRetry, onManageRoles }: 
                 <button
                   type="button"
                   onClick={() => onManageRoles(user)}
-                  aria-label={`Gestionar roles de ${user.full_name}`}
+                  aria-label={`Gestionar roles de ${user.fullName}`}
                   className="flit-row-action"
                 >
                   <i className="pi pi-shield text-xs" aria-hidden="true" />

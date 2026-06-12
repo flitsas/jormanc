@@ -46,7 +46,7 @@ export function UserRolesModal({ user, onClose }: Props) {
   return (
     <FlitModal
       title="Gestionar roles"
-      subtitle={`Usuario: ${user.full_name} (${user.email})`}
+      subtitle={`Usuario: ${user.fullName} (${user.email})`}
       onClose={onClose}
       maxWidthClass="max-w-md"
     >
@@ -103,7 +103,7 @@ export function UserRolesModal({ user, onClose }: Props) {
                     <div className="min-w-0">
                       <p className="text-sm font-medium text-flit-heading dark:text-flit-heading-dark">
                         {role.name}
-                        {role.is_system && (
+                        {role.isSystem && (
                           <span className="ml-1.5 text-xs font-normal text-flit-muted dark:text-flit-muted-dark">
                             (sistema)
                           </span>

@@ -6,7 +6,7 @@ import { LoginFormSchema, type LoginFormValues } from "../api/auth.schemas.js";
 interface FieldError {
   email?: string;
   password?: string;
-  tenant_slug?: string;
+  tenantSlug?: string;
 }
 
 export function LoginForm() {
@@ -18,7 +18,7 @@ export function LoginForm() {
   const [values, setValues] = useState<LoginFormValues>({
     email: "",
     password: "",
-    tenant_slug: "",
+    tenantSlug: "",
   });
   const [fieldErrors, setFieldErrors] = useState<FieldError>({});
   const [apiError, setApiError] = useState<string | null>(null);
@@ -157,26 +157,26 @@ export function LoginForm() {
         </label>
         <input
           id={`${uid}-tenant`}
-          name="tenant_slug"
+          name="tenantSlug"
           type="text"
           autoComplete="organization"
           required
           aria-required="true"
-          aria-invalid={!!fieldErrors.tenant_slug}
-          aria-describedby={fieldErrors.tenant_slug ? `${uid}-tenant-err` : undefined}
-          value={values.tenant_slug}
+          aria-invalid={!!fieldErrors.tenantSlug}
+          aria-describedby={fieldErrors.tenantSlug ? `${uid}-tenant-err` : undefined}
+          value={values.tenantSlug}
           onChange={handleChange}
           disabled={isPending}
           placeholder="mi-empresa"
           className="h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-flit-heading placeholder-flit-muted/60 shadow-flit transition-colors focus:border-flit-primary focus:outline-none focus:ring-2 focus:ring-flit-primary/25 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:border-flit-border-dark dark:text-flit-heading-dark"
         />
-        {fieldErrors.tenant_slug && (
+        {fieldErrors.tenantSlug && (
           <p
             id={`${uid}-tenant-err`}
             role="alert"
             className="text-xs text-red-600 dark:text-red-400"
           >
-            {fieldErrors.tenant_slug}
+            {fieldErrors.tenantSlug}
           </p>
         )}
       </div>

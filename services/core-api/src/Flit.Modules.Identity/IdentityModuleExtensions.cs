@@ -57,6 +57,7 @@ public static class IdentityModuleExtensions
         services.AddScoped<DeleteRoleCommandHandler>();
         services.AddScoped<AssignUserRolesCommandHandler>();
         services.AddScoped<ListRolesQueryHandler>();
+        services.AddScoped<ListUsersQueryHandler>();
         services.AddScoped<ListPermissionsQueryHandler>();
 
         // HU-9772 handlers

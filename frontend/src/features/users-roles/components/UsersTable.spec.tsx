@@ -8,21 +8,21 @@ const MOCK_USERS: User[] = [
   {
     id: "00000000-0000-0000-0000-000000000001",
     email: "ana@flit.co",
-    full_name: "Ana García",
+    fullName: "Ana García",
     status: "active",
-    must_reset_pwd: false,
-    last_login_at: "2026-06-10T10:00:00Z",
-    created_at: "2026-01-01T00:00:00Z",
-    roles: [{ id: "r1", slug: "admin", name: "Admin", is_system: true }],
+    mustResetPwd: false,
+    lastLoginAt: "2026-06-10T10:00:00Z",
+    createdAt: "2026-01-01T00:00:00Z",
+    roles: [{ id: "r1", slug: "admin", name: "Admin", isSystem: true }],
   },
   {
     id: "00000000-0000-0000-0000-000000000002",
     email: "carlos@flit.co",
-    full_name: "Carlos López",
+    fullName: "Carlos López",
     status: "pending",
-    must_reset_pwd: false,
-    last_login_at: null,
-    created_at: "2026-01-02T00:00:00Z",
+    mustResetPwd: false,
+    lastLoginAt: null,
+    createdAt: "2026-01-02T00:00:00Z",
     roles: [],
   },
 ];
@@ -92,7 +92,7 @@ describe("UsersTable", () => {
     expect(onManageRoles).toHaveBeenCalledWith(MOCK_USERS[0]);
   });
 
-  it("shows 'Nunca' when last_login_at is null", () => {
+  it("shows 'Nunca' when lastLoginAt is null", () => {
     render(<UsersTable {...defaultProps} users={MOCK_USERS} />);
 
     expect(screen.getByText("Nunca")).toBeInTheDocument();

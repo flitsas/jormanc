@@ -48,4 +48,14 @@ public interface IUserRepository
     /// EF Core rastrea el objeto; este método solo llama SaveChanges.
     /// </summary>
     Task UpdateAsync(CancellationToken ct = default);
+
+    /// <summary>
+    /// Listado paginado de usuarios del tenant (GET /users). Excluye soft-deleted.
+    /// </summary>
+    Task<(IReadOnlyList<User> Items, int Total)> ListByTenantPaginatedAsync(
+        Guid tenantId,
+        int page,
+        int pageSize,
+        string? search,
+        CancellationToken ct = default);
 }

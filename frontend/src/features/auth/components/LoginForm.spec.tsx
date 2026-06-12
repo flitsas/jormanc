@@ -77,7 +77,7 @@ describe("LoginForm", () => {
       expect(mutateAsync).toHaveBeenCalledWith({
         email: "test@flit.co",
         password: "secreto",
-        tenant_slug: "flit",
+        tenantSlug: "flit",
       });
     });
   });

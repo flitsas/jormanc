@@ -68,7 +68,7 @@ describe("InvitePage", () => {
       isError: false,
       data: {
         email: "nuevo@empresa.com",
-        tenant_name: "Empresa FLIT",
+        tenantName: "Empresa FLIT",
         roles: ["admin"],
       },
     });

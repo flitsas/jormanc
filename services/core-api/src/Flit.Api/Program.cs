@@ -183,6 +183,7 @@ app.MapGet("/api/v1/health", () => new HealthResponse(
 app.MapGet("/", () => Results.Redirect("/api/v1/health"));
 
 app.MapAuthEndpoints();
+app.MapUsersEndpoints();
 app.MapRolesEndpoints();
 app.MapInvitationEndpoints();
 app.MapCompaniesEndpoints();

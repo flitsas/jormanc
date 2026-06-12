@@ -6,24 +6,24 @@ export const UserProfileSchema = z.object({
   email: z.string().email(),
   roles: z.array(z.string()),
   permissions: z.array(z.string()),
-  tenant_id: z.string().uuid(),
-  tenant_name: z.string(),
+  tenantId: z.string().uuid(),
+  tenantName: z.string(),
 });
 
 export const LoginResponseSchema = z.object({
-  access_token: z.string(),
-  expires_in: z.number(),
+  accessToken: z.string(),
+  expiresIn: z.number(),
   user: UserProfileSchema,
 });
 
 export const InvitationValidateSchema = z.object({
   email: z.string().email(),
-  tenant_name: z.string(),
+  tenantName: z.string(),
   roles: z.array(z.string()),
 });
 
 export const AcceptInvitationResponseSchema = z.object({
-  access_token: z.string(),
+  accessToken: z.string(),
   user: UserProfileSchema,
 });
 
@@ -36,7 +36,7 @@ const strongPassword = z
 export const LoginFormSchema = z.object({
   email: z.string().email("Email inválido"),
   password: z.string().min(1, "Contraseña requerida"),
-  tenant_slug: z.string().min(1, "Organización requerida"),
+  tenantSlug: z.string().min(1, "Organización requerida"),
 });
 
 export const AcceptInvitationFormSchema = z
