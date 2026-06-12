@@ -191,6 +191,9 @@ app.MapDashboardEndpoints();
 app.MapOtOrganismsEndpoints();
 app.MapOtWebhooksEndpoints();
 
+if (app.Environment.IsDevelopment())
+    app.MapDevEndpoints();
+
 // ─── SignalR Hubs ─────────────────────────────────────────────────────────────
 app.MapHub<SessionHub>("/hubs/session");
 
