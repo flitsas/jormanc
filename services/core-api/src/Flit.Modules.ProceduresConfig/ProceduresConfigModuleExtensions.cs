@@ -33,6 +33,7 @@ public static class ProceduresConfigModuleExtensions
         // HU-9782 — PUT steps, fields, api-connectors
         services.AddScoped<UpdateProcedureStepCommandHandler>();
         services.AddScoped<UpdateFormFieldCommandHandler>();
+        services.AddScoped<CreateApiConnectorCommandHandler>();
         services.AddScoped<UpdateApiConnectorCommandHandler>();
 
         return services;

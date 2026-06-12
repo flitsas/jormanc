@@ -159,6 +159,12 @@ public sealed class ProcedureTypeRepository(FlitDbContext db) : IProcedureTypeRe
         await db.SaveChangesAsync(ct);
     }
 
+    public async Task AddApiConnectorAsync(ApiConnector connector, CancellationToken ct = default)
+    {
+        db.ApiConnectors.Add(connector);
+        await db.SaveChangesAsync(ct);
+    }
+
     public async Task<IReadOnlyList<ApiConnector>> GetApiConnectorsAsync(
         Guid procedureTypeId, Guid tenantId, CancellationToken ct = default) =>
         await db.ApiConnectors

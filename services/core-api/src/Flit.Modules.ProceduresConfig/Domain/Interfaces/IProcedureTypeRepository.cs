@@ -57,6 +57,8 @@ public interface IProcedureTypeRepository
 
     Task UpdateFieldAsync(FormField field, CancellationToken ct = default);
 
+    Task AddApiConnectorAsync(ApiConnector connector, CancellationToken ct = default);
+
     Task<IReadOnlyList<ApiConnector>> GetApiConnectorsAsync(
         Guid procedureTypeId, Guid tenantId, CancellationToken ct = default);
 

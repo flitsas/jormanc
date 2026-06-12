@@ -86,6 +86,11 @@ public static class ProcedureTypesEndpoints
             .Produces<ProcedureTypeResponse>(StatusCodes.Status200OK);
 
         // HU-9782 — PUT steps, fields, api-connectors
+        group.MapPost("/{id:guid}/api-connectors", HandleCreateApiConnectorAsync)
+            .WithName("CreateApiConnector")
+            .RequireAuthorization()
+            .Produces<ApiConnectorResponse>(StatusCodes.Status201Created);
+
         group.MapPut("/{id:guid}/steps/{stepId:guid}", HandleUpdateStepAsync)
             .WithName("UpdateProcedureStep")
             .RequireAuthorization()
@@ -445,6 +450,38 @@ public static class ProcedureTypesEndpoints
         };
     }
 
+    private static async Task<IResult> HandleCreateApiConnectorAsync(
+        Guid id,
+        [FromBody] CreateApiConnectorRequest request,
+        HttpContext ctx,
+        CreateApiConnectorCommandHandler handler,
+        CancellationToken ct)
+    {
+        var (tenantId, userId, forbidden) = ExtractSuperAdminClaims(ctx);
+        if (forbidden is not null) return forbidden;
+
+        if (string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.Endpoint))
+            return Results.BadRequest(new ErrorResponse("VALIDATION_ERROR", "name y endpoint son requeridos."));
+
+        var bindingsJson = request.ParamBindings is null
+            ? "{}"
+            : JsonSerializer.Serialize(request.ParamBindings);
+
+        var command = new CreateApiConnectorCommand(
+            id, tenantId, userId,
+            request.Name, request.Endpoint,
+            request.HttpVerb ?? "GET",
+            request.StepOrder,
+            bindingsJson);
+
+        var result = await handler.HandleAsync(command, ct);
+        return result.Match(
+            onSuccess: dto => Results.Created(
+                $"/api/v1/procedure-types/{id}/api-connectors/{dto.Id}",
+                MapApiConnector(dto)),
+            onFailure: MapProcedureTypeError);
+    }
+
     private static async Task<IResult> HandleUpdateStepAsync(
         Guid id,
         Guid stepId,
@@ -628,6 +665,13 @@ public sealed record UpdateFormFieldRequest(
     string? FieldType,
     bool? IsRequired,
     JsonElement? Config);
+
+public sealed record CreateApiConnectorRequest(
+    string Name,
+    string Endpoint,
+    string? HttpVerb,
+    int StepOrder,
+    JsonElement? ParamBindings);
 
 public sealed record UpdateApiConnectorRequest(JsonElement? ParamBindings);
 
