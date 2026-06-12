@@ -34,7 +34,8 @@ public static class IdentityModuleExtensions
         services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
 
         // Email sender (dev: console/log; prod: swap to real SMTP sender)
-        services.AddSingleton<IEmailSender, ConsoleEmailSender>();
+        services.AddSingleton<ConsoleEmailSender>();
+        services.AddSingleton<IEmailSender>(sp => sp.GetRequiredService<ConsoleEmailSender>());
 
         // Repositories (scoped — ciclo de vida del request)
         services.AddScoped<IUserRepository, UserRepository>();
