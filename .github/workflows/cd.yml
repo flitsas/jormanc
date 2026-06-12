@@ -162,20 +162,31 @@ jobs:
             # Authenticate to GHCR on the VPS to pull private images
             echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-            # Pull latest images and restart services
+            # Legacy compose project (flit-dev) — libera puertos 40xxx si quedó huérfano
+            # tras renombrar COMPOSE_PROJECT_NAME. No-op si el proyecto no existe.
+            docker compose -p flit-dev -f docker-compose.prod.yml down --remove-orphans 2>/dev/null || true
+
+            # Bajar el stack actual antes de pull/up evita "port is already allocated"
+            # cuando recreate no libera el bind del contenedor anterior a tiempo.
+            docker compose -f docker-compose.prod.yml down --remove-orphans || true
+
             docker compose -f docker-compose.prod.yml pull
-            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            if ! docker compose -f docker-compose.prod.yml up -d; then
+              echo "docker compose up FAILED — diagnostics:"
+              ss -tlnp 2>/dev/null | grep -E '40106|40206|40306|60106|60206|60306' || true
+              docker ps -a --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
+              exit 1
+            fi
 
             # Remove dangling images to free space
             docker image prune -f
 
             # Health check: hit the container directly (bypass host nginx).
-            # Lee los puertos del .env del proyecto (defaults = prod) para que
-            # funcione igual en produccion y develop con sus propios puertos.
+            # Lee puertos del .env; fallback segun rama (develop 40xxx / release 60xxx).
             FE_PORT="$(grep -E '^FRONTEND_PORT=' .env 2>/dev/null | head -1 | cut -d= -f2 || true)"
             GW_PORT="$(grep -E '^GATEWAY_PORT=' .env 2>/dev/null | head -1 | cut -d= -f2 || true)"
-            FE_PORT="${FE_PORT:-60106}"
-            GW_PORT="${GW_PORT:-60206}"
+            FE_PORT="${FE_PORT:-${{ github.ref == 'refs/heads/release' && '60106' || '40106' }}}"
+            GW_PORT="${GW_PORT:-${{ github.ref == 'refs/heads/release' && '60206' || '40206' }}}"
             echo "Waiting for application to start (front:$FE_PORT gateway:$GW_PORT)..."
             sleep 15
             ok=0
@@ -192,7 +203,9 @@ jobs:
             done
             if [ "$ok" -ne 1 ]; then
               echo "Health check FAILED"
+              ss -tlnp 2>/dev/null | grep -E '40106|40206|40306|60106|60206|60306' || true
               docker compose -f docker-compose.prod.yml ps
+              docker ps -a --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
               docker compose -f docker-compose.prod.yml logs --tail=100
               exit 1
             fi
