@@ -57,6 +57,8 @@ public class SubmitProcedureCommandHandlerTests
         _procedureRepo.GetActorsAsync(ProcedureId, TenantId, null, Arg.Any<CancellationToken>())
             .Returns(new List<ProcedureActor> { new() { ActorDefinitionId = VendedorDefId } });
         _typeRepo.FindByIdWithDetailsAsync(TypeId, TenantId, Arg.Any<CancellationToken>()).Returns(procedureType);
+        _typeRepo.FindSnapshotAsync(TypeId, procedureType.Version, Arg.Any<CancellationToken>())
+            .Returns((ProcedureTypeSnapshot?)null);
 
         var result = await _sut.HandleAsync(new SubmitProcedureCommand(ProcedureId, TenantId, UserId));
 
@@ -67,6 +69,38 @@ public class SubmitProcedureCommandHandlerTests
         await _typeRepo.Received(1).AddSnapshotAsync(Arg.Any<ProcedureTypeSnapshot>(), Arg.Any<CancellationToken>());
         await _publisher.Received(1).PublishProcedureSubmittedAsync(
             Arg.Is<ProcedureSubmitted>(e => e.ProcedureId == ProcedureId), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Submit_ReutilizaSnapshotExistente_SinInsertarDuplicado()
+    {
+        var procedure = BuildDraftProcedure("""{"placa":"ABC123"}""");
+        var existingSnapshot = new ProcedureTypeSnapshot
+        {
+            Id = SnapshotId,
+            ProcedureTypeId = TypeId,
+            Version = 1,
+            SnapshotJson = SnapshotWithRequiredPlaca,
+        };
+        var procedureType = new ProcedureType { Id = TypeId, TenantId = TenantId, Version = 1, Steps = [] };
+
+        _procedureRepo.FindByIdAsync(ProcedureId, TenantId, Arg.Any<CancellationToken>()).Returns(procedure);
+        _typeRepo.FindSnapshotByIdAsync(SnapshotId, Arg.Any<CancellationToken>()).Returns(existingSnapshot);
+        _typeRepo.GetActorDefinitionsAsync(TypeId, TenantId, Arg.Any<CancellationToken>())
+            .Returns(new List<ActorDefinition>
+            {
+                new() { Id = VendedorDefId, Role = "vendedor", IsRequired = true },
+            });
+        _procedureRepo.GetActorsAsync(ProcedureId, TenantId, null, Arg.Any<CancellationToken>())
+            .Returns(new List<ProcedureActor> { new() { ActorDefinitionId = VendedorDefId } });
+        _typeRepo.FindByIdWithDetailsAsync(TypeId, TenantId, Arg.Any<CancellationToken>()).Returns(procedureType);
+        _typeRepo.FindSnapshotAsync(TypeId, 1, Arg.Any<CancellationToken>()).Returns(existingSnapshot);
+
+        var result = await _sut.HandleAsync(new SubmitProcedureCommand(ProcedureId, TenantId, UserId));
+
+        result.IsSuccess.Should().BeTrue();
+        procedure.ProcedureTypeSnapshotId.Should().Be(SnapshotId);
+        await _typeRepo.DidNotReceive().AddSnapshotAsync(Arg.Any<ProcedureTypeSnapshot>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
