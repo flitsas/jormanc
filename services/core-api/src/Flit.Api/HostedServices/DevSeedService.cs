@@ -1,4 +1,5 @@
 using Flit.Infrastructure.Persistence;
+using Flit.Infrastructure.Persistence.Entities.Companies;
 using Flit.Infrastructure.Persistence.Entities.Identity;
 using Flit.Modules.Identity.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -246,6 +247,43 @@ public sealed class DevSeedService(
                 AssignedBy = SystemSeedId
             });
             await db.SaveChangesAsync(ct);
+        }
+
+        // Compañía en tenant acme (E2E trámites / parametrizador HU-9779+)
+        var acmeCompany = await db.Companies
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(c => c.TenantId == tenant.Id, ct);
+        if (acmeCompany is null)
+        {
+            acmeCompany = new Company
+            {
+                Id = Guid.NewGuid(),
+                TenantId = tenant.Id,
+                Nit = "900000001",
+                Name = "Acme Corp",
+                Status = "active",
+                CreatedAt = now,
+                CreatedBy = SystemSeedId,
+                UpdatedAt = now,
+                UpdatedBy = SystemSeedId
+            };
+            db.Companies.Add(acmeCompany);
+            db.CompanyConfigs.Add(new CompanyConfig
+            {
+                Id = Guid.NewGuid(),
+                CompanyId = acmeCompany.Id,
+                OnlyOwnVehicles = false,
+                BaulFirmasEnabled = false,
+                NotificationTarget = "radicador",
+                SmtpMode = "native",
+                MatriculaConfig = "{}",
+                TraspasosConfig = "{}",
+                ContingencyConfig = "{}",
+                RecaudoMethods = "[]",
+                UpdatedAt = now
+            });
+            await db.SaveChangesAsync(ct);
+            logger.LogInformation("Dev seed: Company 'Acme Corp' creada ({Id})", acmeCompany.Id);
         }
 
         logger.LogInformation(
