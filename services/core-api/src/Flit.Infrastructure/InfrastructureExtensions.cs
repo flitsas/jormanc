@@ -1,6 +1,6 @@
+using Flit.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Flit.Infrastructure.Persistence;
 
 namespace Flit.Infrastructure;
 
@@ -17,7 +17,11 @@ public static class InfrastructureExtensions
         this IServiceCollection services,
         string connectionString)
     {
-        services.AddDbContext<FlitDbContext>(opts =>
+        services.AddHttpContextAccessor();
+        services.AddSingleton<TenantConnectionInterceptor>();
+        services.AddSingleton<TenantCommandInterceptor>();
+
+        services.AddDbContext<FlitDbContext>((sp, opts) =>
             opts.UseNpgsql(
                 connectionString,
                 npgsql =>
@@ -27,6 +31,9 @@ public static class InfrastructureExtensions
                         maxRetryDelay: TimeSpan.FromSeconds(5),
                         errorCodesToAdd: null);
                 })
+            .AddInterceptors(
+                sp.GetRequiredService<TenantConnectionInterceptor>(),
+                sp.GetRequiredService<TenantCommandInterceptor>())
             .EnableSensitiveDataLogging(false)
             .EnableDetailedErrors(false));
 

@@ -49,6 +49,8 @@ builder.Services.AddCors(opts => opts.AddDefaultPolicy(p => p
     .AllowCredentials()));
 
 builder.Services.AddHttpClient();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ITenantContext, HttpTenantContext>();
 
 // ─── IMemoryCache para ISessionBlacklist (ADR-0013) ──────────────────────────
 builder.Services.AddMemoryCache();
