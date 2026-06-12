@@ -170,6 +170,11 @@ jobs:
             # cuando recreate no libera el bind del contenedor anterior a tiempo.
             docker compose -f docker-compose.prod.yml down --remove-orphans || true
 
+            # VPS DEV: activar seed demo sin cambiar ASPNETCORE_ENVIRONMENT a Development
+            if [ "${{ github.ref }}" = "refs/heads/develop" ]; then
+              export FLIT_SEED_DEMO_DATA=true
+            fi
+
             docker compose -f docker-compose.prod.yml pull
             if ! docker compose -f docker-compose.prod.yml up -d; then
               echo "docker compose up FAILED — diagnostics:"

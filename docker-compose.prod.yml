@@ -57,6 +57,8 @@ services:
       Verifik__BearerToken: ${VERIFIK_API_TOKEN:-}
       Verifik__BaseUrl: ${VERIFIK_BASE_URL:-https://api.verifik.co}
       Verifik__TimeoutSeconds: ${VERIFIK_TIMEOUT_SECONDS:-30}
+      # Seed demo (tenant acme, OT, trámites). true en VPS DEV; false en PDN.
+      Flit__SeedDemoData: ${FLIT_SEED_DEMO_DATA:-false}
     ports:
       - "127.0.0.1:${CORE_API_PORT:-60306}:8081"
     healthcheck:

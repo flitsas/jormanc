@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Flit.Api.Configuration;
 using Flit.Infrastructure.Persistence;
 using Flit.Infrastructure.Persistence.Entities.Companies;
 using Flit.Infrastructure.Persistence.Entities.Documents;
@@ -12,11 +13,12 @@ namespace Flit.Api.HostedServices;
 
 /// <summary>
 /// Catálogo demo idempotente para QA manual y regresión en DEV (tenant acme).
-/// Solo activo en Development. Requiere que <see cref="DevSeedService"/> haya creado tenant/usuarios.
+/// Activo en Development o con <c>Flit:SeedDemoData=true</c> (VPS DEV). Requiere <see cref="DevSeedService"/>.
 /// </summary>
 public sealed class DevQaDemoSeedService(
     IServiceScopeFactory scopeFactory,
     IHostEnvironment env,
+    IConfiguration configuration,
     ILogger<DevQaDemoSeedService> logger) : IHostedService
 {
     private static readonly Guid SystemSeedId = new("00000000-0000-0000-0000-000000000001");
@@ -28,7 +30,7 @@ public sealed class DevQaDemoSeedService(
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        if (!env.IsDevelopment())
+        if (!DemoSeedGate.ShouldRun(env, configuration))
             return;
 
         await using var scope = scopeFactory.CreateAsyncScope();

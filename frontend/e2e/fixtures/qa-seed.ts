@@ -1,5 +1,6 @@
 /**
  * Credenciales seed DEV — DevSeedService + DevQaDemoSeedService (Flit.Api).
+ * VPS DEV: requiere Flit__SeedDemoData=true (o ASPNETCORE_ENVIRONMENT=Development).
  * URL DEV: https://dev.jormanc.flitsas.online
  */
 export const QA_SEED = {

@@ -1,3 +1,4 @@
+using Flit.Api.Configuration;
 using Flit.Infrastructure.Persistence;
 using Flit.Infrastructure.Persistence.Entities.Companies;
 using Flit.Infrastructure.Persistence.Entities.Identity;
@@ -14,6 +15,7 @@ namespace Flit.Api.HostedServices;
 public sealed class DevSeedService(
     IServiceScopeFactory scopeFactory,
     IHostEnvironment env,
+    IConfiguration configuration,
     IPasswordHasher passwordHasher,
     ILogger<DevSeedService> logger) : IHostedService
 {
@@ -21,7 +23,7 @@ public sealed class DevSeedService(
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        if (!env.IsDevelopment())
+        if (!DemoSeedGate.ShouldRun(env, configuration))
             return;
 
         await using var scope = scopeFactory.CreateAsyncScope();
